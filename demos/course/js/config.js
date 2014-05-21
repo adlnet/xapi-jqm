@@ -3,14 +3,16 @@
 function Config() {
 	"use strict";
 }
-// this will be setup when login logic is updated
+// these have been deprecated by getUserName, getUserEmail, and getActor functions
+/*
 var email = "tyler.mulligan.ctr@adlnet.gov";
 var username = "French Toaster";
 var actor = { "mbox": "mailto:" + email, "name": username };
+*/
 Config.endpoint = "https://lrs.adlnet.gov/xapi/";
 Config.user = "jqm";
 Config.password = "xapijqm";
-Config.actor =  actor;
+//Config.actor = actor;
 
 // "global" variables
 var courseID = "http://adlnet.gov/xapi/samples/xapi-jqm";
