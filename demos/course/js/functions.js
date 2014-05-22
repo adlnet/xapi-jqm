@@ -5,8 +5,7 @@ if ( actor == false ) {
     checkLoggedIn();
 } else { // silly thing to wrap in an else but I need to restructure the code to handle a missing actor on login page
 
-    Config.actor = actor;
-    ADL.XAPIWrapper.changeConfig(Config);
+    doConfig();
 
     // Abstracted page changing logic
     $( window ).on("pagechange", function(event) {
@@ -56,8 +55,15 @@ if ( actor == false ) {
     });
 } // end silly else
 
+/* State functions */
 function getState() {
-    ADL.XAPIWrapper.getState(courseID, getActor(), "session-state");
+    return ADL.XAPIWrapper.getState(courseID, getActor(), "session-state");
+}
+
+/* Helpers */
+function doConfig() { // sorry
+    Config.actor = actor;
+    ADL.XAPIWrapper.changeConfig(Config);
 }
 
 function getPage() {
@@ -66,6 +72,7 @@ function getPage() {
     return filename;
 }
 
+/* Login / Logout functions */
 function checkLoggedIn() {
     // If the actor doesn't exist, send them to the login page
     if ( getPage() != "00-account.html" ) {
@@ -79,21 +86,24 @@ function userLogin() {
 }
 
 function userLogout() {
+    courseExited();
     clearActor();
-    window.location = "../../"; // lol
+    window.location = "../"; // lol
+}
+
+function userRegister(name, email) {
+    // should error check this
+    setActor(name, email);
+    courseRegistered();
 }
 
 // jqm's submission process is the reason I'm doing it this way
 function userRegisterSubmit() {
     if ( $("#reg-name").val() != "" && $("#reg-email").val() != "" ) {
         userRegister($("#reg-name").val(), $("#reg-email").val());
+        courseLaunched();
         window.location = "../index.html"
     }
-}
-
-function userRegister(name, email) {
-    // should error check this
-    setActor(name, email);
 }
 
 /* Name, Email, Actor, gets and sets */
@@ -136,30 +146,117 @@ function clearActor() {
     localStorage.removeItem("xapi-jqm/email");
 }
 
-// statement for launching content -- reserved for when login logic is complete
-/*var stmt = { "actor": actor,
-    "verb": ADL.verbs.launched,
-    "context": {
-        "contextActivities": {
-            "parent": [
-                { "id": courseID,
-                    "definition": {
-                        "name": { "en-US": "xAPI for jQuery Demo" },
-                        "description": { "en-US": "A sample HTML5 mobile app with xAPI tracking." }
-                    },
-                    "objectType": "Activity"
-                }
-            ]
+/* SCORMy
+ * verbose for now until login logic / config is cleaner
+ */
+ 
+function courseRegistered() {
+    
+    doConfig();
+
+    // statement for launching content
+    var stmt = { "actor": getActor(),
+        "verb": ADL.verbs.registered,
+        "context": {
+            "contextActivities": {
+                "parent": [
+                    { "id": courseID,
+                        "definition": {
+                            "name": { "en-US": "xAPI for jQuery Mobile Demo" },
+                            "description": { "en-US": "A sample HTML5 app with xAPI tracking." }
+                        },
+                        "objectType": "Activity"
+                    }
+                ]
+            }
+        },
+        "object": {
+            "id": "http://adlnet.gov/xapi/samples/xapi-jqm/registered",
+            "objectType": "Activity",
+            "definition": {
+                "name": {
+                    "en-US": "How to Make French Toast xapi-jqm"
+                },
+                "type": linkType
+            }
         }
-    },
-    "object": {
-        "id": "http://adlnet.gov/xapi/samples/xapi-jqm/glossary/",
-        "objectType": "Activity",
-        "definition": {
-            "name": {
-                "en-US": "xAPI jQuery Demo Glossary"
-            },
-            "type": linkType
+    };
+
+    // Send a statement
+    ADL.XAPIWrapper.sendStatement(stmt);
+
+}
+
+function courseLaunched() {
+    
+    doConfig();
+
+    // statement for launching content
+    var stmt = { "actor": getActor(),
+        "verb": ADL.verbs.launched,
+        "context": {
+            "contextActivities": {
+                "parent": [
+                    { "id": courseID,
+                        "definition": {
+                            "name": { "en-US": "xAPI for jQuery Mobile Demo" },
+                            "description": { "en-US": "A sample HTML5 app with xAPI tracking." }
+                        },
+                        "objectType": "Activity"
+                    }
+                ]
+            }
+        },
+        "object": {
+            "id": "http://adlnet.gov/xapi/samples/xapi-jqm/launched",
+            "objectType": "Activity",
+            "definition": {
+                "name": {
+                    "en-US": "How to Make French Toast xapi-jqm"
+                },
+                "type": linkType
+            }
         }
-    }
-};*/
+    };
+
+    // Send a statement
+    ADL.XAPIWrapper.sendStatement(stmt);
+
+}
+
+function courseExited() {
+
+    doConfig();
+
+    // statement for launching content
+    var stmt = { "actor": getActor(),
+        "verb": ADL.verbs.exited,
+        "context": {
+            "contextActivities": {
+                "parent": [
+                    { "id": courseID,
+                        "definition": {
+                            "name": { "en-US": "xAPI for jQuery Mobile Demo" },
+                            "description": { "en-US": "A sample HTML5 app with xAPI tracking." }
+                        },
+                        "objectType": "Activity"
+                    }
+                ]
+            }
+        },
+        "object": {
+            "id": "http://adlnet.gov/xapi/samples/xapi-jqm/exited",
+            "objectType": "Activity",
+            "definition": {
+                "name": {
+                    "en-US": "How to Make French Toast xapi-jqm"
+                },
+                "type": linkType
+            }
+        }
+    };
+
+    // Send a statement
+    ADL.XAPIWrapper.sendStatement(stmt);
+
+}
