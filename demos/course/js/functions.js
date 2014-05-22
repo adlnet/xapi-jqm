@@ -57,7 +57,7 @@ if ( actor == false ) {
 } // end silly else
 
 function getState() {
-    ADL.XAPIWrapper.getState(activityID, getActor(), "session-state");
+    ADL.XAPIWrapper.getState(courseID, getActor(), "session-state");
 }
 
 function getPage() {
