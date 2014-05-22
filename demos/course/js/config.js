@@ -10,6 +10,7 @@ var username = "French Toaster";
 var actor = { "mbox": "mailto:" + email, "name": username };
 */
 Config.endpoint = "https://lrs.adlnet.gov/xapi/";
+//Config.endpoint = "http://10.100.21.46:8080/xapi/";
 Config.user = "jqm";
 Config.password = "xapijqm";
 //Config.actor = actor;

@@ -11,6 +11,11 @@
     <script src="js/xapiwrapper.min.js"></script>
     <script src="js/config.js"></script>
     <script src="js/functions.js"></script>
+    <style type="text/css">
+        #toc-list li a {
+            padding-left:40px;
+        }
+    </style>
 </head> 
 
 <body data-chapter="toc"> 
@@ -24,12 +29,12 @@
 
     <div data-role="content">
 
-        <ul data-role="listview" data-inset="true">
-            <li id="01-intro"><a href="chapters/01-intro.html" data-ajax="false">1. Introduction</a></li>
-            <li id="02-ingredients"><a href="chapters/02-ingredients.html" data-ajax="false">2. Ingredients &amp; Things You'll Need</a></li>
-            <li id="03-steps"><a href="chapters/03-steps.html" data-ajax="false">3. Steps Involved</a></li> 
-            <li id="04-video"><a href="chapters/04-video.html" data-ajax="false">4. Watch a Video</a></li> 
-            <li id="04-quiz"><a href="chapters/05-quiz.html" data-ajax="false">5. Take a Quiz</a></li> 
+        <ul data-role="listview" data-inset="true" id="toc-list">
+            <li id="01-intro" class="ui-btn-icon-left ui-icon-check"><a href="chapters/01-intro.html" data-ajax="false">1. Introduction</a></li>
+            <li id="02-ingredients" class="ui-btn-icon-left"><a href="chapters/02-ingredients.html" data-ajax="false">2. Ingredients &amp; Things You'll Need</a></li>
+            <li id="03-steps" class="ui-btn-icon-left"><a href="chapters/03-steps.html" data-ajax="false">3. Steps Involved</a></li> 
+            <li id="04-video" class="ui-btn-icon-left"><a href="chapters/04-video.html" data-ajax="false">4. Watch a Video</a></li> 
+            <li id="04-quiz" class="ui-btn-icon-left"><a href="chapters/05-quiz.html" data-ajax="false">5. Take a Quiz</a></li> 
         </ul>
 
     </div><!-- /content -->
