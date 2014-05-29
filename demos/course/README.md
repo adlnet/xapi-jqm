@@ -35,13 +35,13 @@ A [statement](https://github.com/adlnet/xAPI-Spec/blob/master/xAPI.md#statement)
 #### The HTML Attributes Used to Build the Statements
 
 
-The ```data-chapter``` attribute defines what chapter you're in
+The ```data-chapter``` attribute defines what chapter you're in:
 
 ```html
 <body data-chapter="steps">
 ```
 
-Pages in jQuery Mobile (jQM) are defined as divs with a ```data-role="page"```
+Pages in jQuery Mobile (jQM) are defined as divs with a ```data-role="page"```:
 
 ```html
 <div data-role="page" id="p2">
@@ -51,7 +51,7 @@ Pages in jQuery Mobile (jQM) are defined as divs with a ```data-role="page"```
 
 #### An Overview of a Statement
 
-The statement below includes some helper functions from the [functions.js](js/functions.js) file. These functions will be covered in [another document]()
+The statement below includes some helper functions from the [functions.js](js/functions.js) file. These functions will be covered in [another document not yet written]().
 
 ```js
 var stmt = { "actor": getActor(),
@@ -93,7 +93,7 @@ The [State API](https://github.com/adlnet/xAPI-Spec/blob/master/xAPI.md#stateapi
 
 ### Reporting
 
-At the moment, the easiest way to view the raw statements is by logging into to [ADL LRS](https://lrs.adlnet.gov)
+At the moment, the easiest way to view the raw statements is by logging into to [ADL LRS](https://lrs.adlnet.gov):
 
 **username:** *jqm*
 
