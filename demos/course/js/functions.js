@@ -13,9 +13,7 @@ if ( actor == false ) {
         var chapter = $("body").attr("data-chapter");
         var pagename = $.mobile.activePage.attr("id");
         var activityID = "http://adlnet.gov/xapi/samples/xapi-jqm/changedpage/" + chapter + "/" + pagename;
-        // var re = new RegExp("[p][0-9]+");
 
-        // if (!(chapter == "quiz" && re.test(pagename))){
         var stmt = { "actor": getActor(),
             "verb": ADL.verbs.experienced,
             "context": {
@@ -50,11 +48,6 @@ if ( actor == false ) {
 
         // Send a statement
         ADL.XAPIWrapper.sendStatement(stmt);
-        // }
-        // else{
-        //     gradeQuestion();
-        // }
-        // Saving the state
         ADL.XAPIWrapper.sendState(courseID, getActor(), "session-state", null, { "info": "reading", "chapter": chapter, "page": pagename });
 
     });
