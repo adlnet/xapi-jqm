@@ -58,6 +58,32 @@ function getState() {
     return ADL.XAPIWrapper.getState(courseID, getActor(), "session-state");
 }
 
+/* Course Progress */
+// find from DOM
+function findChaptersCompleted() {
+    return $.map($("#toc-list li.ui-icon-check"), function(n, i) { return n.id; });
+}
+
+/* in progress checklist for chapter completion
+// Get from State API
+function getChaptersCompleted() {
+    // In progress
+}
+
+// Set in State API
+function setChapterComplete() {
+    var array1 = ["01-intro", "02-ingredients"];
+    var array2 = ["02-ingredients", "03-steps"];
+
+    var hash = {}, union = [];
+
+    $.each($.merge($.merge([], array1), array2), function (index, value) { hash[value] = value; });
+    $.each(hash, function (key, value) { union.push(key); } );
+
+    console.log(union);
+}
+*/
+
 /* Helpers */
 function doConfig() { // sorry
     Config.actor = actor;
