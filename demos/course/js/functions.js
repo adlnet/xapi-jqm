@@ -64,9 +64,10 @@ function findChaptersCompleted() {
     return $.map($("#toc-list li.ui-icon-check"), function(n, i) { return n.id; });
 }
 
+/* in progress checklist for chapter completion
 // Get from State API
 function getChaptersCompleted() {
-
+    // In progress
 }
 
 // Set in State API
@@ -81,6 +82,7 @@ function setChapterComplete() {
 
     console.log(union);
 }
+*/
 
 /* Helpers */
 function doConfig() { // sorry
