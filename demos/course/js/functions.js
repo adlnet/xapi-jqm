@@ -289,7 +289,7 @@ function gradeQuestion(){
 
             //compare radio/checkbox selections 
             var success = false;
-            if (correct_answer.sort().join(',') === user_answer.sort().join(',')){
+            if (correct_answer.join(',') === user_answer.sort().join(',')){
                 success = true;
             }
 
@@ -308,9 +308,9 @@ function gradeQuestion(){
                 },
                 "result": {
                     "success": success,
-                    "response": user_answer.toString() + user_answer_display.toString(),
+                    "response": user_answer.toString() + " " + user_answer_display.toString(),
                     "extensions":{
-                        "answer:correct_answer": correct_answer.toString() + correct_answer_display.toString()
+                        "answer:correct_answer": correct_answer.toString() + " " + correct_answer_display.toString()
                     }
                 },
                 "context":{

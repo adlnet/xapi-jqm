@@ -9,12 +9,9 @@ var email = "tyler.mulligan.ctr@adlnet.gov";
 var username = "French Toaster";
 var actor = { "mbox": "mailto:" + email, "name": username };
 */
-// Config.endpoint = "https://lrs.adlnet.gov/xapi/";
-// Config.user = "jqm";
-// Config.password = "xapijqm";
-Config.endpoint = "http://localhost:8000/xapi/";
-Config.user = "lou";
-Config.password = "password";
+Config.endpoint = "https://lrs.adlnet.gov/xapi/";
+Config.user = "jqm";
+Config.password = "xapijqm";
 
 //Config.actor = actor;
 
