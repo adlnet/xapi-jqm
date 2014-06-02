@@ -48,8 +48,6 @@ if ( actor == false ) {
 
         // Send a statement
         ADL.XAPIWrapper.sendStatement(stmt);
-
-        // Saving the state
         ADL.XAPIWrapper.sendState(courseID, getActor(), "session-state", null, { "info": "reading", "chapter": chapter, "page": pagename });
 
     });
@@ -283,4 +281,171 @@ function courseExited() {
     // Send a statement
     ADL.XAPIWrapper.sendStatement(stmt);
 
+}
+var CORRECT_QUIZ_ANSWERS =[["Bread", "Eggs", "Butter / Oil or Non-stick Spray"], ["A Pan or an electric skillet"], "toast"];
+
+function gradeQuestion(){
+    var pagename = $.mobile.activePage.attr("id");
+    var quiz_name = "q" + pagename[1]
+    var quizID = "http://adlnet.gov/xapi/samples/xapi-jqm/quiz/"
+    var questionID = "http://adlnet.gov/xapi/samples/xapi-jqm/quiz/" + quiz_name;
+
+    var q_form = $("#"+pagename+"_form :input")
+    var question_type = q_form[0].type
+    var correct_answer = CORRECT_QUIZ_ANSWERS[parseInt(pagename[1]) - 1];
+    var actor = getActor()
+
+    switch (question_type){
+        case 'radio':
+        case 'checkbox':
+            var user_answer = [];
+            $("#"+pagename+"_form input:checked").each(function(idx, val){
+                    user_answer.push(val.value);
+                });
+            
+            var success = false;
+            //checks if answer arrays have same elements
+            if ($(correct_answer).not(user_answer).length == 0 && $(user_answer).not(correct_answer).length == 0){
+                success = true;
+            }
+            var stmt = new ADL.XAPIStatement({
+                "actor": actor,
+                "verb": ADL.verbs.answered,
+                "object": {
+                    "id" : questionID,
+                    "objectType": "Activity",
+                    "definition": {
+                        "name": {
+                            "en-US": "xAPI jQuery Mobile quiz question " + quiz_name
+                        },
+                        "type": "http://adlnet.gov/xapi/activities/quiz"
+                    }
+                },
+                "result": {
+                    "success": success,
+                    "response": user_answer.toString(),
+                    "extensions":{
+                        "answer:correct_answer": correct_answer.toString()
+                    }
+                },
+                "context":{
+                    "contextActivities": {
+                        "parent":[
+                            {
+                                "id": courseID
+                            },
+                            {
+                                "id": quizID
+                            }
+                        ]
+                    }
+                }
+            });            
+            break;
+        case 'text':
+            user_answer = q_form.val();
+            success = false;
+            if (user_answer === correct_answer){
+                success = true;
+            }
+            var stmt = new ADL.XAPIStatement({
+                "actor": actor,
+                "verb": ADL.verbs.answered,
+                "object": {
+                    "id" : questionID,
+                    "objectType": "Activity",
+                    "definition": {
+                        "name": {
+                            "en-US": "xAPI jQuery Mobile quiz question" + quiz_name
+                        },
+                        "type": "http://adlnet.gov/xapi/activities/quiz"
+                    }
+                },
+                "result": {
+                    "success": success,
+                    "response": user_answer,
+                    "extensions":{
+                        "answer:correct_answer": correct_answer
+                    }
+                },
+                "context":{
+                    "contextActivities": {
+                        "parent":[
+                            {
+                                "id": courseID
+                            },
+                            {
+                                "id":quizID
+                            }
+                        ]
+                    }
+                }
+            });
+            break;
+    }
+    // Send a statement
+    ADL.XAPIWrapper.sendStatement(stmt);
+    localStorage.setItem("xapi-jqm/"+actor["name"]+"/"+quiz_name, success);
+}
+
+function makeAssessment(){
+    var actor = getActor();
+    var quizID = "http://adlnet.gov/xapi/samples/xapi-jqm/quiz/";    
+    var results = [];
+    var correct = 0;
+
+    for(var i=0; i<CORRECT_QUIZ_ANSWERS.length;i++){
+        results.push(localStorage.getItem("xapi-jqm/"+actor['name']+"/"+"q"+(i+1)));
+        localStorage.removeItem("xapi-jqm/"+actor['name']+"/"+"q"+(i+1));
+    }
+
+    $.each(results, function(idx, val){
+        if (val === "true"){
+            correct++;
+        }
+    });
+
+    var verb = ADL.verbs.failed;
+    var percentage = Math.round((correct/CORRECT_QUIZ_ANSWERS.length) * 100)
+    var display = "";
+    if (percentage > 60){
+        verb = ADL.verbs.passed;
+        display = "You passed the quiz! You scored " + percentage + "%"
+    }
+    else{
+        display = "You failed the quiz! You scored " + percentage + "%"        
+    }
+    var stmt = new ADL.XAPIStatement({
+                "actor": actor,
+                "verb": verb,
+                "object": {
+                    "id" : quizID,
+                    "objectType": "Activity",
+                    "definition": {
+                        "name": {
+                            "en-US": "xAPI jQuery Mobile quiz"
+                        },
+                        "type": "http://adlnet.gov/xapi/activities/quiz"
+                    }
+                },
+                "result": {
+                    "score":{
+                        "min": 0,
+                        "raw": correct,
+                        "max": CORRECT_QUIZ_ANSWERS.length
+                    }
+                },
+                "context":{
+                    "contextActivities": {
+                        "parent":[
+                            {
+                                "id": courseID
+                            }
+                        ]
+                    }
+                }
+            });
+    // Send a statement
+    ADL.XAPIWrapper.sendStatement(stmt);
+    $("#quiz_results").html(display)
 }
