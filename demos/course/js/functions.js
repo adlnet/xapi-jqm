@@ -42,7 +42,7 @@ if ( actor  == false ) {
                 "objectType": "Activity",
                 "definition": {
                     "name": {
-                        "en-US": "xAPI jQuery Mobile " + chapter + " " + pageID
+                        "en-US": "How to Make French Toast Chapter: " + chapter + ", page: " + pageID
                     },
                     "type": linkType
                 }
@@ -67,25 +67,61 @@ function findChaptersCompleted() {
     return $.map($("#toc-list li.ui-icon-check"), function(n, i) { return n.id; });
 }
 
-/* in progress checklist for chapter completion
 // Get from State API
 function getChaptersCompleted() {
-    // In progress
+    var chaptersCompleted = ADL.XAPIWrapper.getState(courseID, actor, "chapters-completed");
+    return chaptersCompleted.chapters;
 }
 
 // Set in State API
 function setChapterComplete() {
-    var array1 = ["01-intro", "02-ingredients"];
-    var array2 = ["02-ingredients", "03-steps"];
+    var chapterID = $("body").attr("data-chapter");
+    var currentCompletedChapters = getChaptersCompleted();   
+    var chapterCompleted = [ chapterID ];
 
     var hash = {}, union = [];
 
-    $.each($.merge($.merge([], array1), array2), function (index, value) { hash[value] = value; });
+    // #thatHappened
+    $.each($.merge($.merge([], currentCompletedChapters), chapterCompleted), function (index, value) { hash[value] = value; });
     $.each(hash, function (key, value) { union.push(key); } );
+    
+    ADL.XAPIWrapper.sendState(courseID, actor, "chapters-completed", null, { "chapters": union });
 
-    console.log(union);
+    doConfig();
+
+    // statement for launching content
+    var stmt = {
+        "actor": actor,
+        "verb": ADL.verbs.completed,
+        "context": {
+            "contextActivities": {
+                "parent": [
+                    { "id": courseID,
+                        "definition": {
+                            "name": { "en-US": "xAPI for jQuery Mobile Demo" },
+                            "description": { "en-US": "A sample HTML5 app with xAPI tracking." }
+                        },
+                        "objectType": "Activity"
+                    }
+                ]
+            }
+        },
+        "object": {
+            "id": "http://adlnet.gov/xapi/samples/xapi-jqm/completedchapter/" + chapterCompleted,
+            "objectType": "Activity",
+            "definition": {
+                "name": {
+                    "en-US": "How to Make French Toast Chapter: " + chapterCompleted
+                },
+                "type": linkType
+            }
+        }
+    };
+
+    // Send registered statement
+    ADL.XAPIWrapper.sendStatement(stmt);
+
 }
-*/
 
 /* Helpers */
 function doConfig() { // sorry
@@ -164,6 +200,8 @@ function userRegister(name, email) {
     // Set global actor var so other functions can use it
     actor = getActor();
     courseRegistered();
+    // Setup chapters-complete
+    ADL.XAPIWrapper.sendState(courseID, actor, "chapters-completed", null, { "chapters": [] });
 }
 
 // jqm's submission process is the reason I'm doing it this way
@@ -333,7 +371,7 @@ function gradeQuestion() {
                     "objectType": "Activity",
                     "definition": {
                         "name": {
-                            "en-US": "xAPI jQuery Mobile quiz question " + quiz_name
+                            "en-US": "How to Make French Toast quiz question " + quiz_name
                         },
                         "type": quizType
                     }
@@ -373,7 +411,7 @@ function gradeQuestion() {
                     "objectType": "Activity",
                     "definition": {
                         "name": {
-                            "en-US": "xAPI jQuery Mobile quiz question " + quiz_name
+                            "en-US": "How to Make French Toast quiz question " + quiz_name
                         },
                         "type": quizType
                     }
@@ -437,7 +475,7 @@ function makeAssessment() {
             "objectType": "Activity",
             "definition": {
                 "name": {
-                    "en-US": "xAPI jQuery Mobile quiz"
+                    "en-US": "How to Make French Toast quiz"
                 },
                 "type": quizType
             }
