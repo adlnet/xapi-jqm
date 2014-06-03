@@ -1,7 +1,7 @@
 /* in progress */
 var actor = getActor();
 
-if ( actor == false ) {
+if ( actor  == false ) {
     checkLoggedIn();
 } else { // silly thing to wrap in an else but I need to restructure the code to handle a missing actor on login page
 
@@ -11,10 +11,11 @@ if ( actor == false ) {
     $( window ).on("pagechange", function(event) {
 
         var chapter = $("body").attr("data-chapter");
-        var pagename = $.mobile.activePage.attr("id");
-        var activityID = "http://adlnet.gov/xapi/samples/xapi-jqm/changedpage/" + chapter + "/" + pagename;
+        var pageID = $.mobile.activePage.attr("id");
+        var activityID = "http://adlnet.gov/xapi/samples/xapi-jqm/changedpage/" + chapter + "/" + pageID;
 
-        var stmt = { "actor": getActor(),
+        var stmt = {
+            "actor": getActor(),
             "verb": ADL.verbs.experienced,
             "context": {
                 "contextActivities": {
@@ -39,7 +40,7 @@ if ( actor == false ) {
                 "objectType": "Activity",
                 "definition": {
                     "name": {
-                        "en-US": "xAPI jQuery Mobile " + chapter + " " + pagename
+                        "en-US": "xAPI jQuery Mobile " + chapter + " " + pageID
                     },
                     "type": linkType
                 }
@@ -48,7 +49,7 @@ if ( actor == false ) {
 
         // Send a statement
         ADL.XAPIWrapper.sendStatement(stmt);
-        ADL.XAPIWrapper.sendState(courseID, getActor(), "session-state", null, { "info": "reading", "chapter": chapter, "page": pagename });
+        ADL.XAPIWrapper.sendState(courseID, getActor(), "session-state", null, { "info": "reading", "chapter": chapter, "page": pageID });
 
     });
 } // end silly else
@@ -173,13 +174,13 @@ function clearActor() {
 /* SCORMy
  * verbose for now until login logic / config is cleaner
  */
- 
 function courseRegistered() {
     
     doConfig();
 
     // statement for launching content
-    var stmt = { "actor": getActor(),
+    var stmt = {
+        "actor": getActor(),
         "verb": ADL.verbs.registered,
         "context": {
             "contextActivities": {
@@ -206,7 +207,7 @@ function courseRegistered() {
         }
     };
 
-    // Send a statement
+    // Send registered statement
     ADL.XAPIWrapper.sendStatement(stmt);
 
 }
@@ -216,7 +217,8 @@ function courseLaunched() {
     doConfig();
 
     // statement for launching content
-    var stmt = { "actor": getActor(),
+    var stmt = {
+        "actor": getActor(),
         "verb": ADL.verbs.launched,
         "context": {
             "contextActivities": {
@@ -243,7 +245,7 @@ function courseLaunched() {
         }
     };
 
-    // Send a statement
+    // Send launched statement
     ADL.XAPIWrapper.sendStatement(stmt);
 
 }
@@ -253,7 +255,8 @@ function courseExited() {
     doConfig();
 
     // statement for launching content
-    var stmt = { "actor": getActor(),
+    var stmt = {
+        "actor": getActor(),
         "verb": ADL.verbs.exited,
         "context": {
             "contextActivities": {
@@ -280,35 +283,35 @@ function courseExited() {
         }
     };
 
-    // Send a statement
+    // Send exited statement
     ADL.XAPIWrapper.sendStatement(stmt);
 
 }
 
-function gradeQuestion(){
-    var pagename = $.mobile.activePage.attr("id");
-    var quiz_name = "q" + pagename[1]
-    var quizID = "http://adlnet.gov/xapi/samples/xapi-jqm/quiz/"
+function gradeQuestion() {
+    var pageID = $.mobile.activePage.attr("id");
+    var quiz_name = "q" + pageID[1]
     var questionID = "http://adlnet.gov/xapi/samples/xapi-jqm/quiz/" + quiz_name;
 
-    var q_form = $("#"+pagename+"_form :input")
+    var q_form = $("#" + pageID + "_form :input")
     var question_type = q_form[0].type
-    var correct_answer = CORRECT_QUIZ_ANSWERS[parseInt(pagename[1]) - 1];
+    var correct_answer = CORRECT_QUIZ_ANSWERS[parseInt(pageID[1]) - 1];
     var correct_answer_display = [];
-    var actor = getActor()
+    var actor = getActor();
 
-    switch (question_type){
+    switch ( question_type ) {
         case 'radio':
         case 'checkbox':
             var user_answer = [];
             var user_answer_display = [];
+            
             //loop through radio/checkboxex and push ones that were selected
-            $("#"+pagename+"_form input").each(function(idx, val){
-                    if (val.checked){
+            $("#" + pageID + "_form input").each(function(idx, val) {
+                    if ( val.checked ){
                         user_answer.push(idx + 1);
                         user_answer_display.push(this.previousSibling.textContent);
                     }
-                    if ($.inArray(idx+1, correct_answer) > -1){
+                    if ( $.inArray(idx+1, correct_answer ) > -1) {
                         correct_answer_display.push(this.previousSibling.textContent);
                     }
                 });
@@ -319,7 +322,7 @@ function gradeQuestion(){
                 success = true;
             }
 
-            var stmt = new ADL.XAPIStatement({
+            var stmt = {
                 "actor": actor,
                 "verb": ADL.verbs.answered,
                 "object": {
@@ -351,15 +354,15 @@ function gradeQuestion(){
                         ]
                     }
                 }
-            });            
+            };            
             break;
         case 'text':
             user_answer = q_form.val();
             success = false;
-            if (user_answer === correct_answer){
+            if ( user_answer === correct_answer ){
                 success = true;
             }
-            var stmt = new ADL.XAPIStatement({
+            var stmt = {
                 "actor": actor,
                 "verb": ADL.verbs.answered,
                 "object": {
@@ -367,7 +370,7 @@ function gradeQuestion(){
                     "objectType": "Activity",
                     "definition": {
                         "name": {
-                            "en-US": "xAPI jQuery Mobile quiz question" + quiz_name
+                            "en-US": "xAPI jQuery Mobile quiz question " + quiz_name
                         },
                         "type": quizType
                     }
@@ -391,26 +394,24 @@ function gradeQuestion(){
                         ]
                     }
                 }
-            });
+            };
             break;
     }
     // Send a statement
     ADL.XAPIWrapper.sendStatement(stmt);
-    localStorage.setItem("xapi-jqm/"+actor["name"]+"/"+quiz_name, success);
+    localStorage.setItem("xapi-jqm/" + actor["name"] + "/" + quiz_name, success);
 }
 
-function makeAssessment(){
-    var actor = getActor();
-    var quizID = "http://adlnet.gov/xapi/samples/xapi-jqm/quiz/";    
+function makeAssessment() { 
     var results = [];
     var correct = 0;
 
-    for(var i=0; i<CORRECT_QUIZ_ANSWERS.length;i++){
-        results.push(localStorage.getItem("xapi-jqm/"+actor['name']+"/"+"q"+(i+1)));
-        localStorage.removeItem("xapi-jqm/"+actor['name']+"/"+"q"+(i+1));
+    for ( var i=0; i < CORRECT_QUIZ_ANSWERS.length; i++ ) {
+        results.push(localStorage.getItem("xapi-jqm/" + actor['name'] + "/" + "q" + (i+1)));
+        localStorage.removeItem("xapi-jqm/" + actor['name'] + "/" + "q" + (i+1));
     }
 
-    $.each(results, function(idx, val){
+    $.each(results, function(idx, val) {
         if (val === "true"){
             correct++;
         }
@@ -419,43 +420,42 @@ function makeAssessment(){
     var verb = ADL.verbs.failed;
     var percentage = Math.round((correct/CORRECT_QUIZ_ANSWERS.length) * 100)
     var display = "";
-    if (percentage > 60){
+    if ( percentage > 60 ) {
         verb = ADL.verbs.passed;
         display = "You passed the quiz! You scored " + percentage + "%"
-    }
-    else{
+    } else {
         display = "You failed the quiz! You scored " + percentage + "%"        
     }
-    var stmt = new ADL.XAPIStatement({
-                "actor": actor,
-                "verb": verb,
-                "object": {
-                    "id" : quizID,
-                    "objectType": "Activity",
-                    "definition": {
-                        "name": {
-                            "en-US": "xAPI jQuery Mobile quiz"
-                        },
-                        "type": quizType
-                    }
+    var stmt = {
+        "actor": actor,
+        "verb": verb,
+        "object": {
+            "id" : quizID,
+            "objectType": "Activity",
+            "definition": {
+                "name": {
+                    "en-US": "xAPI jQuery Mobile quiz"
                 },
-                "result": {
-                    "score":{
-                        "min": 0,
-                        "raw": correct,
-                        "max": CORRECT_QUIZ_ANSWERS.length
+                "type": quizType
+            }
+        },
+        "result": {
+            "score":{
+                "min": 0,
+                "raw": correct,
+                "max": CORRECT_QUIZ_ANSWERS.length
+            }
+        },
+        "context":{
+            "contextActivities": {
+                "parent":[
+                    {
+                        "id": courseID
                     }
-                },
-                "context":{
-                    "contextActivities": {
-                        "parent":[
-                            {
-                                "id": courseID
-                            }
-                        ]
-                    }
-                }
-            });
+                ]
+            }
+        }
+    };
     // Send a statement
     ADL.XAPIWrapper.sendStatement(stmt);
     $("#quiz_results").html(display)

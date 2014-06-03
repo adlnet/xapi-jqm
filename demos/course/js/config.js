@@ -18,9 +18,10 @@ Config.password = "xapijqm";
 
 // "global" variables
 var courseID = "http://adlnet.gov/xapi/samples/xapi-jqm";
-var courseType = "http://adlnet.gov/xapi/activities/course";
+var quizID = "http://adlnet.gov/xapi/samples/xapi-jqm/quiz/"
 
+var courseType = "http://adlnet.gov/xapi/activities/course";
 var linkType = "http://adlnet.gov/xapi/activities/link";
 var quizType = "http://adlnet.gov/xapi/activities/quiz";
 
-var CORRECT_QUIZ_ANSWERS =[[2,3,6], [4], "toast"];
+var CORRECT_QUIZ_ANSWERS = [ [2,3,6], [4], "bread" ];
