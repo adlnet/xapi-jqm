@@ -10,12 +10,18 @@ var username = "French Toaster";
 var actor = { "mbox": "mailto:" + email, "name": username };
 */
 Config.endpoint = "https://lrs.adlnet.gov/xapi/";
+//Config.endpoint = "http://10.100.21.46:8080/xapi/";
 Config.user = "jqm";
 Config.password = "xapijqm";
+
 //Config.actor = actor;
 
 // "global" variables
 var courseID = "http://adlnet.gov/xapi/samples/xapi-jqm";
-var courseType = "http://adlnet.gov/xapi/activities/course";
+var quizID = "http://adlnet.gov/xapi/samples/xapi-jqm/quiz/"
 
+var courseType = "http://adlnet.gov/xapi/activities/course";
 var linkType = "http://adlnet.gov/xapi/activities/link";
+var quizType = "http://adlnet.gov/xapi/activities/quiz";
+
+var CORRECT_QUIZ_ANSWERS = [ [2,3,6], [4], "bread" ];
