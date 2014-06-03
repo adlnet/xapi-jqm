@@ -1,5 +1,7 @@
 /* in progress */
-var actor = getActor();
+
+// Global Actor
+actor = getActor();
 
 if ( actor  == false ) {
     checkLoggedIn();
@@ -15,7 +17,7 @@ if ( actor  == false ) {
         var activityID = "http://adlnet.gov/xapi/samples/xapi-jqm/changedpage/" + chapter + "/" + pageID;
 
         var stmt = {
-            "actor": getActor(),
+            "actor": actor,
             "verb": ADL.verbs.experienced,
             "context": {
                 "contextActivities": {
@@ -49,14 +51,14 @@ if ( actor  == false ) {
 
         // Send a statement
         ADL.XAPIWrapper.sendStatement(stmt);
-        ADL.XAPIWrapper.sendState(courseID, getActor(), "session-state", null, { "info": "reading", "chapter": chapter, "page": pageID });
+        ADL.XAPIWrapper.sendState(courseID, actor, "session-state", null, { "info": "reading", "chapter": chapter, "page": pageID });
 
     });
 } // end silly else
 
 /* State functions */
 function getState() {
-    return ADL.XAPIWrapper.getState(courseID, getActor(), "session-state");
+    return ADL.XAPIWrapper.getState(courseID, actor, "session-state");
 }
 
 /* Course Progress */
@@ -95,40 +97,6 @@ function getPage() {
     var url = window.location.pathname;
     var filename = url.substring(url.lastIndexOf('/')+1);
     return filename;
-}
-
-/* Login / Logout functions */
-function checkLoggedIn() {
-    // If the actor doesn't exist, send them to the login page
-    if ( getPage() != "00-account.html" ) {
-        userLogin();
-    }
-}
-
-function userLogin() {
-    // Should get the page root
-    window.location = "chapters/00-account.html#login";
-}
-
-function userLogout() {
-    courseExited();
-    clearActor();
-    window.location = "../"; // lol
-}
-
-function userRegister(name, email) {
-    // should error check this
-    setActor(name, email);
-    courseRegistered();
-}
-
-// jqm's submission process is the reason I'm doing it this way
-function userRegisterSubmit() {
-    if ( $("#reg-name").val() != "" && $("#reg-email").val() != "" ) {
-        userRegister($("#reg-name").val(), $("#reg-email").val());
-        courseLaunched();
-        window.location = "../index.html"
-    }
 }
 
 /* Name, Email, Actor, gets and sets */
@@ -171,6 +139,42 @@ function clearActor() {
     localStorage.removeItem("xapi-jqm/email");
 }
 
+/* Login / Logout functions */
+function checkLoggedIn() {
+    // If the actor doesn't exist, send them to the login page
+    if ( getPage() != "00-account.html" ) {
+        userLogin();
+    }
+}
+
+function userLogin() {
+    // Should get the page root
+    window.location = "chapters/00-account.html#login";
+}
+
+function userLogout() {
+    courseExited();
+    clearActor();
+    window.location = "../"; // lol
+}
+
+function userRegister(name, email) {
+    // should error check this
+    setActor(name, email);
+    // Set global actor var so other functions can use it
+    actor = getActor();
+    courseRegistered();
+}
+
+// jqm's submission process is the reason I'm doing it this way
+function userRegisterSubmit() {
+    if ( $("#reg-name").val() != "" && $("#reg-email").val() != "" ) {
+        userRegister($("#reg-name").val(), $("#reg-email").val());
+        courseLaunched();
+        window.location = "../index.html"
+    }
+}
+
 /* SCORMy
  * verbose for now until login logic / config is cleaner
  */
@@ -180,7 +184,7 @@ function courseRegistered() {
 
     // statement for launching content
     var stmt = {
-        "actor": getActor(),
+        "actor": actor,
         "verb": ADL.verbs.registered,
         "context": {
             "contextActivities": {
@@ -218,7 +222,7 @@ function courseLaunched() {
 
     // statement for launching content
     var stmt = {
-        "actor": getActor(),
+        "actor": actor,
         "verb": ADL.verbs.launched,
         "context": {
             "contextActivities": {
@@ -256,7 +260,7 @@ function courseExited() {
 
     // statement for launching content
     var stmt = {
-        "actor": getActor(),
+        "actor": actor,
         "verb": ADL.verbs.exited,
         "context": {
             "contextActivities": {
@@ -297,7 +301,6 @@ function gradeQuestion() {
     var question_type = q_form[0].type
     var correct_answer = CORRECT_QUIZ_ANSWERS[parseInt(pageID[1]) - 1];
     var correct_answer_display = [];
-    var actor = getActor();
 
     switch ( question_type ) {
         case 'radio':
