@@ -284,7 +284,6 @@ function courseExited() {
     ADL.XAPIWrapper.sendStatement(stmt);
 
 }
-var CORRECT_QUIZ_ANSWERS =[["Bread", "Eggs", "Butter / Oil or Non-stick Spray"], ["A Pan or an electric skillet"], "toast"];
 
 function gradeQuestion(){
     var pagename = $.mobile.activePage.attr("id");
@@ -295,21 +294,31 @@ function gradeQuestion(){
     var q_form = $("#"+pagename+"_form :input")
     var question_type = q_form[0].type
     var correct_answer = CORRECT_QUIZ_ANSWERS[parseInt(pagename[1]) - 1];
+    var correct_answer_display = [];
     var actor = getActor()
 
     switch (question_type){
         case 'radio':
         case 'checkbox':
             var user_answer = [];
-            $("#"+pagename+"_form input:checked").each(function(idx, val){
-                    user_answer.push(val.value);
+            var user_answer_display = [];
+            //loop through radio/checkboxex and push ones that were selected
+            $("#"+pagename+"_form input").each(function(idx, val){
+                    if (val.checked){
+                        user_answer.push(idx + 1);
+                        user_answer_display.push(this.previousSibling.textContent);
+                    }
+                    if ($.inArray(idx+1, correct_answer) > -1){
+                        correct_answer_display.push(this.previousSibling.textContent);
+                    }
                 });
-            
+
+            //compare radio/checkbox selections 
             var success = false;
-            //checks if answer arrays have same elements
-            if ($(correct_answer).not(user_answer).length == 0 && $(user_answer).not(correct_answer).length == 0){
+            if (correct_answer.join(',') === user_answer.sort().join(',')){
                 success = true;
             }
+
             var stmt = new ADL.XAPIStatement({
                 "actor": actor,
                 "verb": ADL.verbs.answered,
@@ -320,14 +329,14 @@ function gradeQuestion(){
                         "name": {
                             "en-US": "xAPI jQuery Mobile quiz question " + quiz_name
                         },
-                        "type": "http://adlnet.gov/xapi/activities/quiz"
+                        "type": quizType
                     }
                 },
                 "result": {
                     "success": success,
-                    "response": user_answer.toString(),
+                    "response": user_answer.toString() + " " + user_answer_display.toString(),
                     "extensions":{
-                        "answer:correct_answer": correct_answer.toString()
+                        "answer:correct_answer": correct_answer.toString() + " " + correct_answer_display.toString()
                     }
                 },
                 "context":{
@@ -360,7 +369,7 @@ function gradeQuestion(){
                         "name": {
                             "en-US": "xAPI jQuery Mobile quiz question" + quiz_name
                         },
-                        "type": "http://adlnet.gov/xapi/activities/quiz"
+                        "type": quizType
                     }
                 },
                 "result": {
@@ -427,7 +436,7 @@ function makeAssessment(){
                         "name": {
                             "en-US": "xAPI jQuery Mobile quiz"
                         },
-                        "type": "http://adlnet.gov/xapi/activities/quiz"
+                        "type": quizType
                     }
                 },
                 "result": {
