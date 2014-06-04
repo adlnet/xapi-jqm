@@ -20,24 +20,7 @@ if ( actor == false ) {
         var stmt = {
             "actor": actor,
             "verb": ADL.verbs.experienced,
-            "context": {
-                "contextActivities": {
-                    "parent": [
-                        {
-                            "id": courseID,
-                            "definition": {
-                                "name": {
-                                    "en-US": "xAPI for jQuery Demo"
-                                },
-                                "description": {
-                                    "en-US": "A sample HTML5 mobile app with xAPI tracking."
-                                }
-                            },
-                            "objectType": "Activity"
-                        }
-                    ]
-                }
-            },
+            "context": courseContext,
             "object": {
                 "id" : activityID,
                 "objectType": "Activity",
@@ -96,19 +79,7 @@ function setChapterComplete() {
     var stmt = {
         "actor": actor,
         "verb": ADL.verbs.completed,
-        "context": {
-            "contextActivities": {
-                "parent": [
-                    { "id": courseID,
-                        "definition": {
-                            "name": { "en-US": "xAPI for jQuery Mobile Demo" },
-                            "description": { "en-US": "A sample HTML5 app with xAPI tracking." }
-                        },
-                        "objectType": "Activity"
-                    }
-                ]
-            }
-        },
+        "context": courseContext,
         "object": {
             "id": "http://adlnet.gov/xapi/samples/xapi-jqm/completedchapter/" + chapterCompleted,
             "objectType": "Activity",
@@ -227,19 +198,7 @@ function courseRegistered() {
     var stmt = {
         "actor": actor,
         "verb": ADL.verbs.registered,
-        "context": {
-            "contextActivities": {
-                "parent": [
-                    { "id": courseID,
-                        "definition": {
-                            "name": { "en-US": "xAPI for jQuery Mobile Demo" },
-                            "description": { "en-US": "A sample HTML5 app with xAPI tracking." }
-                        },
-                        "objectType": "Activity"
-                    }
-                ]
-            }
-        },
+        "context": courseContext,
         "object": {
             "id": "http://adlnet.gov/xapi/samples/xapi-jqm/registered",
             "objectType": "Activity",
@@ -265,19 +224,7 @@ function courseLaunched() {
     var stmt = {
         "actor": actor,
         "verb": ADL.verbs.launched,
-        "context": {
-            "contextActivities": {
-                "parent": [
-                    { "id": courseID,
-                        "definition": {
-                            "name": { "en-US": "xAPI for jQuery Mobile Demo" },
-                            "description": { "en-US": "A sample HTML5 app with xAPI tracking." }
-                        },
-                        "objectType": "Activity"
-                    }
-                ]
-            }
-        },
+        "context": courseContext,
         "object": {
             "id": "http://adlnet.gov/xapi/samples/xapi-jqm/launched",
             "objectType": "Activity",
@@ -303,19 +250,7 @@ function courseExited() {
     var stmt = {
         "actor": actor,
         "verb": ADL.verbs.exited,
-        "context": {
-            "contextActivities": {
-                "parent": [
-                    { "id": courseID,
-                        "definition": {
-                            "name": { "en-US": "xAPI for jQuery Mobile Demo" },
-                            "description": { "en-US": "A sample HTML5 app with xAPI tracking." }
-                        },
-                        "objectType": "Activity"
-                    }
-                ]
-            }
-        },
+        "context": courseContext,
         "object": {
             "id": "http://adlnet.gov/xapi/samples/xapi-jqm/exited",
             "objectType": "Activity",
