@@ -15,6 +15,8 @@ A list of demos available for a starting point in using xapi-jqm.
 
 - [Try the course demo live](http://adlnet.github.io/xapi-jqm/demos/course/)
 
+- [View reports from this course](http://adlnet.github.io/xapi-jqm/reports)
+
 - [Check the course source](demos/course) to learn more about how xapi-jqm is used
 
 

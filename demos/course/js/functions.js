@@ -3,13 +3,22 @@
 // Global Actor
 actor = getActor();
 
-if ( actor  == false ) {
+/* Page Change Logic */
+if ( actor == false ) {
     checkLoggedIn();
 } else { // silly thing to wrap in an else but I need to restructure the code to handle a missing actor on login page
 
     doConfig();
+    
+    // handle chapter clicks to send launch statements
+    $( document ).on( "vclick", "a.chapter", function() {
+        $chapter = $(this);
+        var chapter = $chapter.parent("li").attr("id");
+        var name = $chapter.text();
+        chapterLaunched(chapter, name);
+    });
 
-    // Abstracted page changing logic
+    // Abstracted page changing logic -- catch-all
     $( window ).on("pagechange", function(event) {
 
         var chapter = $("body").attr("data-chapter");
@@ -19,24 +28,7 @@ if ( actor  == false ) {
         var stmt = {
             "actor": actor,
             "verb": ADL.verbs.experienced,
-            "context": {
-                "contextActivities": {
-                    "parent": [
-                        {
-                            "id": courseID,
-                            "definition": {
-                                "name": {
-                                    "en-US": "xAPI for jQuery Demo"
-                                },
-                                "description": {
-                                    "en-US": "A sample HTML5 mobile app with xAPI tracking."
-                                }
-                            },
-                            "objectType": "Activity"
-                        }
-                    ]
-                }
-            },
+            "context": courseContext,
             "object": {
                 "id" : activityID,
                 "objectType": "Activity",
@@ -53,6 +45,13 @@ if ( actor  == false ) {
         ADL.XAPIWrapper.sendStatement(stmt);
         ADL.XAPIWrapper.sendState(courseID, actor, "session-state", null, { "info": "reading", "chapter": chapter, "page": pageID });
 
+        // initialize youtube video for the video chapter only
+        if (chapter === "04-video"){
+            var video = Popcorn.youtube("#How-to-make-french-toast-xapi-jqm-video", TUTORIAL_VIDEO_URL);
+            video.media.src = TUTORIAL_VIDEO_URL;
+            video.autoplay(false);
+            ADL.XAPIVideo.addVideo(video, "", true, false, false, false);            
+        }
     });
 } // end silly else
 
@@ -62,11 +61,6 @@ function getState() {
 }
 
 /* Course Progress */
-// find from DOM
-function findChaptersCompleted() {
-    return $.map($("#toc-list li.ui-icon-check"), function(n, i) { return n.id; });
-}
-
 // Get from State API
 function getChaptersCompleted() {
     var chaptersCompleted = ADL.XAPIWrapper.getState(courseID, actor, "chapters-completed");
@@ -93,19 +87,7 @@ function setChapterComplete() {
     var stmt = {
         "actor": actor,
         "verb": ADL.verbs.completed,
-        "context": {
-            "contextActivities": {
-                "parent": [
-                    { "id": courseID,
-                        "definition": {
-                            "name": { "en-US": "xAPI for jQuery Mobile Demo" },
-                            "description": { "en-US": "A sample HTML5 app with xAPI tracking." }
-                        },
-                        "objectType": "Activity"
-                    }
-                ]
-            }
-        },
+        "context": courseContext,
         "object": {
             "id": "http://adlnet.gov/xapi/samples/xapi-jqm/completedchapter/" + chapterCompleted,
             "objectType": "Activity",
@@ -224,19 +206,7 @@ function courseRegistered() {
     var stmt = {
         "actor": actor,
         "verb": ADL.verbs.registered,
-        "context": {
-            "contextActivities": {
-                "parent": [
-                    { "id": courseID,
-                        "definition": {
-                            "name": { "en-US": "xAPI for jQuery Mobile Demo" },
-                            "description": { "en-US": "A sample HTML5 app with xAPI tracking." }
-                        },
-                        "objectType": "Activity"
-                    }
-                ]
-            }
-        },
+        "context": courseContext,
         "object": {
             "id": "http://adlnet.gov/xapi/samples/xapi-jqm/registered",
             "objectType": "Activity",
@@ -262,19 +232,7 @@ function courseLaunched() {
     var stmt = {
         "actor": actor,
         "verb": ADL.verbs.launched,
-        "context": {
-            "contextActivities": {
-                "parent": [
-                    { "id": courseID,
-                        "definition": {
-                            "name": { "en-US": "xAPI for jQuery Mobile Demo" },
-                            "description": { "en-US": "A sample HTML5 app with xAPI tracking." }
-                        },
-                        "objectType": "Activity"
-                    }
-                ]
-            }
-        },
+        "context": courseContext,
         "object": {
             "id": "http://adlnet.gov/xapi/samples/xapi-jqm/launched",
             "objectType": "Activity",
@@ -300,19 +258,7 @@ function courseExited() {
     var stmt = {
         "actor": actor,
         "verb": ADL.verbs.exited,
-        "context": {
-            "contextActivities": {
-                "parent": [
-                    { "id": courseID,
-                        "definition": {
-                            "name": { "en-US": "xAPI for jQuery Mobile Demo" },
-                            "description": { "en-US": "A sample HTML5 app with xAPI tracking." }
-                        },
-                        "objectType": "Activity"
-                    }
-                ]
-            }
-        },
+        "context": courseContext,
         "object": {
             "id": "http://adlnet.gov/xapi/samples/xapi-jqm/exited",
             "objectType": "Activity",
@@ -328,6 +274,29 @@ function courseExited() {
     // Send exited statement
     ADL.XAPIWrapper.sendStatement(stmt);
 
+}
+
+function chapterLaunched(chapter, name) {
+        var activityID = "http://adlnet.gov/xapi/samples/xapi-jqm/launchedchapter/" + chapter;
+
+        var stmt = {
+            "actor": actor,
+            "verb": ADL.verbs.launched,
+            "context": courseContext,
+            "object": {
+                "id" : activityID,
+                "objectType": "Activity",
+                "definition": {
+                    "name": {
+                        "en-US": "How to Make French Toast Chapter: " + chapter
+                    },
+                    "type": linkType
+                }
+            }
+        };
+
+        // Send a statement
+        ADL.XAPIWrapper.sendStatement(stmt);
 }
 
 function gradeQuestion() {
