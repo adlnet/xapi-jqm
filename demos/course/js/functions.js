@@ -9,8 +9,16 @@ if ( actor == false ) {
 } else { // silly thing to wrap in an else but I need to restructure the code to handle a missing actor on login page
 
     doConfig();
+    
+    // handle chapter clicks to send launch statements
+    $( document ).on( "vclick", "a.chapter", function() {
+        $chapter = $(this);
+        var chapter = $chapter.parent("li").attr("id");
+        var name = $chapter.text();
+        chapterLaunched(chapter, name);
+    });
 
-    // Abstracted page changing logic
+    // Abstracted page changing logic -- catch-all
     $( window ).on("pagechange", function(event) {
 
         var chapter = $("body").attr("data-chapter");
@@ -266,6 +274,29 @@ function courseExited() {
     // Send exited statement
     ADL.XAPIWrapper.sendStatement(stmt);
 
+}
+
+function chapterLaunched(chapter, name) {
+        var activityID = "http://adlnet.gov/xapi/samples/xapi-jqm/launchedchapter/" + chapter;
+
+        var stmt = {
+            "actor": actor,
+            "verb": ADL.verbs.launched,
+            "context": courseContext,
+            "object": {
+                "id" : activityID,
+                "objectType": "Activity",
+                "definition": {
+                    "name": {
+                        "en-US": "How to Make French Toast Chapter: " + chapter
+                    },
+                    "type": linkType
+                }
+            }
+        };
+
+        // Send a statement
+        ADL.XAPIWrapper.sendStatement(stmt);
 }
 
 function gradeQuestion() {
