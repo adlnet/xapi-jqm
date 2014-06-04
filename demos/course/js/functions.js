@@ -53,6 +53,13 @@ if ( actor  == false ) {
         ADL.XAPIWrapper.sendStatement(stmt);
         ADL.XAPIWrapper.sendState(courseID, actor, "session-state", null, { "info": "reading", "chapter": chapter, "page": pageID });
 
+        // initialize youtube video for the video chapter only
+        if (chapter === "04-video"){
+            var video = Popcorn.youtube("#How-to-make-french-toast-xapi-jqm-video", TUTORIAL_VIDEO_URL);
+            video.media.src = TUTORIAL_VIDEO_URL;
+            video.autoplay(false);
+            ADL.XAPIVideo.addVideo(video, "", true, false, false, false);            
+        }
     });
 } // end silly else
 

@@ -25,3 +25,4 @@ var linkType = "http://adlnet.gov/xapi/activities/link";
 var quizType = "http://adlnet.gov/xapi/activities/quiz";
 
 var CORRECT_QUIZ_ANSWERS = [ [2,3,6], [4], "bread" ];
+var TUTORIAL_VIDEO_URL = "http://www.youtube-nocookie.com/embed/vPrtNzvDS5M?rel=0";
