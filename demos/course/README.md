@@ -93,7 +93,7 @@ var stmt = { "actor": getActor(),
 
 The [State API](https://github.com/adlnet/xAPI-Spec/blob/master/xAPI.md#stateapi) stores state information on the LRS, such as the current chapter and page.
 
-### Widgets
+### Templates
 
 This course is built with multiple examples of commonly used widgets. Below offers a brief overview of how they are used in xapi-jqm. For more detailed information please refer to [this document that doesn't exist yet]().
 
