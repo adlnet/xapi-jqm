@@ -3,12 +3,6 @@
 function Config() {
 	"use strict";
 }
-// these have been deprecated by getUserName, getUserEmail, and getActor functions
-/*
-var email = "tyler.mulligan.ctr@adlnet.gov";
-var username = "French Toaster";
-var actor = { "mbox": "mailto:" + email, "name": username };
-*/
 Config.endpoint = "https://lrs.adlnet.gov/xapi/";
 //Config.endpoint = "http://10.100.21.46:8080/xapi/";
 Config.user = "jqm";
@@ -24,4 +18,25 @@ var courseType = "http://adlnet.gov/xapi/activities/course";
 var linkType = "http://adlnet.gov/xapi/activities/link";
 var quizType = "http://adlnet.gov/xapi/activities/quiz";
 
+// simplify the repetition of this context for course statements
+var courseContext = {
+    "contextActivities": {
+        "parent": [
+            {
+                "id": courseID,
+                "definition": {
+                    "name": {
+                        "en-US": "xAPI for jQuery Mobile Demo"
+                    },
+                    "description": {
+                        "en-US": "A sample HTML5 app with xAPI tracking using french toast as an example course."
+                    }
+                },
+                "objectType": "Activity"
+            }
+        ]
+    }
+};
+
 var CORRECT_QUIZ_ANSWERS = [ [2,3,6], [4], "bread" ];
+var TUTORIAL_VIDEO_URL = "http://www.youtube-nocookie.com/embed/vPrtNzvDS5M?rel=0";
