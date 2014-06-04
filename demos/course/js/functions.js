@@ -3,7 +3,8 @@
 // Global Actor
 actor = getActor();
 
-if ( actor  == false ) {
+/* Page Change Logic */
+if ( actor == false ) {
     checkLoggedIn();
 } else { // silly thing to wrap in an else but I need to restructure the code to handle a missing actor on login page
 
@@ -69,11 +70,6 @@ function getState() {
 }
 
 /* Course Progress */
-// find from DOM
-function findChaptersCompleted() {
-    return $.map($("#toc-list li.ui-icon-check"), function(n, i) { return n.id; });
-}
-
 // Get from State API
 function getChaptersCompleted() {
     var chaptersCompleted = ADL.XAPIWrapper.getState(courseID, actor, "chapters-completed");
