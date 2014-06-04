@@ -23,9 +23,11 @@ The [config.js](js/config.js) file also includes "global" variables, that are us
 
 ```js
 var courseID = "http://adlnet.gov/xapi/samples/xapi-jqm";
-var courseType = "http://adlnet.gov/xapi/activities/course";
+var quizID = "http://adlnet.gov/xapi/samples/xapi-jqm/quiz/"
 
+var courseType = "http://adlnet.gov/xapi/activities/course";
 var linkType = "http://adlnet.gov/xapi/activities/link";
+var quizType = "http://adlnet.gov/xapi/activities/quiz";
 ```
 
 ### Statements Built from Attributes in HTML
@@ -91,12 +93,36 @@ var stmt = { "actor": getActor(),
 
 The [State API](https://github.com/adlnet/xAPI-Spec/blob/master/xAPI.md#stateapi) stores state information on the LRS, such as the current chapter and page.
 
+### Templates
+
+This course is built with multiple examples of commonly used widgets. Below offers a brief overview of how they are used in xapi-jqm. For more detailed information please refer to [this document that doesn't exist yet]().
+
+#### Checklist
+
+*in progress (not yet reporting)*
+
+#### Video Tracking
+
+Utilizes popcorn.js and xapipopcorn.js to track videos
+
+*in progress*
+
+#### Quiz
+
+Quizes can be built from three types of inputs:
+
+- Checklist (mulitple choice)
+- Radio (single choice)
+- Text Box (strict string comparison)
+
+*in progress*
+
 ### Reporting
 
-At the moment, the easiest way to view the raw statements is by logging into to [ADL LRS](https://lrs.adlnet.gov):
+[Click here to view visual reports](http://adlnet.github.io/xapi-jqm/reports)
+
+To view raw statements, log into to the [ADL LRS](https://lrs.adlnet.gov):
 
 **username:** *jqm*
 
 **password:** *xapijqm*
-
-*visual reporting is in progress*
