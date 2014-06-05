@@ -28,7 +28,7 @@ if ( actor  == false ) {
         var stmt = {
             "actor": actor,
             "verb": ADL.verbs.experienced,
-            "context": courseContext,
+            "context": createContext(),
             "object": {
                 "id" : activityID,
                 "objectType": "Activity",
@@ -91,7 +91,7 @@ function setChapterComplete() {
     var stmt = {
         "actor": actor,
         "verb": ADL.verbs.completed,
-        "context": courseContext,
+        "context": createContext(),
         "object": {
             "id": moduleID + chapterCompleted,
             "objectType": "Activity",
@@ -249,7 +249,46 @@ function courseExited() {
 
 }
 
+//suply the chapter, the page, and any sub-activity in that chapter and page
+function createContext(parentChapter, parentPage, subParentActivity) {
+    var baseContext = {
+        "contextActivities": {
+            "parent": [
+                baseActivity
+            ]
+        }
+    };
+
+    if (typeof parentChapter !== "undefined" && typeof parentPage !== "undefined"){
+        var chapterActivity = {
+            "id": moduleID + parentChapter + "/" + parentPage,
+            "definition": {
+                "name": {
+                    "en-US": "How to Make French Toast Chapter: " + parentChapter + ", page: " + parentPage
+                }
+            },
+            "objectType": "Activity"
+        };
+        baseContext.contextActivities.parent.push(chapterActivity);
+    
+        if (typeof subParentActivity !== "undefined"){
+            var subActivity = {
+                "id": moduleID + parentChapter + "/" + parentPage + "#" + subParentActivity,
+                "definition": {
+                    "name": {
+                        "en-US": "How to Make French Toast Chapter: " + parentChapter + ", page: " + parentPage + " " + subParentActivity
+                    }
+                },
+                "objectType": "Activity"
+            };
+            baseContext.contextActivities.parent.push(subActivity);
+        }
+    }
+    return baseContext;
+}
+
 function gradeQuestion() {
+    var chapter = $("body").attr("data-chapter");
     var pageID = $.mobile.activePage.attr("id");
     var quiz_name = "q" + pageID[1]
     var questionID = quizID + "#" + quiz_name;
@@ -301,7 +340,7 @@ function gradeQuestion() {
                         "answer:correct_answer": correct_answer.toString() + " " + correct_answer_display.toString()
                     }
                 },
-                "context":quizQuestionContext
+                "context":createContext(chapter, pageID, "quiz")
             };            
             break;
         case 'text':
@@ -329,7 +368,7 @@ function gradeQuestion() {
                         "answer:correct_answer": correct_answer
                     }
                 },
-                "context":quizQuestionContext
+                "context":createContext(chapter, pageID, "quiz")
             };
             break;
     }
@@ -339,6 +378,9 @@ function gradeQuestion() {
 }
 
 function makeAssessment() { 
+    var chapter = $("body").attr("data-chapter");
+    var pageID = $.mobile.activePage.attr("id");
+    
     var results = [];
     var correct = 0;
 
@@ -373,7 +415,7 @@ function makeAssessment() {
                 "max": CORRECT_QUIZ_ANSWERS.length
             }
         },
-        "context": quizContext
+        "context": createContext(chapter, pageID)
     };
     // Send a statement
     ADL.XAPIWrapper.sendStatement(stmt);
