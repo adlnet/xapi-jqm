@@ -22,10 +22,8 @@ The [config.js](js/config.js) file also includes "global" variables, that are us
 **Example:**
 
 ```js
-var courseID = "http://adlnet.gov/xapi/samples/xapi-jqm";
-var courseType = "http://adlnet.gov/xapi/activities/course";
+var moduleID = "http://adlnet.gov/xapi/samples/xapi-jqm";
 
-var linkType = "http://adlnet.gov/xapi/activities/link";
 ```
 
 ### Statements Built from Attributes in HTML
@@ -60,7 +58,7 @@ var stmt = { "actor": getActor(),
         "contextActivities": {
             "parent": [
                 {
-                    "id": courseID,
+                    "id": moduleID,
                     "definition": {
                         "name": {
                             "en-US": "xAPI for jQuery Demo"
@@ -80,8 +78,7 @@ var stmt = { "actor": getActor(),
         "definition": {
             "name": {
                 "en-US": "xAPI jQuery Mobile " + chapter + " " + pagename
-            },
-            "type": linkType
+            }
         }
     }
 };

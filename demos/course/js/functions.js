@@ -3,27 +3,18 @@
 // Global Actor
 actor = getActor();
 
-/* Page Change Logic */
-if ( actor == false ) {
+if ( actor  == false ) {
     checkLoggedIn();
 } else { // silly thing to wrap in an else but I need to restructure the code to handle a missing actor on login page
 
     doConfig();
-    
-    // handle chapter clicks to send launch statements
-    $( document ).on( "vclick", "a.chapter", function() {
-        $chapter = $(this);
-        var chapter = $chapter.parent("li").attr("id");
-        var name = $chapter.text();
-        chapterLaunched(chapter, name);
-    });
 
-    // Abstracted page changing logic -- catch-all
+    // Abstracted page changing logic
     $( window ).on("pagechange", function(event) {
 
         var chapter = $("body").attr("data-chapter");
         var pageID = $.mobile.activePage.attr("id");
-        var activityID = "http://adlnet.gov/xapi/samples/xapi-jqm/changedpage/" + chapter + "/" + pageID;
+        var activityID = moduleID + chapter + "/" + pageID;
 
         var stmt = {
             "actor": actor,
@@ -35,15 +26,14 @@ if ( actor == false ) {
                 "definition": {
                     "name": {
                         "en-US": "How to Make French Toast Chapter: " + chapter + ", page: " + pageID
-                    },
-                    "type": linkType
+                    }
                 }
             }
         };
 
         // Send a statement
         ADL.XAPIWrapper.sendStatement(stmt);
-        ADL.XAPIWrapper.sendState(courseID, actor, "session-state", null, { "info": "reading", "chapter": chapter, "page": pageID });
+        ADL.XAPIWrapper.sendState(moduleID, actor, "session-state", null, { "info": "reading", "chapter": chapter, "page": pageID });
 
         // initialize youtube video for the video chapter only
         if (chapter === "04-video"){
@@ -57,13 +47,18 @@ if ( actor == false ) {
 
 /* State functions */
 function getState() {
-    return ADL.XAPIWrapper.getState(courseID, actor, "session-state");
+    return ADL.XAPIWrapper.getState(moduleID, actor, "session-state");
 }
 
 /* Course Progress */
+// find from DOM
+function findChaptersCompleted() {
+    return $.map($("#toc-list li.ui-icon-check"), function(n, i) { return n.id; });
+}
+
 // Get from State API
 function getChaptersCompleted() {
-    var chaptersCompleted = ADL.XAPIWrapper.getState(courseID, actor, "chapters-completed");
+    var chaptersCompleted = ADL.XAPIWrapper.getState(moduleID, actor, "chapters-completed");
     return chaptersCompleted.chapters;
 }
 
@@ -79,7 +74,7 @@ function setChapterComplete() {
     $.each($.merge($.merge([], currentCompletedChapters), chapterCompleted), function (index, value) { hash[value] = value; });
     $.each(hash, function (key, value) { union.push(key); } );
     
-    ADL.XAPIWrapper.sendState(courseID, actor, "chapters-completed", null, { "chapters": union });
+    ADL.XAPIWrapper.sendState(moduleID, actor, "chapters-completed", null, { "chapters": union });
 
     doConfig();
 
@@ -89,13 +84,12 @@ function setChapterComplete() {
         "verb": ADL.verbs.completed,
         "context": courseContext,
         "object": {
-            "id": "http://adlnet.gov/xapi/samples/xapi-jqm/completedchapter/" + chapterCompleted,
+            "id": moduleID + chapterCompleted,
             "objectType": "Activity",
             "definition": {
                 "name": {
                     "en-US": "How to Make French Toast Chapter: " + chapterCompleted
-                },
-                "type": linkType
+                }
             }
         }
     };
@@ -183,7 +177,7 @@ function userRegister(name, email) {
     actor = getActor();
     courseRegistered();
     // Setup chapters-complete
-    ADL.XAPIWrapper.sendState(courseID, actor, "chapters-completed", null, { "chapters": [] });
+    ADL.XAPIWrapper.sendState(moduleID, actor, "chapters-completed", null, { "chapters": [] });
 }
 
 // jqm's submission process is the reason I'm doing it this way
@@ -206,17 +200,7 @@ function courseRegistered() {
     var stmt = {
         "actor": actor,
         "verb": ADL.verbs.registered,
-        "context": courseContext,
-        "object": {
-            "id": "http://adlnet.gov/xapi/samples/xapi-jqm/registered",
-            "objectType": "Activity",
-            "definition": {
-                "name": {
-                    "en-US": "How to Make French Toast xapi-jqm"
-                },
-                "type": linkType
-            }
-        }
+        "object": baseActivity
     };
 
     // Send registered statement
@@ -232,17 +216,7 @@ function courseLaunched() {
     var stmt = {
         "actor": actor,
         "verb": ADL.verbs.launched,
-        "context": courseContext,
-        "object": {
-            "id": "http://adlnet.gov/xapi/samples/xapi-jqm/launched",
-            "objectType": "Activity",
-            "definition": {
-                "name": {
-                    "en-US": "How to Make French Toast xapi-jqm"
-                },
-                "type": linkType
-            }
-        }
+        "object": baseActivity
     };
 
     // Send launched statement
@@ -258,17 +232,7 @@ function courseExited() {
     var stmt = {
         "actor": actor,
         "verb": ADL.verbs.exited,
-        "context": courseContext,
-        "object": {
-            "id": "http://adlnet.gov/xapi/samples/xapi-jqm/exited",
-            "objectType": "Activity",
-            "definition": {
-                "name": {
-                    "en-US": "How to Make French Toast xapi-jqm"
-                },
-                "type": linkType
-            }
-        }
+        "object": baseActivity
     };
 
     // Send exited statement
@@ -276,33 +240,10 @@ function courseExited() {
 
 }
 
-function chapterLaunched(chapter, name) {
-        var activityID = "http://adlnet.gov/xapi/samples/xapi-jqm/launchedchapter/" + chapter;
-
-        var stmt = {
-            "actor": actor,
-            "verb": ADL.verbs.launched,
-            "context": courseContext,
-            "object": {
-                "id" : activityID,
-                "objectType": "Activity",
-                "definition": {
-                    "name": {
-                        "en-US": "How to Make French Toast Chapter: " + chapter
-                    },
-                    "type": linkType
-                }
-            }
-        };
-
-        // Send a statement
-        ADL.XAPIWrapper.sendStatement(stmt);
-}
-
 function gradeQuestion() {
     var pageID = $.mobile.activePage.attr("id");
     var quiz_name = "q" + pageID[1]
-    var questionID = "http://adlnet.gov/xapi/samples/xapi-jqm/quiz/" + quiz_name;
+    var questionID = quizID + "#" + quiz_name;
 
     var q_form = $("#" + pageID + "_form :input")
     var question_type = q_form[0].type
@@ -341,8 +282,7 @@ function gradeQuestion() {
                     "definition": {
                         "name": {
                             "en-US": "How to Make French Toast quiz question " + quiz_name
-                        },
-                        "type": quizType
+                        }
                     }
                 },
                 "result": {
@@ -352,18 +292,7 @@ function gradeQuestion() {
                         "answer:correct_answer": correct_answer.toString() + " " + correct_answer_display.toString()
                     }
                 },
-                "context":{
-                    "contextActivities": {
-                        "parent":[
-                            {
-                                "id": courseID
-                            },
-                            {
-                                "id": quizID
-                            }
-                        ]
-                    }
-                }
+                "context":quizQuestionContext
             };            
             break;
         case 'text':
@@ -381,8 +310,7 @@ function gradeQuestion() {
                     "definition": {
                         "name": {
                             "en-US": "How to Make French Toast quiz question " + quiz_name
-                        },
-                        "type": quizType
+                        }
                     }
                 },
                 "result": {
@@ -392,18 +320,7 @@ function gradeQuestion() {
                         "answer:correct_answer": correct_answer
                     }
                 },
-                "context":{
-                    "contextActivities": {
-                        "parent":[
-                            {
-                                "id": courseID
-                            },
-                            {
-                                "id":quizID
-                            }
-                        ]
-                    }
-                }
+                "context":quizQuestionContext
             };
             break;
     }
@@ -439,16 +356,7 @@ function makeAssessment() {
     var stmt = {
         "actor": actor,
         "verb": verb,
-        "object": {
-            "id" : quizID,
-            "objectType": "Activity",
-            "definition": {
-                "name": {
-                    "en-US": "How to Make French Toast quiz"
-                },
-                "type": quizType
-            }
-        },
+        "object": quizActivity,
         "result": {
             "score":{
                 "min": 0,
@@ -456,15 +364,7 @@ function makeAssessment() {
                 "max": CORRECT_QUIZ_ANSWERS.length
             }
         },
-        "context":{
-            "contextActivities": {
-                "parent":[
-                    {
-                        "id": courseID
-                    }
-                ]
-            }
-        }
+        "context": quizContext
     };
     // Send a statement
     ADL.XAPIWrapper.sendStatement(stmt);
