@@ -15,6 +15,16 @@ This course was designed to run both on a web server or a local file system. If 
 
 The default credentials are setup to work with and account on the ADL LRS in the [config.js](js/config.js) file. You can edit this file to point to your own LRS and/or user.
 
+**Example LRS credentials**
+
+```
+Config.endpoint = "https://lrs.adlnet.gov/xapi/";
+Config.user = "jqm";
+Config.password = "xapijqm";
+```
+
+You can [register your own LRS user](http://lrs.adlnet.gov) on the ADL LRS.
+
 ##### "Global Variables"
 
 The [config.js](js/config.js) file also includes "global" variables, that are used in the building of statements. You can define variables you wish to use throughout your course with these.
@@ -56,7 +66,8 @@ Pages in jQuery Mobile (jQM) are defined as divs with a ```data-role="page"```:
 The statement below includes some helper functions from the [functions.js](js/functions.js) file. These functions will be covered in [another document not yet written]().
 
 ```js
-var stmt = { "actor": getActor(),
+var stmt = {
+    "actor": actor,
     "verb": ADL.verbs.experienced,
     "context": {
         "contextActivities": {
@@ -97,6 +108,14 @@ The [State API](https://github.com/adlnet/xAPI-Spec/blob/master/xAPI.md#stateapi
 
 This course is built with multiple examples of commonly used widgets. Below offers a brief overview of how they are used in xapi-jqm. For more detailed information please refer to [this document that doesn't exist yet]().
 
+#### Table of Contents
+
+Provide a list of steps that can be tracked for their completed progress through a "chapter"
+
+#### Glossary
+
+Layout a list of words and track which words a user has read
+
 #### Checklist
 
 *in progress (not yet reporting)*
@@ -116,6 +135,10 @@ Quizes can be built from three types of inputs:
 - Text Box (strict string comparison)
 
 *in progress*
+
+#### Modal (pop-up) Windows
+
+A template for a trigger that opens a modal a.k.a. pop-up window.
 
 ### Reporting
 
