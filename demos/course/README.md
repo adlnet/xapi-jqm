@@ -15,6 +15,14 @@ This course was designed to run both on a web server or a local file system. If 
 
 The default credentials are setup to work with and account on the ADL LRS in the [config.js](js/config.js) file. You can edit this file to point to your own LRS and/or user.
 
+**Example LRS credentials**
+
+```
+Config.endpoint = "https://lrs.adlnet.gov/xapi/";
+Config.user = "jqm";
+Config.password = "xapijqm";
+```
+
 ##### "Global Variables"
 
 The [config.js](js/config.js) file also includes "global" variables, that are used in the building of statements. You can define variables you wish to use throughout your course with these.
@@ -56,7 +64,8 @@ Pages in jQuery Mobile (jQM) are defined as divs with a ```data-role="page"```:
 The statement below includes some helper functions from the [functions.js](js/functions.js) file. These functions will be covered in [another document not yet written]().
 
 ```js
-var stmt = { "actor": getActor(),
+var stmt = {
+    "actor": actor,
     "verb": ADL.verbs.experienced,
     "context": {
         "contextActivities": {
