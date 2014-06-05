@@ -1,13 +1,13 @@
 xapi-jqm
 ========
 
-Integration of xAPI using jQuery Mobile with demos and templates to get you started with xapi-jqm to communicate statements to a Learning Record Store (LRS).
+Integration of the Experience API (xAPI) using jQuery Mobile (jQM) with demos and templates based on xapi-jqm which handle the heavy lifting in communicating statements to a Learning Record Store (LRS).
+
+Instructional designers and developers can focus on content and HTML rather than writing javasript code, without limiting their abilities to extend their statements and tracking of interactions.
 
 ### Demos
 
-A list of demos available for a starting point in using xapi-jqm.
-
-*in progress*
+A list of demos available for a starting point in using xapi-jqm. More to come, please stand-by.
 
 #### Course
 
