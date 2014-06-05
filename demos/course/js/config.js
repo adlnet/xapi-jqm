@@ -4,14 +4,9 @@ function Config() {
 	"use strict";
 }
 
-// Config.endpoint = "https://lrs.adlnet.gov/xapi/";
-// Config.user = "jqm";
-// Config.password = "xapijqm";
-
-Config.endpoint = "http://localhost:8000/xapi/";
-Config.user = "lou";
-Config.password = "password";
-
+Config.endpoint = "https://lrs.adlnet.gov/xapi/";
+Config.user = "jqm";
+Config.password = "xapijqm";
 
 // "global" variables
 var moduleID = "http://adlnet.gov/xapi/samples/xapi-jqm/";
