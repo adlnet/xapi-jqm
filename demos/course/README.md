@@ -32,7 +32,6 @@ The [config.js](js/config.js) file also includes "global" variables, that are us
 **Example:**
 
 ```js
-<<<<<<< HEAD
 var moduleID = "http://adlnet.gov/xapi/samples/xapi-jqm";
 var courseType = "http://adlnet.gov/xapi/activities/course";
 ```

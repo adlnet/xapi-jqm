@@ -3,13 +3,22 @@
 // Global Actor
 actor = getActor();
 
+/* Page Change Logic */
 if ( actor  == false ) {
     checkLoggedIn();
 } else { // silly thing to wrap in an else but I need to restructure the code to handle a missing actor on login page
 
     doConfig();
 
-    // Abstracted page changing logic
+    //handle chapter clicks to send launch statements
+    $( document ).on("vclick", "a.chapter", function() {
+        $chapter = $(this);
+        var chapter = $chapter.parent("li").attr("id");
+        var name = $chapter.text();
+        chapterLaunched(chapter, name);
+    });
+
+    // Abstracted page changing logic -- catch-all
     $( window ).on("pagechange", function(event) {
 
         var chapter = $("body").attr("data-chapter");
