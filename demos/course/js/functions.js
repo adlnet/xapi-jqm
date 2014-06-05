@@ -250,6 +250,32 @@ function courseLaunched() {
 
 }
 
+function courseMastered() {
+    
+    doConfig();
+
+    // statement for launching content
+    var stmt = {
+        "actor": actor,
+        "verb": ADL.verbs.mastered,
+        "context": courseContext,
+        "object": {
+            "id": "http://adlnet.gov/xapi/samples/xapi-jqm/course/mastered",
+            "objectType": "Activity",
+            "definition": {
+                "name": {
+                    "en-US": "How to Make French Toast xapi-jqm"
+                },
+                "type": linkType
+            }
+        }
+    };
+
+    // Send launched statement
+    ADL.XAPIWrapper.sendStatement(stmt);
+
+}
+
 function courseExited() {
 
     doConfig();
@@ -468,5 +494,13 @@ function makeAssessment() {
     };
     // Send a statement
     ADL.XAPIWrapper.sendStatement(stmt);
-    $("#quiz_results").html(display)
+
+    // Mastered statement
+    var chaptersCompleted = getChaptersCompleted();
+    if ( percentage == 100 && chaptersCompleted.length == 5 ) {
+        courseMastered();
+        // show a badge by appending to display
+    }
+
+    $("#quiz_results").html(display);
 }
