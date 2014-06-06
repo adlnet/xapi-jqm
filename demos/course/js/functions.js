@@ -49,7 +49,8 @@ if ( actor  == false ) {
             var video = Popcorn.youtube("#How-to-make-french-toast-xapi-jqm-video", TUTORIAL_VIDEO_URL);
             video.media.src = TUTORIAL_VIDEO_URL;
             video.autoplay(false);
-            ADL.XAPIVideo.addVideo(video, "", true, false, false, false);            
+            var videoContext = createContext(chapter, pageID);
+            ADL.XAPIVideo.addVideo(video, "", true, false, false, false, videoContext);            
         }
     });
 } // end silly else
