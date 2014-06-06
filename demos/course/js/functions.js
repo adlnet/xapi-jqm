@@ -233,6 +233,32 @@ function courseLaunched() {
 
 }
 
+function courseMastered() {
+    
+    doConfig();
+
+    // statement for launching content
+    var stmt = {
+        "actor": actor,
+        "verb": ADL.verbs.mastered,
+        "context": courseContext,
+        "object": {
+            "id": "http://adlnet.gov/xapi/samples/xapi-jqm/course/mastered",
+            "objectType": "Activity",
+            "definition": {
+                "name": {
+                    "en-US": "How to Make French Toast xapi-jqm"
+                },
+                "type": linkType
+            }
+        }
+    };
+
+    // Send launched statement
+    ADL.XAPIWrapper.sendStatement(stmt);
+
+}
+
 function courseExited() {
 
     doConfig();
@@ -378,8 +404,7 @@ function gradeQuestion() {
 }
 
 function makeAssessment() { 
-    var chapter = $("body").attr("data-chapter");
-    
+    var chapter = $("body").attr("data-chapter");    
     var results = [];
     var correct = 0;
 
@@ -419,5 +444,16 @@ function makeAssessment() {
     };
     // Send a statement
     ADL.XAPIWrapper.sendStatement(stmt);
-    $("#quiz_results").html(display)
+
+	setChapterComplete();
+
+    // Mastered statement
+    var chaptersCompleted = getChaptersCompleted();
+    if ( percentage == 100 && chaptersCompleted.length == 5 ) {
+        courseMastered();
+        // show a badge by appending to display -- PoC
+        display += '<p><img src="../media/488px-badge-french-toast.jpg" alt="French Toast Badge" title="French Toast Badge" style="width:auto;max-width:488px" /></p><h4>French Toast Master</h4><p>Congratulations, you have mastered the course in How to Make French Toast</p>';
+    }
+
+    $("#quiz_results").html(display);
 }
