@@ -379,7 +379,6 @@ function gradeQuestion() {
 
 function makeAssessment() { 
     var chapter = $("body").attr("data-chapter");
-    var pageID = $.mobile.activePage.attr("id");
     
     var results = [];
     var correct = 0;
@@ -415,7 +414,8 @@ function makeAssessment() {
                 "max": CORRECT_QUIZ_ANSWERS.length
             }
         },
-        "context": createContext(chapter, pageID)
+        //hardcoded p1 in there, if put current page it would be the end of the quiz-we want the beginning
+        "context": createContext(chapter, "p1")
     };
     // Send a statement
     ADL.XAPIWrapper.sendStatement(stmt);
