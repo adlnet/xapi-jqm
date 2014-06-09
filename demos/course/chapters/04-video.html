@@ -13,7 +13,6 @@
     <script src="../js/xapipopcorn.min.js"></script>
     <script src="../js/config.js"></script>
     <script src="../js/functions.js"></script>
-
 </head> 
 
 <body data-chapter="04-video"> 
@@ -45,6 +44,17 @@
     </div><!-- /footer -->
 
 </div><!-- /page p1 -->
+
+<script type="text/javascript">
+    // initialize youtube video tracking
+    var chapterID = $("body").attr("data-chapter");
+    var pageID = 1; // lazy
+    var video = Popcorn.youtube("#How-to-make-french-toast-xapi-jqm-video", TUTORIAL_VIDEO_URL);
+    video.media.src = TUTORIAL_VIDEO_URL;
+    video.autoplay(false);
+    var videoContext = createContext(chapterID, pageID);
+    ADL.XAPIVideo.addVideo(video, "", true, true, false, false, videoContext);
+</script>
 
 </body>
 </html>
