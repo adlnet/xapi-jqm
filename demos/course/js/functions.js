@@ -4,14 +4,14 @@
 actor = getActor();
 
 /* Page Change Logic */
-if ( actor == false ) {
+if ( actor  == false ) {
     checkLoggedIn();
 } else { // silly thing to wrap in an else but I need to restructure the code to handle a missing actor on login page
 
     doConfig();
-    
-    // handle chapter clicks to send launch statements
-    $( document ).on( "vclick", "a.chapter", function() {
+
+    //handle chapter clicks to send launch statements
+    $( document ).on("vclick", "a.chapter", function() {
         $chapter = $(this);
         var chapter = $chapter.parent("li").attr("id");
         var name = $chapter.text();
@@ -23,47 +23,52 @@ if ( actor == false ) {
 
         var chapter = $("body").attr("data-chapter");
         var pageID = $.mobile.activePage.attr("id");
-        var activityID = "http://adlnet.gov/xapi/samples/xapi-jqm/changedpage/" + chapter + "/" + pageID;
+        var activityID = moduleID + chapter + "/" + pageID;
 
         var stmt = {
             "actor": actor,
             "verb": ADL.verbs.experienced,
-            "context": courseContext,
+            "context": createContext(),
             "object": {
                 "id" : activityID,
                 "objectType": "Activity",
                 "definition": {
                     "name": {
                         "en-US": "How to Make French Toast Chapter: " + chapter + ", page: " + pageID
-                    },
-                    "type": linkType
+                    }
                 }
             }
         };
 
         // Send a statement
         ADL.XAPIWrapper.sendStatement(stmt);
-        ADL.XAPIWrapper.sendState(courseID, actor, "session-state", null, { "info": "reading", "chapter": chapter, "page": pageID });
+        ADL.XAPIWrapper.sendState(moduleID, actor, "session-state", null, { "info": "reading", "chapter": chapter, "page": pageID });
 
         // initialize youtube video for the video chapter only
         if (chapter === "04-video"){
             var video = Popcorn.youtube("#How-to-make-french-toast-xapi-jqm-video", TUTORIAL_VIDEO_URL);
             video.media.src = TUTORIAL_VIDEO_URL;
             video.autoplay(false);
-            ADL.XAPIVideo.addVideo(video, "", true, false, false, false);            
+            var videoContext = createContext(chapter, pageID);
+            ADL.XAPIVideo.addVideo(video, "", true, false, false, false, videoContext);            
         }
     });
 } // end silly else
 
 /* State functions */
 function getState() {
-    return ADL.XAPIWrapper.getState(courseID, actor, "session-state");
+    return ADL.XAPIWrapper.getState(moduleID, actor, "session-state");
 }
 
 /* Course Progress */
+// find from DOM
+function findChaptersCompleted() {
+    return $.map($("#toc-list li.ui-icon-check"), function(n, i) { return n.id; });
+}
+
 // Get from State API
 function getChaptersCompleted() {
-    var chaptersCompleted = ADL.XAPIWrapper.getState(courseID, actor, "chapters-completed");
+    var chaptersCompleted = ADL.XAPIWrapper.getState(moduleID, actor, "chapters-completed");
     return chaptersCompleted.chapters;
 }
 
@@ -79,7 +84,7 @@ function setChapterComplete() {
     $.each($.merge($.merge([], currentCompletedChapters), chapterCompleted), function (index, value) { hash[value] = value; });
     $.each(hash, function (key, value) { union.push(key); } );
     
-    ADL.XAPIWrapper.sendState(courseID, actor, "chapters-completed", null, { "chapters": union });
+    ADL.XAPIWrapper.sendState(moduleID, actor, "chapters-completed", null, { "chapters": union });
 
     doConfig();
 
@@ -87,15 +92,14 @@ function setChapterComplete() {
     var stmt = {
         "actor": actor,
         "verb": ADL.verbs.completed,
-        "context": courseContext,
+        "context": createContext(),
         "object": {
-            "id": "http://adlnet.gov/xapi/samples/xapi-jqm/completedchapter/" + chapterCompleted,
+            "id": moduleID + chapterCompleted,
             "objectType": "Activity",
             "definition": {
                 "name": {
                     "en-US": "How to Make French Toast Chapter: " + chapterCompleted
-                },
-                "type": linkType
+                }
             }
         }
     };
@@ -183,7 +187,7 @@ function userRegister(name, email) {
     actor = getActor();
     courseRegistered();
     // Setup chapters-complete
-    ADL.XAPIWrapper.sendState(courseID, actor, "chapters-completed", null, { "chapters": [] });
+    ADL.XAPIWrapper.sendState(moduleID, actor, "chapters-completed", null, { "chapters": [] });
 }
 
 // jqm's submission process is the reason I'm doing it this way
@@ -206,17 +210,7 @@ function courseRegistered() {
     var stmt = {
         "actor": actor,
         "verb": ADL.verbs.registered,
-        "context": courseContext,
-        "object": {
-            "id": "http://adlnet.gov/xapi/samples/xapi-jqm/registered",
-            "objectType": "Activity",
-            "definition": {
-                "name": {
-                    "en-US": "How to Make French Toast xapi-jqm"
-                },
-                "type": linkType
-            }
-        }
+        "object": baseActivity
     };
 
     // Send registered statement
@@ -232,17 +226,7 @@ function courseLaunched() {
     var stmt = {
         "actor": actor,
         "verb": ADL.verbs.launched,
-        "context": courseContext,
-        "object": {
-            "id": "http://adlnet.gov/xapi/samples/xapi-jqm/launched",
-            "objectType": "Activity",
-            "definition": {
-                "name": {
-                    "en-US": "How to Make French Toast xapi-jqm"
-                },
-                "type": linkType
-            }
-        }
+        "object": baseActivity
     };
 
     // Send launched statement
@@ -284,17 +268,7 @@ function courseExited() {
     var stmt = {
         "actor": actor,
         "verb": ADL.verbs.exited,
-        "context": courseContext,
-        "object": {
-            "id": "http://adlnet.gov/xapi/samples/xapi-jqm/exited",
-            "objectType": "Activity",
-            "definition": {
-                "name": {
-                    "en-US": "How to Make French Toast xapi-jqm"
-                },
-                "type": linkType
-            }
-        }
+        "object": baseActivity
     };
 
     // Send exited statement
@@ -302,33 +276,49 @@ function courseExited() {
 
 }
 
-function chapterLaunched(chapter, name) {
-        var activityID = "http://adlnet.gov/xapi/samples/xapi-jqm/launchedchapter/" + chapter;
+//suply the chapter, the page, and any sub-activity in that chapter and page
+function createContext(parentChapter, parentPage, subParentActivity) {
+    var baseContext = {
+        "contextActivities": {
+            "parent": [
+                baseActivity
+            ]
+        }
+    };
 
-        var stmt = {
-            "actor": actor,
-            "verb": ADL.verbs.launched,
-            "context": courseContext,
-            "object": {
-                "id" : activityID,
-                "objectType": "Activity",
+    if (typeof parentChapter !== "undefined" && typeof parentPage !== "undefined"){
+        var chapterActivity = {
+            "id": moduleID + parentChapter + "/" + parentPage,
+            "definition": {
+                "name": {
+                    "en-US": "How to Make French Toast Chapter: " + parentChapter + ", page: " + parentPage
+                }
+            },
+            "objectType": "Activity"
+        };
+        baseContext.contextActivities.parent.push(chapterActivity);
+    
+        if (typeof subParentActivity !== "undefined"){
+            var subActivity = {
+                "id": moduleID + parentChapter + "/" + parentPage + "#" + subParentActivity,
                 "definition": {
                     "name": {
-                        "en-US": "How to Make French Toast Chapter: " + chapter
-                    },
-                    "type": linkType
-                }
-            }
-        };
-
-        // Send a statement
-        ADL.XAPIWrapper.sendStatement(stmt);
+                        "en-US": "How to Make French Toast Chapter: " + parentChapter + ", page: " + parentPage + " " + subParentActivity
+                    }
+                },
+                "objectType": "Activity"
+            };
+            baseContext.contextActivities.parent.push(subActivity);
+        }
+    }
+    return baseContext;
 }
 
 function gradeQuestion() {
+    var chapter = $("body").attr("data-chapter");
     var pageID = $.mobile.activePage.attr("id");
     var quiz_name = "q" + pageID[1]
-    var questionID = "http://adlnet.gov/xapi/samples/xapi-jqm/quiz/" + quiz_name;
+    var questionID = quizID + "#" + quiz_name;
 
     var q_form = $("#" + pageID + "_form :input")
     var question_type = q_form[0].type
@@ -367,8 +357,7 @@ function gradeQuestion() {
                     "definition": {
                         "name": {
                             "en-US": "How to Make French Toast quiz question " + quiz_name
-                        },
-                        "type": quizType
+                        }
                     }
                 },
                 "result": {
@@ -378,18 +367,7 @@ function gradeQuestion() {
                         "answer:correct_answer": correct_answer.toString() + " " + correct_answer_display.toString()
                     }
                 },
-                "context":{
-                    "contextActivities": {
-                        "parent":[
-                            {
-                                "id": courseID
-                            },
-                            {
-                                "id": quizID
-                            }
-                        ]
-                    }
-                }
+                "context":createContext(chapter, pageID, "quiz")
             };            
             break;
         case 'text':
@@ -407,8 +385,7 @@ function gradeQuestion() {
                     "definition": {
                         "name": {
                             "en-US": "How to Make French Toast quiz question " + quiz_name
-                        },
-                        "type": quizType
+                        }
                     }
                 },
                 "result": {
@@ -418,18 +395,7 @@ function gradeQuestion() {
                         "answer:correct_answer": correct_answer
                     }
                 },
-                "context":{
-                    "contextActivities": {
-                        "parent":[
-                            {
-                                "id": courseID
-                            },
-                            {
-                                "id":quizID
-                            }
-                        ]
-                    }
-                }
+                "context":createContext(chapter, pageID, "quiz")
             };
             break;
     }
@@ -438,7 +404,8 @@ function gradeQuestion() {
     localStorage.setItem("xapi-jqm/" + actor["name"] + "/" + quiz_name, success);
 }
 
-function makeAssessment() {	
+function makeAssessment() { 
+    var chapter = $("body").attr("data-chapter");    
     var results = [];
     var correct = 0;
 
@@ -465,16 +432,7 @@ function makeAssessment() {
     var stmt = {
         "actor": actor,
         "verb": verb,
-        "object": {
-            "id" : quizID,
-            "objectType": "Activity",
-            "definition": {
-                "name": {
-                    "en-US": "How to Make French Toast quiz"
-                },
-                "type": quizType
-            }
-        },
+        "object": quizActivity,
         "result": {
             "score":{
                 "min": 0,
@@ -482,15 +440,8 @@ function makeAssessment() {
                 "max": CORRECT_QUIZ_ANSWERS.length
             }
         },
-        "context":{
-            "contextActivities": {
-                "parent":[
-                    {
-                        "id": courseID
-                    }
-                ]
-            }
-        }
+        //hardcoded p1 in there, if put current page it would be the end of the quiz-we want the beginning
+        "context": createContext(chapter, "p1")
     };
     // Send a statement
     ADL.XAPIWrapper.sendStatement(stmt);
