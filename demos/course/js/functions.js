@@ -10,7 +10,7 @@ if ( actor  == false ) {
 
     doConfig();
 
-    //handle chapter clicks to send launch statements
+    // Handle chapter clicks to send launch statements
     $( document ).on("vclick", "a.chapter", function() {
         $chapter = $(this);
         var chapter = $chapter.parent("li").attr("id");
@@ -43,6 +43,16 @@ if ( actor  == false ) {
         // Send a statement
         ADL.XAPIWrapper.sendStatement(stmt);
         ADL.XAPIWrapper.sendState(moduleID, actor, "session-state", null, { "info": "reading", "chapter": chapter, "page": pageID });
+
+        // Handle checkbox clicks -- basic no knowledge of context or checked
+        $(":checkbox").change(function(event) {
+            $checkbox = $(this);
+            var checkboxID = $checkbox.attr("id");
+            var checkboxName = $checkbox.siblings("label").text();
+            var chapter = $("body").attr("data-chapter");
+            var pageID = $.mobile.activePage.attr("id");
+            checkboxClicked(chapter, pageID, checkboxID, checkboxName);
+        });
 
     });
 } // end silly else
@@ -191,8 +201,41 @@ function userRegisterSubmit() {
     }
 }
 
-/* SCORMy
- * verbose for now until login logic / config is cleaner
+/*
+ * xAPIy
+ */
+function checkboxClicked(chapter, pageID, checkboxID, checkboxName) {
+    
+    doConfig();
+
+    var baseActivity = {
+        "id": moduleID,
+        "definition": {
+            "name": {
+                "en-US": "xAPI for jQuery Mobile French Toast Demo: clicked a checkbox, " + checkboxName
+            },
+            "description": {
+                "en-US": "A sample HTML5 mobile app with xAPI tracking that teaches you how to make french toast."
+            }
+        },
+        "objectType": "Activity"
+    };
+
+    // statement for launching content
+    var stmt = {
+        "actor": actor,
+        "verb": ADL.verbs.interacted,
+        "object": baseActivity,
+        "context":createContext(chapter, checkboxID, "clicked")
+    };
+
+    // Send launched statement
+    ADL.XAPIWrapper.sendStatement(stmt);
+
+}
+
+/* 
+ * SCORMy
  */
 function courseRegistered() {
     
