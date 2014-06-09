@@ -16,7 +16,7 @@ var baseActivity = {
     "id": moduleID,
     "definition": {
         "name": {
-            "en-US": "xAPI for jQuery French Toast Demo"
+            "en-US": "xAPI for jQuery Mobile French Toast Demo"
         },
         "description": {
             "en-US": "A sample HTML5 mobile app with xAPI tracking that teaches you how to make french toast."
@@ -30,7 +30,7 @@ var quizActivity = {
     "id": quizID,
     "definition": {
         "name": {
-            "en-US": "xAPI for jQuery French Toast Demo quiz"
+            "en-US": "xAPI for jQuery Mobile French Toast Demo quiz"
         }
     },
     "objectType": "Activity"
