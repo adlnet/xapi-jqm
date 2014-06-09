@@ -61,7 +61,7 @@
 			cutoff = cutoff.toISOString();
 
 			//dash.fetchAllStatements({since: cutoff, "agent": JSON.stringify({"objectType":"Agent","mbox":"mailto:tyler.mulligan.ctr@adlnet.gov"}), related_agents: true }, wrapper, function()
-			dash.fetchAllStatements({since: cutoff, activity: "http://adlnet.gov/xapi/samples/xapi-jqm", related_activities: true }, wrapper, function()
+			dash.fetchAllStatements({since: cutoff, activity: "http://adlnet.gov/xapi/samples/xapi-jqm/course/", related_activities: true }, wrapper, function()
 			{
 				clearInterval(handle);
 
