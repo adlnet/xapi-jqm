@@ -174,7 +174,7 @@ function checkLoggedIn() {
 function getBaseURL() {
     // silly regex hack for now #helpWanted
     var regex1 = new RegExp("(index.html|.*/chapters/.*|.*/glossary.html)");
-    var regex2 = new RegExp("course(/)?$");
+    var regex2 = new RegExp("course/$");
     var location = window.location.href;
     if ( regex1.test(location) || regex2.test(location) ) {
         var str = location.split("/").pop();
