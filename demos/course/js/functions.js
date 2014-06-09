@@ -173,7 +173,7 @@ function checkLoggedIn() {
 
 function getBaseURL() {
     // silly regex hack for now #helpWanted
-    var regex = new RegExp(".*/chapters/.*|.*/glossary.html#?[A-Z-_.]+?");
+    var regex = new RegExp("(index.html|.*/chapters/.*|.*/glossary.html)");
     var location = window.location.href;
     if ( regex.test(location) ) {
         var str = location.split("/").pop();
@@ -184,13 +184,12 @@ function getBaseURL() {
         // otherwise give up and send them to the github version
         var baseurl = "http://adlnet.github.io/xapi-jqm/demos/course/";
     }
-    console.log(baseurl); // so lou can see
     return baseurl;
 }
 
 function userLogin() {
     // Should get the page root
-    window.location = "chapters/00-account.html#login";
+    window.location = getBaseURL() + "chapters/00-account.html#login";
 }
 
 function userLogout() {
