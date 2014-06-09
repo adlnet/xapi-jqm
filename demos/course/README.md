@@ -17,7 +17,7 @@ The default credentials are setup to work with and account on the ADL LRS in the
 
 **Example LRS credentials**
 
-```
+```js
 Config.endpoint = "https://lrs.adlnet.gov/xapi/";
 Config.user = "jqm";
 Config.password = "xapijqm";
@@ -32,9 +32,11 @@ The [config.js](js/config.js) file also includes "global" variables, that are us
 **Example:**
 
 ```js
-var moduleID = "http://adlnet.gov/xapi/samples/xapi-jqm";
+var moduleID = "http://adlnet.gov/xapi/samples/xapi-jqm/course";
 var courseType = "http://adlnet.gov/xapi/activities/course";
 ```
+
+*note:* Change the moduleID and courseType to something appropriate for your app.
 
 ### Statements Built from Attributes in HTML
 
@@ -59,7 +61,9 @@ Pages in jQuery Mobile (jQM) are defined as divs with a ```data-role="page"```:
 
 #### An Overview of a Statement
 
-The statement below includes some helper functions from the [functions.js](js/functions.js) file. These functions will be covered in [another document not yet written]().
+The statement below includes some helper functions from the [functions.js](js/functions.js) file as well as definitions in the [config.js](js/config.js). These functions will be covered in [another document not yet written]().
+
+**VERBOSE STATEMENT**
 
 ```js
 var stmt = {
@@ -89,6 +93,26 @@ var stmt = {
         "definition": {
             "name": {
                 "en-US": "xAPI jQuery Mobile " + chapter + " " + pagename
+            }
+        }
+    }
+};
+```
+
+**CONSOLIDATED**
+
+```js
+// statement for launching content
+var stmt = {
+    "actor": actor,
+    "verb": ADL.verbs.completed,
+    "context": createContext(),
+    "object": {
+        "id": moduleID + chapterCompleted,
+        "objectType": "Activity",
+        "definition": {
+            "name": {
+                "en-US": "How to Make French Toast Chapter: " + chapterCompleted
             }
         }
     }

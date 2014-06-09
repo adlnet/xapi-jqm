@@ -44,14 +44,6 @@ if ( actor  == false ) {
         ADL.XAPIWrapper.sendStatement(stmt);
         ADL.XAPIWrapper.sendState(moduleID, actor, "session-state", null, { "info": "reading", "chapter": chapter, "page": pageID });
 
-        // initialize youtube video for the video chapter only
-        if (chapter === "04-video"){
-            var video = Popcorn.youtube("#How-to-make-french-toast-xapi-jqm-video", TUTORIAL_VIDEO_URL);
-            video.media.src = TUTORIAL_VIDEO_URL;
-            video.autoplay(false);
-            var videoContext = createContext(chapter, pageID);
-            ADL.XAPIVideo.addVideo(video, "", true, false, false, false, videoContext);            
-        }
     });
 } // end silly else
 
@@ -134,7 +126,7 @@ function getActor() {
         return actor;
     }
 }
-function setActor(name, email) {
+function setActor( name, email ) {
     setUserName(name);
     setUserEmail(email);
 }
@@ -180,7 +172,7 @@ function userLogout() {
     window.location = "../"; // lol
 }
 
-function userRegister(name, email) {
+function userRegister( name, email ) {
     // should error check this
     setActor(name, email);
     // Set global actor var so other functions can use it
@@ -242,17 +234,7 @@ function courseMastered() {
     var stmt = {
         "actor": actor,
         "verb": ADL.verbs.mastered,
-        "context": courseContext,
-        "object": {
-            "id": "http://adlnet.gov/xapi/samples/xapi-jqm/course/mastered",
-            "objectType": "Activity",
-            "definition": {
-                "name": {
-                    "en-US": "How to Make French Toast xapi-jqm"
-                },
-                "type": linkType
-            }
-        }
+        "object": baseActivity
     };
 
     // Send launched statement
@@ -277,7 +259,7 @@ function courseExited() {
 }
 
 //suply the chapter, the page, and any sub-activity in that chapter and page
-function createContext(parentChapter, parentPage, subParentActivity) {
+function createContext( parentChapter, parentPage, subParentActivity ) {
     var baseContext = {
         "contextActivities": {
             "parent": [
@@ -286,7 +268,7 @@ function createContext(parentChapter, parentPage, subParentActivity) {
         }
     };
 
-    if (typeof parentChapter !== "undefined" && typeof parentPage !== "undefined"){
+    if ( typeof parentChapter !== "undefined" && typeof parentPage !== "undefined" ) {
         var chapterActivity = {
             "id": moduleID + parentChapter + "/" + parentPage,
             "definition": {
@@ -298,7 +280,7 @@ function createContext(parentChapter, parentPage, subParentActivity) {
         };
         baseContext.contextActivities.parent.push(chapterActivity);
     
-        if (typeof subParentActivity !== "undefined"){
+        if ( typeof subParentActivity !== "undefined" ) {
             var subActivity = {
                 "id": moduleID + parentChapter + "/" + parentPage + "#" + subParentActivity,
                 "definition": {
@@ -344,7 +326,7 @@ function gradeQuestion() {
 
             //compare radio/checkbox selections 
             var success = false;
-            if (correct_answer.join(',') === user_answer.sort().join(',')){
+            if ( correct_answer.join(',') === user_answer.sort().join(',') ) {
                 success = true;
             }
 
@@ -373,7 +355,7 @@ function gradeQuestion() {
         case 'text':
             user_answer = q_form.val();
             success = false;
-            if ( user_answer === correct_answer ){
+            if ( user_answer === correct_answer ) {
                 success = true;
             }
             var stmt = {
@@ -421,7 +403,7 @@ function makeAssessment() {
     });
 
     var verb = ADL.verbs.failed;
-    var percentage = Math.round((correct/CORRECT_QUIZ_ANSWERS.length) * 100)
+    var percentage = Math.round( (correct/CORRECT_QUIZ_ANSWERS.length) * 100 )
     var display = "";
     if ( percentage > 60 ) {
         verb = ADL.verbs.passed;

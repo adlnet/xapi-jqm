@@ -9,7 +9,7 @@ Config.user = "jqm";
 Config.password = "xapijqm";
 
 // "global" variables
-var moduleID = "http://adlnet.gov/xapi/samples/xapi-jqm/";
+var moduleID = "http://adlnet.gov/xapi/samples/xapi-jqm/course/"; // trailing slash
 var courseType = "http://adlnet.gov/xapi/activities/course";
 
 var baseActivity = {
