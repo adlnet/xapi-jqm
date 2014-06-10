@@ -224,12 +224,16 @@ function userRegisterSubmit() {
 function checkboxClicked(chapter, pageID, checkboxID, checkboxName) {
     
     doConfig();
+    
+    // Figure out if it was checked or unchecked
+    var isChecked = $("#"+checkboxID).prop('checked');
+    var checkedVerb = (isChecked) ? "checked" : "unchecked";
 
     var baseActivity = {
         "id": moduleID,
         "definition": {
             "name": {
-                "en-US": "xAPI for jQuery Mobile French Toast Demo: clicked a checkbox, " + checkboxName
+                "en-US": "xAPI for jQuery Mobile French Toast Demo: " + checkedVerb + " a checkbox, " + checkboxName
             },
             "description": {
                 "en-US": "A sample HTML5 mobile app with xAPI tracking that teaches you how to make french toast."
@@ -243,7 +247,7 @@ function checkboxClicked(chapter, pageID, checkboxID, checkboxName) {
         "actor": actor,
         "verb": ADL.verbs.interacted,
         "object": baseActivity,
-        "context":createContext(chapter, checkboxID, "clicked")
+        "context":createContext(chapter, checkboxID, checkedVerb)
     };
 
     // Send launched statement
