@@ -63,10 +63,6 @@ function getState() {
 }
 
 /* Course Progress */
-// find from DOM
-function findChaptersCompleted() {
-    return $.map($("#toc-list li.ui-icon-check"), function(n, i) { return n.id; });
-}
 
 // Get from State API
 function getChaptersCompleted() {
