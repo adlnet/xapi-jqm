@@ -16,9 +16,9 @@ Instructional designers and developers can focus on content and HTML rather than
 - Experience with jQuery, jQuery Mobile and Javascript are a plus
 - Experience with xAPI
 
-### Demos
+### Setup & Demos
 
-A list of demos available for a starting point in using xapi-jqm. More to come, please stand-by.
+A list of demos available for a starting point in using xapi-jqm.
 
 #### Course
 
