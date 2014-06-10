@@ -206,7 +206,7 @@ function createContext( parentChapter, parentPage, subParentActivity ) {
                 "id": moduleID + parentChapter + "/" + parentPage + "#" + subParentActivity,
                 "definition": {
                     "name": {
-                        "en-US": moduleName ": " + parentChapter + ", page: " + parentPage + " " + subParentActivity
+                        "en-US": moduleName + ": " + parentChapter + ", page: " + parentPage + " " + subParentActivity
                     }
                 },
                 "objectType": "Activity"
