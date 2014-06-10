@@ -27,7 +27,7 @@ A list of demos available for a starting point in using xapi-jqm.
 
 - :bar_chart: [View reports from this course](http://adlnet.github.io/xapi-jqm/reports)
 
-- :page_facing_up: [Check the course source](demos/course) to learn more about how xapi-jqm is used
+- :page_facing_up: [Check the course source](demos/course) to learn more about how xapi-jqm is used and how to get started
 
 ### Homepage
 
