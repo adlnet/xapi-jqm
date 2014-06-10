@@ -25,17 +25,3 @@ var baseActivity = {
     },
     "objectType": "Activity"
 };
-
-var quizID = moduleID + "chapters/05-quiz#quiz"
-var quizActivity = {
-    "id": quizID,
-    "definition": {
-        "name": {
-            "en-US": "xAPI for jQuery Mobile French Toast Demo quiz"
-        }
-    },
-    "objectType": "Activity"
-};
-
-var CORRECT_QUIZ_ANSWERS = [ [2,3,6], [4], "bread" ];
-var TUTORIAL_VIDEO_URL = "http://www.youtube-nocookie.com/embed/vPrtNzvDS5M?rel=0";
