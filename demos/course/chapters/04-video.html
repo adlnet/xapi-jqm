@@ -49,9 +49,9 @@
     // initialize youtube video tracking
     var chapterID = $("body").attr("data-chapter");
     var pageID = 1; // lazy
-    var video = Popcorn.youtube("#How-to-make-french-toast-xapi-jqm-video", TUTORIAL_VIDEO_URL);
-    video.media.src = TUTORIAL_VIDEO_URL;
-    video.autoplay(false);
+    var wrapper = Popcorn.HTMLYouTubeVideoElement("#How-to-make-french-toast-xapi-jqm-video");
+    wrapper.src = TUTORIAL_VIDEO_URL 
+    var video = Popcorn(wrapper);
     var videoContext = createContext(chapterID, pageID);
     ADL.XAPIVideo.addVideo(video, "", true, true, false, false, videoContext);
 </script>
