@@ -1,0 +1,124 @@
+<!DOCTYPE html> 
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1"> 
+    <title>Minimal Example - xapi-jqm</title> 
+    <link rel="stylesheet" href="http://code.jquery.com/mobile/1.4.2/jquery.mobile-1.4.2.min.css" />
+    <script src="http://code.jquery.com/jquery-1.10.2.min.js"></script>
+    <script src="http://code.jquery.com/mobile/1.4.2/jquery.mobile-1.4.2.min.js"></script>
+    <script src="js/xapiwrapper.min.js"></script>
+    <script src="js/config.js"></script>
+    <script src="js/functions.js"></script>
+    <style type="text/css">
+        #toc-list li a {
+            padding-left:40px;
+        }
+    </style>
+    <script type="text/javascript">
+        $(function(){
+            var chaptersCompleted = getChaptersCompleted()
+            $("#toc-list li").each(function() {
+                if ( $.inArray( $(this).attr("id"), chaptersCompleted ) !== -1 ) {
+                    $(this).addClass("ui-icon-check");
+                }
+            });
+        });
+    </script>
+</head> 
+
+<body data-chapter="toc"> 
+
+<div data-role="page" id="toc">
+
+    <div data-role="header">
+        <h1>Table of Contents Example</h1>
+        <a href="chapters/00-account.html#logout" data-ajax="false" data-theme="b" data-transition="slidedown" data-icon="delete" class="ui-btn-right">Exit</a>
+    </div><!-- /header -->
+
+    <div data-role="content">
+
+        <ul data-role="listview" data-inset="true" id="toc-list">
+            <li id="01-intro" class="ui-btn-icon-left"><a href="chapters/01-intro.html" data-ajax="false" class="chapter">1. Introduction</a></li>
+            <li id="02-state" class="ui-btn-icon-left"><a href="chapters/02-state.html" data-ajax="false" class="chapter">2. State API</a></li>
+            <li id="03-summary" class="ui-btn-icon-left"><a href="chapters/03-summary.html" data-ajax="false" class="chapter">3. Summary</a></li> 
+        </ul>
+
+    </div><!-- /content -->
+    
+    <div data-role="footer" data-theme="b" data-position="fixed">
+        <div data-role="navbar">
+            <ul>
+                <li><a href="#resources" data-icon="star" data-iconpos="top" data-rel="dialog" data-transition="slideup" data-ajax="false">Resources</a></li>
+                <li><a href="#help" data-icon="alert" data-iconpos="top" data-transition="slideup" data-ajax="false">Help</a></li>
+            </ul>
+        </div><!-- /navbar -->
+    </div><!-- /footer -->
+
+</div><!-- /page toc -->
+
+
+<!-- #resources -->
+<div data-role="page" id="resources">
+
+    <div data-role="header" data-theme="b">
+        <h1>Resources</h1>
+    </div><!-- /header -->
+
+    <div role="main" class="ui-content">
+        <h2>Resources</h2>
+        <ul>
+            <li><a href="http://www.github.com/adlnet/xapi-jqm" target="_blank">xapi-jqm github page</a></li>
+            <li><a href="http://www.jquerymobile.com" target="_blank">jQuery Mobile page</a></li>
+            <li><a href="https://github.com/adlnet/xAPIWrapper" target="_blank">xAPI Wrapper page</a></li>
+        </ul>
+    </div><!-- /content -->
+
+    <div data-role="footer" data-position="fixed">
+        <div style="text-align:center;"><a href="#toc" data-rel="back" class="ui-btn ui-shadow ui-corner-all ui-btn-inline ui-icon-back ui-btn-icon-left">Go Back</a></div>
+    </div><!-- /footer -->
+
+</div><!-- /page resources -->
+
+
+<!-- #help -->
+<div data-role="page" id="help">
+
+    <div data-role="header" data-theme="b">
+        <h1>Help</h1>
+    </div><!-- /header -->
+
+    <div role="main" class="ui-content">
+        <h2>Github</h2>
+        <p><a href="http://adlnet.github.com/adlnet">ADL's Github page</a> is a great place for our work, this project specifically has more demos and documentation if you're looking for more information.</p>
+        <h2>Email</h2>
+        <p>Feel free to email <a href="mailto:tyler.mulligan.ctr@adlnet.gov">Tyler Mulligan</a> with questions.</p>
+    </div><!-- /content -->
+
+    <div data-role="footer" data-position="fixed">
+        <div style="text-align:center;"><a href="index.html" data-rel="back" class="ui-btn ui-shadow ui-corner-all ui-btn-inline ui-icon-back ui-btn-icon-left">Go Back</a></div>
+    </div><!-- /footer -->
+
+</div><!-- /page help -->
+
+<!-- #modal -->
+<div data-role="page" id="modal">
+
+    <div data-role="header" data-theme="b">
+        <h1>Modal Example</h1>
+    </div><!-- /header -->
+
+    <div role="main" class="ui-content">
+        <h2>Hello</h2>
+        <p>I'm a modal window!</p>
+    </div><!-- /content -->
+
+    <div data-role="footer" data-position="fixed">
+        <div style="text-align:center;"><a href="index.html" data-rel="back" class="ui-btn ui-shadow ui-corner-all ui-btn-inline ui-icon-back ui-btn-icon-left">Go Back</a></div>
+    </div><!-- /footer -->
+
+</div><!-- /page help -->
+
+</body>
+</html>
