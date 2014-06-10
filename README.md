@@ -7,7 +7,7 @@ Instructional designers and developers can focus on content and HTML rather than
 
 ### Requirements
 
-- A laptop
+- A computer (laptop if you're the bootcamp)
 - Web Browser (preferably Chrome)
 - Text editor with syntax highlighting (notepad++, sublime, geany, etc.)
 - Experience with HTML
