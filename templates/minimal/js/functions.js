@@ -26,7 +26,7 @@ if ( actor  == false ) {
                 "objectType": "Activity",
                 "definition": {
                     "name": {
-                        "en-US": "Minimal xapi-jqm template: " + chapter + ", page: " + pageID
+                        "en-US": moduleName + ": " + chapter + ", page: " + pageID
                     }
                 }
             }
@@ -194,7 +194,7 @@ function createContext( parentChapter, parentPage, subParentActivity ) {
             "id": moduleID + parentChapter + "/" + parentPage,
             "definition": {
                 "name": {
-                    "en-US": "How to Make French Toast Chapter: " + parentChapter + ", page: " + parentPage
+                    "en-US": moduleName + ": " + parentChapter + ", page: " + parentPage
                 }
             },
             "objectType": "Activity"
@@ -206,7 +206,7 @@ function createContext( parentChapter, parentPage, subParentActivity ) {
                 "id": moduleID + parentChapter + "/" + parentPage + "#" + subParentActivity,
                 "definition": {
                     "name": {
-                        "en-US": "How to Make French Toast Chapter: " + parentChapter + ", page: " + parentPage + " " + subParentActivity
+                        "en-US": moduleName ": " + parentChapter + ", page: " + parentPage + " " + subParentActivity
                     }
                 },
                 "objectType": "Activity"

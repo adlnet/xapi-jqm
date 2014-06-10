@@ -10,12 +10,13 @@ Config.password = "xapijqm";
 
 // "global" variables
 var moduleID = "http://adlnet.gov/xapi/samples/xapi-jqm/minimal/"; // trailing slash
+var moduleName "Minimal starter xapi-jqm template"
 
 var baseActivity = {
     "id": moduleID,
     "definition": {
         "name": {
-            "en-US": "Minimal starter xapi-jqm template"
+            "en-US": moduleName
         },
         "description": {
             "en-US": "Great starting point with a blank slate. Read more about templates to learn how to integrate and track."
