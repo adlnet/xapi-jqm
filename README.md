@@ -5,9 +5,21 @@ Integration of the Experience API (xAPI) using jQuery Mobile (jQM) with demos an
 
 Instructional designers and developers can focus on content and HTML rather than writing javasript code, without limiting their abilities to extend their statements and tracking of interactions.
 
-### Demos
+### Requirements
 
-A list of demos available for a starting point in using xapi-jqm. More to come, please stand-by.
+- A laptop
+- Web Browser (preferably Chrome)
+- Text editor with syntax highlighting (notepad++, sublime, geany, etc.)
+- Experience with HTML
+
+#### Preferred
+
+- Experience with jQuery, jQuery Mobile and Javascript are a plus
+- Experience with xAPI
+
+### Setup & Demos
+
+A list of demos available for a starting point in using xapi-jqm.
 
 #### Course
 
@@ -15,7 +27,7 @@ A list of demos available for a starting point in using xapi-jqm. More to come, 
 
 - :bar_chart: [View reports from this course](http://adlnet.github.io/xapi-jqm/reports)
 
-- :page_facing_up: [Check the course source](demos/course) to learn more about how xapi-jqm is used
+- :page_facing_up: [Check the course source](demos/course) to learn more about how xapi-jqm is used and how to get started
 
 ### Homepage
 

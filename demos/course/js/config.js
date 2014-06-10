@@ -14,13 +14,14 @@ Config.password = "password";
 
 // "global" variables
 var moduleID = "http://adlnet.gov/xapi/samples/xapi-jqm/course/"; // trailing slash
+var moduleName = "How to Make French Toast xapi-jqm Course Demo";
 var courseType = "http://adlnet.gov/xapi/activities/course";
 
 var baseActivity = {
     "id": moduleID,
     "definition": {
         "name": {
-            "en-US": "xAPI for jQuery French Toast Demo"
+            "en-US": moduleName
         },
         "description": {
             "en-US": "A sample HTML5 mobile app with xAPI tracking that teaches you how to make french toast."
@@ -34,7 +35,7 @@ var quizActivity = {
     "id": quizID,
     "definition": {
         "name": {
-            "en-US": "xAPI for jQuery French Toast Demo quiz"
+            "en-US": "xAPI for jQuery Mobile French Toast Demo quiz"
         }
     },
     "objectType": "Activity"
