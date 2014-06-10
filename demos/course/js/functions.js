@@ -34,7 +34,7 @@ if ( actor  == false ) {
                 "objectType": "Activity",
                 "definition": {
                     "name": {
-                        "en-US": "How to Make French Toast Chapter: " + chapter + ", page: " + pageID
+                        "en-US": moduleName + ": " + chapter + ", page: " + pageID
                     }
                 }
             }
@@ -63,10 +63,6 @@ function getState() {
 }
 
 /* Course Progress */
-// find from DOM
-function findChaptersCompleted() {
-    return $.map($("#toc-list li.ui-icon-check"), function(n, i) { return n.id; });
-}
 
 // Get from State API
 function getChaptersCompleted() {
@@ -100,7 +96,7 @@ function setChapterComplete() {
             "objectType": "Activity",
             "definition": {
                 "name": {
-                    "en-US": "How to Make French Toast Chapter: " + chapterCompleted
+                    "en-US": moduleName + ": " + chapterCompleted
                 }
             }
         }
@@ -233,7 +229,7 @@ function checkboxClicked(chapter, pageID, checkboxID, checkboxName) {
         "id": moduleID,
         "definition": {
             "name": {
-                "en-US": "xAPI for jQuery Mobile French Toast Demo: " + checkedVerb + " a checkbox, " + checkboxName
+                "en-US": moduleName + ": " + checkedVerb + " a checkbox, " + checkboxName
             },
             "description": {
                 "en-US": "A sample HTML5 mobile app with xAPI tracking that teaches you how to make french toast."
@@ -337,7 +333,7 @@ function createContext( parentChapter, parentPage, subParentActivity ) {
             "id": moduleID + parentChapter + "/" + parentPage,
             "definition": {
                 "name": {
-                    "en-US": "How to Make French Toast Chapter: " + parentChapter + ", page: " + parentPage
+                    "en-US": moduleName + ": " + parentChapter + ", page: " + parentPage
                 }
             },
             "objectType": "Activity"
@@ -349,7 +345,7 @@ function createContext( parentChapter, parentPage, subParentActivity ) {
                 "id": moduleID + parentChapter + "/" + parentPage + "#" + subParentActivity,
                 "definition": {
                     "name": {
-                        "en-US": "How to Make French Toast Chapter: " + parentChapter + ", page: " + parentPage + " " + subParentActivity
+                        "en-US": moduleName + ": " + parentChapter + ", page: " + parentPage + " " + subParentActivity
                     }
                 },
                 "objectType": "Activity"
@@ -402,7 +398,7 @@ function gradeQuestion() {
                     "objectType": "Activity",
                     "definition": {
                         "name": {
-                            "en-US": "How to Make French Toast quiz question " + quiz_name
+                            "en-US": moduleName + " quiz question " + quiz_name
                         }
                     }
                 },
@@ -430,7 +426,7 @@ function gradeQuestion() {
                     "objectType": "Activity",
                     "definition": {
                         "name": {
-                            "en-US": "How to Make French Toast quiz question " + quiz_name
+                            "en-US": moduleName + " quiz question " + quiz_name
                         }
                     }
                 },
