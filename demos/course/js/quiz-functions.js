@@ -68,9 +68,9 @@ function gradeQuestion() {
             };            
             break;
         case 'text':
-            user_answer = q_form.val();
+            user_answer = q_form.val().toLowerCase();
             success = false;
-            if ( user_answer === correct_answer ) {
+            if ( user_answer === correct_answer.toLowerCase() ) {
                 success = true;
             }
             var stmt = {
