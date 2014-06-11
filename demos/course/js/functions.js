@@ -415,7 +415,7 @@ function gradeQuestion() {
         case 'text':
             user_answer = q_form.val();
             success = false;
-            if ( user_answer === correct_answer ) {
+            if ( user_answer && user_answer.toLowerCase() === correct_answer.toLowerCase() ) {
                 success = true;
             }
             var stmt = {
