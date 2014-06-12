@@ -175,7 +175,7 @@ Layout a list of words and track which words a user has read
 
 #### Checklist
 
-*in progress (not yet reporting)*
+Reports checked and unchecked
 
 #### Video Tracking
 
