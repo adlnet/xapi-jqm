@@ -37,7 +37,7 @@ var moduleName = "How to Make French Toast xapi-jqm Course Demo";
 var courseType = "http://adlnet.gov/xapi/activities/course";
 ```
 
-*note:* Change the moduleID and courseType to something appropriate for your app.
+*note:* Change the moduleID, moduleName and courseType to something appropriate for your app.
 
 ### Statements Built from Attributes in HTML
 
