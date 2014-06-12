@@ -29,6 +29,16 @@ A list of demos available for a starting point in using xapi-jqm.
 
 - :page_facing_up: [Check the course source](demos/course) to learn more about how xapi-jqm is used and how to get started
 
+#### Performance Support
+
+- :blue_book: [Try the performance support demo live](http://adlnet.github.io/xapi-jqm/demos/performance-support/)
+
+- :page_facing_up: [Check the performance support source](demos/performance-support) to learn more about how xapi-jqm is used and how to get started
+
+#### Templates
+
+Check out [templates directory](templates) for isolated examples.
+
 ### Homepage
 
 If you prefer reading more stylized information as a website instead of README.md files, you can [learn more about xapi-jqm](http://adlnet.github.com/xapi-jqm) on the homepage.
