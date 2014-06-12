@@ -1,157 +1,61 @@
 <!DOCTYPE html>
 <html>
-	<head>
-		<title>French Toast Course Reports</title>
-		<link rel='stylesheet' href='lib/nv.d3.css'/>
-		<script type="text/javascript" src="lib/d3.v3.js" charset="utf-8"></script>
-		<script type="text/javascript" src="lib/nv.d3.js"></script>
-		<script type="text/javascript" src="lib/xapiwrapper.min.js"></script>
-		<script type="text/javascript" src="src/chart.js"></script>
-		<script type="text/javascript" src="src/dashboard.js"></script>
-		<script type="text/javascript" src="src/xapicollection.js"></script>
+  <head>
+    <meta charset='utf-8'>
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <link href='https://fonts.googleapis.com/css?family=Architects+Daughter' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" type="text/css" href="../stylesheets/stylesheet.css" media="screen" />
+    <link rel="stylesheet" type="text/css" href="../stylesheets/pygment_trac.css" media="screen" />
+    <link rel="stylesheet" type="text/css" href="../stylesheets/print.css" media="print" />
 
-		<style>
-			h2 {
-				text-align: center;
-			}
-			#graphContainer {
-				display: flex;
-				flex-direction: row;
-				justify-content: center;
-				align-items: center;
-				flex-wrap: wrap;
-			}
+    <!--[if lt IE 9]>
+    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
 
-			.container {
-				width: 500px;
-				height: 300px;
-				overflow: hidden;
-			}
-		</style>
+    <title>xapi-jqm by ty- for ADL</title>
+  </head>
 
-	</head>
-	<body>
-        <h1>How to Make French Toast - Reports from the LRS</h1>
-		<span id='status'>Fetching data</span>
-		<div id='graphContainer'>
-			<div id='verbs' class='container'>
-				<svg></svg>
-			</div>
-			<div id='lrsActivity' class='container'>
-				<svg></svg>
-			</div>
-			<div id='actorActivity' class='container'>
-				<svg></svg>
-			</div>
-		</div>
-        <p><a href="http://adlnet.github.io/xapi-jqm/demos/course/index.html">Take the Course on How to Make French Toast!</a></p>
-        <p>Reports made possible by <a href="https://github.com/adlnet/xAPI-Dashboard" target="_blank">xAPI-Dashboard</a></p>
-		<script>
+  <body>
+    <header>
+      <div class="inner">
+        <h1>xapi-jqm</h1>
+        <h2>Integration of xAPI with jQuery Mobile</h2>
+        <a href="https://github.com/adlnet/xapi-jqm" class="button"><small>View project on</small>GitHub</a>
+      </div>
+    </header>
 
-			var wrapper = ADL.XAPIWrapper;
-			var dash = new ADL.XAPIDashboard();
-			wrapper.changeConfig({'endpoint': 'https://lrs.adlnet.gov/xAPI/'});
+    <div id="content-wrapper">
+      <div class="inner clearfix">
+        <section id="main-content">
+          <h3><a name="reports" class="anchor" href="#what"><span class="octicon octicon-link"></span></a>Reports</h3>
 
-			var handle = setInterval(function(){
-				document.querySelector('span').innerHTML += '.';
-			}, 500);
+            <p>View Reports from the Demos:</p>
 
-			var cutoff = new Date(Date.now());
-			cutoff = new Date(cutoff.getFullYear(),cutoff.getMonth(),cutoff.getDate()-30);
-			cutoff = cutoff.toISOString();
+            <ul>
+                <li><a href="course.html">Course Reports</a></li>
+                <li><a href="ps.html">Performance Support Reports</a></li>
+            </ul>
 
-			//dash.fetchAllStatements({since: cutoff, "agent": JSON.stringify({"objectType":"Agent","mbox":"mailto:tyler.mulligan.ctr@adlnet.gov"}), related_agents: true }, wrapper, function()
-			dash.fetchAllStatements({since: cutoff, activity: "http://adlnet.gov/xapi/samples/xapi-jqm/course/", related_activities: true }, wrapper, function()
-			{
-				clearInterval(handle);
+        </section>
 
-				// label for first graph
-				var container = document.querySelector('#verbs');
-				var header = document.createElement('h2');
-				header.innerHTML = 'Verb Popularity Over Last 30 Days';
-				container.insertBefore(header, container.firstChild);
-	
-				// create first graph
-				var verbsChart = dash.createBarChart({
-					container: '#verbs svg',
-					groupBy: 'verb.id',
-					aggregate: ADL.count(),
-					post: function(data){
-						data = new ADL.CollectionSync(data);
-						return data.orderBy('out','descending').slice(0,10).contents;
-					},
-					customize: function(nvd3chart){
-						nvd3chart.margin({bottom: 150, right: 50});
-						nvd3chart.xAxis.rotateLabels(45);
-						nvd3chart.xAxis.tickFormat(function(label){
-							//var parts = /https?:\/\/.*?(\w+\.\w{2,3}).*(\/.+)$/.exec(label);
-							//return parts.slice(1,3).join('');
-							return /[^\/]+$/.exec(label)[0];
-						});
-					}
-				});
+        <aside id="sidebar">
+          <a href="https://github.com/adlnet/xapi-jqm/zipball/master" class="button">
+            <small>Download</small>
+            .zip file
+          </a>
+          <a href="https://github.com/adlnet/xapi-jqm/tarball/master" class="button">
+            <small>Download</small>
+            .tar.gz file
+          </a>
 
-				// draw first graph once it's configured
-				verbsChart.draw();
+          <p class="repo-owner"><a href="https://github.com/adlnet/xapi-jqm"></a> is maintained by <a href="https://github.com/ty-">ty-</a>.</p>
 
+          <p>This page was generated by <a href="https://pages.github.com">GitHub Pages</a> using the Architect theme by <a href="https://twitter.com/jasonlong">Jason Long</a>.</p>
+        </aside>
+      </div>
+    </div>
 
-				// label for second graph
-				container = document.querySelector('#lrsActivity');
-				header = document.createElement('h2');
-				header.innerHTML = 'LRS Activity Over Last 30 Days';
-				container.insertBefore(header, container.firstChild);
-	
-				// create second graph
-				var activityChart = dash.createLineChart({
-					container: '#lrsActivity svg',
-					groupBy: 'stored',
-					range: {
-						start: cutoff,
-						end: (new Date(Date.now())).toISOString(),
-						increment: 1000*3600*24
-					},
-					rangeLabel: 'start',
-					aggregate: ADL.count(),
-					post: function(data){
-						for(var i=0; i<data.length; i++){
-							data[i].in = Date.parse(data[i].in);
-						}
-						return data;
-					},
-					customize: function(nvd3chart){
-						nvd3chart.xAxis.tickFormat(function(label){
-							return d3.time.format('%b %d')(new Date(label));
-						});
-					}
-				});
-				activityChart.draw();
-
-
-				// label for third graph
-				container = document.querySelector('#actorActivity');
-				header = document.createElement('h2');
-				header.innerHTML = 'Most Active Actors Over Last 30 Days';
-				container.insertBefore(header, container.firstChild);
-	
-				var actorChart = dash.createBarChart({
-					container: '#actorActivity svg',
-					groupBy: 'actor.mbox',
-					aggregate: ADL.count(),
-					post: function(data){
-						data = new ADL.CollectionSync(data);
-						return data.orderBy('out', 'descending').slice(0,10).contents;
-					},
-					customize: function(nvd3chart){
-						nvd3chart.xAxis.rotateLabels(45);
-						nvd3chart.xAxis.tickFormat(function(label){
-							return label.slice(7);
-						});
-						nvd3chart.margin({right: 80, bottom: 150});
-					}
-				});
-				actorChart.draw();
-			});
-
-		</script>
-	</body>
+  
+  </body>
 </html>
