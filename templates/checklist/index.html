@@ -1,0 +1,45 @@
+<!DOCTYPE html> 
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1"> 
+    <title>Checklist Example - xapi-jqm</title> 
+    <link rel="stylesheet" href="http://code.jquery.com/mobile/1.4.2/jquery.mobile-1.4.2.min.css" />
+    <script src="http://code.jquery.com/jquery-1.10.2.min.js"></script>
+    <script src="http://code.jquery.com/mobile/1.4.2/jquery.mobile-1.4.2.min.js"></script>
+    <script src="js/xapiwrapper.min.js"></script>
+    <script src="js/config.js"></script>
+    <script src="js/functions.js"></script>
+</head> 
+
+<body data-chapter="home"> 
+
+<div data-role="page" id="briefing">
+
+    <div data-role="header">
+        <h1>Checklist Example - xapi-jqm</h1>
+        <a href="chapters/00-account.html#logout" data-ajax="false" data-theme="b" data-transition="slidedown" data-icon="delete" class="ui-btn-right">Exit</a>
+    </div><!-- /header -->
+
+    <div data-role="content">
+
+        <h3>It's always comforting to check!</h3>
+        <form>
+            <fieldset data-role="controlgroup">
+                <input type="checkbox" name="checkbox-v-2a" id="checkbox-v-2a"><label for="checkbox-v-2a">1 egg for every 2 slices of bread</label>
+                <input type="checkbox" name="checkbox-v-2b" id="checkbox-v-2b"><label for="checkbox-v-2b">Non-stick spray, olive oil, or butter/margarine</label>
+                <input type="checkbox" name="checkbox-v-2c" id="checkbox-v-2c"><label for="checkbox-v-2c">Cinnamon (Season to taste)</label>
+                <input type="checkbox" name="checkbox-v-2d" id="checkbox-v-2d"><label for="checkbox-v-2d">1/2 teaspoon (3 ml) vanilla extract (vanilla essence, optional)</label>
+                <input type="checkbox" name="checkbox-v-2e" id="checkbox-v-2e"><label for="checkbox-v-2e">Bread (6 pieces), type of bread is up to your preference</label>
+                <input type="checkbox" name="checkbox-v-2f" id="checkbox-v-2f"><label for="checkbox-v-2f">Icing Sugar, syrup, jam, etc.</label>
+                <input type="checkbox" name="checkbox-v-2g" id="checkbox-v-2g"><label for="checkbox-v-2g">Milk (depending on number of eggs, 2 tablespoons per egg)</label>
+            </fieldset>
+        </form>
+
+    </div><!-- /content -->
+
+</div><!-- /page toc -->
+
+</body>
+</html>

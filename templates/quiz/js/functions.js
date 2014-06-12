@@ -10,14 +10,6 @@ if ( actor  == false ) {
 
     doConfig();
 
-    // Handle chapter clicks to send launch statements
-    $( document ).on("vclick", "a.chapter", function() {
-        $chapter = $(this);
-        var chapter = $chapter.parent("li").attr("id");
-        var name = $chapter.text();
-        chapterLaunched(chapter, name);
-    });
-
     // Abstracted page changing logic -- catch-all
     $( window ).on("pagechange", function(event) {
 
@@ -42,70 +34,9 @@ if ( actor  == false ) {
 
         // Send a statement
         ADL.XAPIWrapper.sendStatement(stmt);
-        ADL.XAPIWrapper.sendState(moduleID, actor, "session-state", null, { "info": "reading", "chapter": chapter, "page": pageID });
-
-        // Handle checkbox clicks -- basic no knowledge of context or checked
-        $(":checkbox").change(function(event) {
-            $checkbox = $(this);
-            var checkboxID = $checkbox.attr("id");
-            var checkboxName = $checkbox.siblings("label").text();
-            var chapter = $("body").attr("data-chapter");
-            var pageID = $.mobile.activePage.attr("id");
-            checkboxClicked(chapter, pageID, checkboxID, checkboxName);
-        });
 
     });
 } // end silly else
-
-/* State functions */
-function getState() {
-    return ADL.XAPIWrapper.getState(moduleID, actor, "session-state");
-}
-
-/* Course Progress */
-
-// Get from State API
-function getChaptersCompleted() {
-    var chaptersCompleted = ADL.XAPIWrapper.getState(moduleID, actor, "chapters-completed");
-    return chaptersCompleted.chapters;
-}
-
-// Set in State API
-function setChapterComplete() {
-    var chapterID = $("body").attr("data-chapter");
-    var currentCompletedChapters = getChaptersCompleted();   
-    var chapterCompleted = [ chapterID ];
-
-    var hash = {}, union = [];
-
-    // #thatHappened
-    $.each($.merge($.merge([], currentCompletedChapters), chapterCompleted), function (index, value) { hash[value] = value; });
-    $.each(hash, function (key, value) { union.push(key); } );
-    
-    ADL.XAPIWrapper.sendState(moduleID, actor, "chapters-completed", null, { "chapters": union });
-
-    doConfig();
-
-    // statement for launching content
-    var stmt = {
-        "actor": actor,
-        "verb": ADL.verbs.completed,
-        "context": createContext(),
-        "object": {
-            "id": moduleID + chapterCompleted,
-            "objectType": "Activity",
-            "definition": {
-                "name": {
-                    "en-US": moduleName + ": " + chapterCompleted
-                }
-            }
-        }
-    };
-
-    // Send chapterComplete statement
-    ADL.XAPIWrapper.sendStatement(stmt);
-
-}
 
 /* Helpers */
 function doConfig() { // sorry
@@ -167,23 +98,6 @@ function checkLoggedIn() {
     }
 }
 
-/*
-function getBaseURL() {
-    // silly regex hack for now #helpWanted
-    var regex = new RegExp("(index.html|.*\/chapters\/.*|.*\/glossary.html)");
-    var location = window.location.href;
-    if ( regex.test(location) ) {
-        var str = location.split("/").pop();
-        var baseurl = location.replace(str, "");
-        var str = "chapters/"
-        var baseurl = baseurl.replace(str, "");
-    } else {
-        // otherwise give up and send them to the github version
-        var baseurl = "http://adlnet.github.io/xapi-jqm/demos/course/";
-    }
-    return baseurl;
-}*/
-
 function userLogin() {
     // Should get the page root
     window.location = "chapters/00-account.html#login";
@@ -212,43 +126,6 @@ function userRegisterSubmit() {
         courseLaunched();
         window.location = "../index.html"
     }
-}
-
-/*
- * xAPIy
- */
-function checkboxClicked(chapter, pageID, checkboxID, checkboxName) {
-    
-    doConfig();
-    
-    // Figure out if it was checked or unchecked
-    var isChecked = $("#"+checkboxID).prop('checked');
-    var checkedVerb = (isChecked) ? "checked" : "unchecked";
-
-    var baseActivity = {
-        "id": moduleID,
-        "definition": {
-            "name": {
-                "en-US": moduleName + ": " + checkedVerb + " a checkbox, " + checkboxName
-            },
-            "description": {
-                "en-US": "A sample HTML5 mobile app with xAPI tracking that teaches you how to make french toast."
-            }
-        },
-        "objectType": "Activity"
-    };
-
-    // statement for launching content
-    var stmt = {
-        "actor": actor,
-        "verb": ADL.verbs.interacted,
-        "object": baseActivity,
-        "context":createContext(chapter, checkboxID, checkedVerb)
-    };
-
-    // Send launched statement
-    ADL.XAPIWrapper.sendStatement(stmt);
-
 }
 
 /* 
@@ -285,29 +162,6 @@ function courseLaunched() {
     ADL.XAPIWrapper.sendStatement(stmt);
 
 }
-
-function chapterLaunched(chapter, name) {
-        var activityID = moduleID + chapter;
-
-        var stmt = {
-            "actor": actor,
-            "verb": ADL.verbs.launched,
-            "context": createContext(),
-            "object": {
-                "id":  activityID,
-                "objectType": "Activity",
-                "definition": {
-                    "name": {
-                        "en-US": moduleName + ": " + chapter
-                    }
-                }
-            }
-        };
-
-        // Send a statement
-        ADL.XAPIWrapper.sendStatement(stmt);
-}
-
 
 function courseMastered() {
     
