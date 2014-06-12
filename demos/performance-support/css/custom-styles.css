@@ -1,0 +1,254 @@
+@charset "UTF-8";
+/* Get rid of the Ellipses for long text items in headers and footers */
+
+h1 .no-ellipses, 
+
+.no-ellipses,
+.ui-listview .no-ellipses,
+.ui-listview .no-ellipses,
+.no-ellipses .ui-header .ui-title, 
+.no-ellipses .ui-footer .ui-title,
+.no-ellipses .ui-btn-inner,
+.no-ellipses .ui-select .ui-btn-text,
+.no-ellipses .ui-li .ui-btn-text a.ui-link-inherit,
+.no-ellipses .ui-li-heading,
+.no-ellipses .ui-li-desc {text-overflow:ellipsis;overflow:visible;white-space:normal;}
+.no-ellipses a {text-decoration:none;}
+
+
+/* responsive background setup */
+.background {
+    background-repeat:no-repeat;
+    /* custom background-position */
+    background-position:50% 50%;
+    /* ie8- graceful degradation */
+    background-position:50% 50%9 !important;
+}
+
+/* fullscreen setup */
+html, body {
+    /* give this to all tags from html to .fullscreen */
+    height:100%;
+}
+.fullscreen,
+.content-a {
+    width:100%;
+    min-height:100%;
+}
+.not-fullscreen,
+.not-fullscreen .content-a,
+.fullscreen.not-overflow,
+.fullscreen.not-overflow .content-a {
+    height:100%;
+    overflow:hidden;
+}
+
+/* content centering styles */
+/* content centering styles */
+.content-a {
+	display:table;
+}
+.content-b {
+	display:table-cell;
+    position:relative;
+	vertical-align:middle;
+	text-align:center;
+
+}
+
+.headline {
+    display:block;
+	color:#C6CFCF;
+	font-size: 56px;
+	font-family: "proxima-nova","Helvetica Neue",Helvetica,Arial,sans-serif;
+	font-weight: 500;
+	letter-spacing: -2px;
+	line-height: 1;
+	text-rendering: optimizelegibility;
+	text-shadow: 2px 2px 2px rgba(0, 0, 0, 1);
+}
+
+.subline {
+    display:block;
+	font-size: 24px;	
+	font-family: "proxima-nova","Helvetica Neue",Helvetica,Arial,sans-serif;
+	font-weight: 100;
+	letter-spacing: 0px;	
+	text-rendering: optimizelegibility;
+	text-shadow: 2px 2px 2px rgba(0, 0, 0, 1);
+	color:#ffffff;
+		
+}
+
+.stepsize {
+    display:block;
+	font-size: 41px;	
+	font-family: Helvetica,Arial,sans-serif;
+	font-weight: 100;
+	letter-spacing: 0px;	
+	text-rendering: optimizelegibility;	
+}
+
+.transparent {
+
+  /* IE 8 */
+  -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=70)";
+
+  /* IE 5-7 */
+  filter: alpha(opacity=70);
+
+  /* Netscape */
+  -moz-opacity: 0.7;
+
+  /* Safari 1.x */
+  -khtml-opacity: 0.7;
+
+  /* Good browsers */
+  opacity: 0.7;
+  	
+}
+
+
+
+/* Videos */
+
+
+
+
+/* Responsive Ingredients Menu */
+
+.ingredients-menu .ui-listview li .ui-btn p {
+    color: #c0c0c0;
+}
+.ingredients-menu .ui-listview li .ui-btn .ui-li-aside {
+    color: #eee;
+}
+/* First breakpoint is 48em (768px). 3 column layout. Tiles 250x250 pixels incl. margin at the breakpoint. */
+@media ( min-width: 48em ) {
+    .ingredients-menu .ui-content {
+        padding: .5625em; /* 9px */
+    }
+    .ingredients-menu .ui-listview li {
+        float: left;
+        width: 30.9333%; /* 33.3333% incl. 2 x 1.2% margin */
+        height: 14.5em; /* 232p */
+        margin: .5625em 1.2%;
+    }
+    .ingredients-menu .ui-listview li > .ui-btn {
+        -webkit-box-sizing: border-box; /* include padding and border in height so we can set it to 100% */
+        -moz-box-sizing: border-box;
+        -ms-box-sizing: border-box;
+        box-sizing: border-box;
+        height: 100%;
+    }
+    .ingredients-menu .ui-listview li.ui-li-has-thumb .ui-li-thumb {
+        height: auto; /* To keep aspect ratio. */
+        max-width: 100%;
+        max-height: none;
+    }
+    /* Make all list items and anchors inherit the border-radius from the UL. */
+    .ingredients-menu .ui-listview li,
+    .ingredients-menu .ui-listview li .ui-btn,
+    .ingredients-menu .ui-listview .ui-li-thumb {
+        -webkit-border-radius: inherit;
+        border-radius: inherit;
+    }
+    /* Hide the icon */
+    .ingredients-menu .ui-listview .ui-btn-icon-right:after {
+        display: none;
+    }
+    /* Make text wrap. */
+    .ingredients-menu .ui-listview h2,
+    .ingredients-menu .ui-listview p {
+        white-space: normal;
+        overflow: visible;
+        position: absolute;
+        left: 0;
+        right: 0;
+    }
+    /* Text position */
+    .ingredients-menu .ui-listview h2 {
+        font-size: 1.25em;
+        margin: 0;
+        padding: .125em 1em;
+        bottom: 50%;
+    }
+    .ingredients-menu .ui-listview p {
+        font-size: 1em;
+        margin: 0;
+        padding: 0 1.25em;
+        min-height: 50%;
+        bottom: 0;
+    }
+    /* Semi transparent background and different position if there is a thumb. The button has overflow hidden so we don't need to set border-radius. */
+    .ui-listview .ui-li-has-thumb h2,
+    .ui-listview .ui-li-has-thumb p {
+        background: #111;
+        background: rgba(0,0,0,.8);
+    }
+    .ui-listview .ui-li-has-thumb h2 {
+        bottom: 35%;
+    }
+    .ui-listview .ui-li-has-thumb p {
+        min-height: 35%;
+    }
+    /* ui-li-aside has class .ui-li-desc as well so we have to override some things. */
+    .ingredients-menu .ui-listview .ui-li-aside {
+        padding: .125em .625em;
+        width: auto;
+        min-height: 0;
+        top: 0;
+        left: auto;
+        bottom: auto;
+        /* Custom styling. */
+        background: #990099;
+        background: rgba(153,0,153,.85);
+        -webkit-border-top-right-radius: inherit;
+        border-top-right-radius: inherit;
+        -webkit-border-bottom-left-radius: inherit;
+        border-bottom-left-radius: inherit;
+        -webkit-border-bottom-right-radius: 0;
+        border-bottom-right-radius: 0;
+    }
+    /* If you want to add shadow, don't kill the focus style. */
+    .ingredients-menu .ui-listview li {
+        -moz-box-shadow: 0px 0px 9px #111;
+        -webkit-box-shadow: 0px 0px 9px #111;
+        box-shadow: 0px 0px 9px #111;
+    }
+    /* Images mask the hover bg color so we give desktop users feedback by applying the focus style on hover as well. */
+    .ingredients-menu .ui-listview li > .ui-btn:hover {
+        -moz-box-shadow: 0px 0px 12px #33ccff;
+        -webkit-box-shadow: 0px 0px 12px #33ccff;
+        box-shadow: 0px 0px 12px #33ccff;
+    }
+    /* Animate focus and hover style, and resizing. */
+    .ingredients-menu .ui-listview li,
+    .ingredients-menu .ui-listview .ui-btn {
+        -webkit-transition: all 500ms ease;
+        -moz-transition: all 500ms ease;
+        -o-transition: all 500ms ease;
+        -ms-transition: all 500ms ease;
+        transition: all 500ms ease;
+    }
+}
+/* Second breakpoint is 63.75em (1020px). 4 column layout. Tiles will be 250x250 pixels incl. margin again at the breakpoint. */
+@media ( min-width: 63.75em ) {
+    .ingredients-menu .ui-content {
+        padding: .625em; /* 10px */
+    }
+    /* Set a max-width for the last breakpoint to prevent too much stretching on large screens.
+    By setting the max-width equal to the breakpoint width minus padding we keep square tiles. */
+    .ingredients-menu .ui-listview {
+        max-width: 62.5em; /* 1000px */
+        margin: 0 auto;
+    }
+    /* Because of the 1000px max-width the width will always be 230px (and margin left/right 10px),
+    but we stick to percentage values for demo purposes. */
+    .ingredients-menu .ui-listview li {
+        width: 23%;
+        height: 230px;
+        margin: .625em 1%;
+    }
+}
+/* For this we used images with a size of 300x300 pixels. Just before the second breakpoint the images reach their max width: 1019px - 2 x 9px padding = 1001px x 30.9333% = ~310px */
