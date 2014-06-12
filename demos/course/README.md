@@ -32,11 +32,12 @@ The [config.js](js/config.js) file also includes "global" variables, that are us
 **Example:**
 
 ```js
-var moduleID = "http://adlnet.gov/xapi/samples/xapi-jqm/course";
+var moduleID = "http://adlnet.gov/xapi/samples/xapi-jqm/course/"; // trailing slash
+var moduleName = "How to Make French Toast xapi-jqm Course Demo";
 var courseType = "http://adlnet.gov/xapi/activities/course";
 ```
 
-*note:* Change the moduleID and courseType to something appropriate for your app.
+*note:* Change the moduleID, moduleName and courseType to something appropriate for your app.
 
 ### Statements Built from Attributes in HTML
 
@@ -117,6 +118,43 @@ var stmt = {
         }
     }
 };
+```
+
+The [config.js](js/config.js) also includes a *baseActivity* definition:
+
+```js
+var baseActivity = {
+    "id": moduleID,
+    "definition": {
+        "name": {
+            "en-US": moduleName
+        },
+        "description": {
+            "en-US": "Great starting point with a blank slate. Read more about templates to learn how to integrate and track."
+        }
+    },
+    "objectType": "Activity"
+};
+```
+
+This can be used to consolidate even further, for example:
+
+```js
+function courseLaunched() {
+    
+    doConfig();
+
+    // statement for launching content
+    var stmt = {
+        "actor": actor,
+        "verb": ADL.verbs.launched,
+        "object": baseActivity
+    };
+
+    // Send launched statement
+    ADL.XAPIWrapper.sendStatement(stmt);
+
+}
 ```
 
 ### The State API
