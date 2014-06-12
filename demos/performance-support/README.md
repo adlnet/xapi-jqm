@@ -1,7 +1,7 @@
-xapi-jqm based course demo
---------------------------
+xapi-jqm based performance support demo
+---------------------------------------
 
-This is a fully functional course that teaches a learner about the process of making french toast and quizes their knowledge. It uses [jQuery Mobile](http://www.jquerymobile.com) for layout and interactions, combined with [xAPIWrapper](https://github.com/adlnet/xAPIWrapper) to send, and retrieve data from a Learning Record Store (LRS).
+This is a fully functional performance support application that a learner can use to reference the process of making french toast. It uses [jQuery Mobile](http://www.jquerymobile.com) for layout and interactions, combined with [xAPIWrapper](https://github.com/adlnet/xAPIWrapper) to send, and retrieve data from a Learning Record Store (LRS).
 
 The [functions.js](js/functions.js) file does all the heavy lifting by pulling values from the HTML to build statements and send them on specific events (such as page change).
 
@@ -32,9 +32,10 @@ The [config.js](js/config.js) file also includes "global" variables, that are us
 **Example:**
 
 ```js
-var moduleID = "http://adlnet.gov/xapi/samples/xapi-jqm/course/"; // trailing slash
-var moduleName = "How to Make French Toast xapi-jqm Course Demo";
-var courseType = "http://adlnet.gov/xapi/activities/course";
+var jobaidID = "http://adlnet.gov/xapi/samples/xapi-jqm/ps/";
+var jobaidType = "http://adlnet.gov/xapi/activities/interaction";
+var linkType = "http://adlnet.gov/xapi/activities/link";
+var mediaType = "http://adlnet.gov/xapi/activities/media";
 ```
 
 *note:* Change the moduleID, moduleName and courseType to something appropriate for your app.
@@ -100,63 +101,6 @@ var stmt = {
 };
 ```
 
-**CONSOLIDATED**
-
-```js
-// statement for launching content
-var stmt = {
-    "actor": actor,
-    "verb": ADL.verbs.completed,
-    "context": createContext(),
-    "object": {
-        "id": moduleID + chapterCompleted,
-        "objectType": "Activity",
-        "definition": {
-            "name": {
-                "en-US": "How to Make French Toast Chapter: " + chapterCompleted
-            }
-        }
-    }
-};
-```
-
-The [config.js](js/config.js) also includes a *baseActivity* definition:
-
-```js
-var baseActivity = {
-    "id": moduleID,
-    "definition": {
-        "name": {
-            "en-US": moduleName
-        },
-        "description": {
-            "en-US": "Great starting point with a blank slate. Read more about templates to learn how to integrate and track."
-        }
-    },
-    "objectType": "Activity"
-};
-```
-
-This can be used to consolidate even further, for example:
-
-```js
-function courseLaunched() {
-    
-    doConfig();
-
-    // statement for launching content
-    var stmt = {
-        "actor": actor,
-        "verb": ADL.verbs.launched,
-        "object": baseActivity
-    };
-
-    // Send launched statement
-    ADL.XAPIWrapper.sendStatement(stmt);
-
-}
-```
-
 ### The State API
 
 The [State API](https://github.com/adlnet/xAPI-Spec/blob/master/xAPI.md#stateapi) stores state information on the LRS, such as the current chapter and page.
@@ -175,21 +119,11 @@ Layout a list of words and track which words a user has read
 
 #### Checklist
 
-Reports checked and unchecked
+*in progress*
 
 #### Video Tracking
 
 Utilizes popcorn.js and xapipopcorn.js to track videos
-
-*in progress*
-
-#### Quiz
-
-Quizes can be built from three types of inputs:
-
-- Checklist (mulitple choice)
-- Radio (single choice)
-- Text Box (strict string comparison)
 
 *in progress*
 
