@@ -286,6 +286,29 @@ function courseLaunched() {
 
 }
 
+function chapterLaunched(chapter, name) {
+        var activityID = moduleID + chapter;
+
+        var stmt = {
+            "actor": actor,
+            "verb": ADL.verbs.launched,
+            "context": createContext(),
+            "object": {
+                "id":  activityID,
+                "objectType": "Activity",
+                "definition": {
+                    "name": {
+                        "en-US": moduleName + ": " + chapter
+                    }
+                }
+            }
+        };
+
+        // Send a statement
+        ADL.XAPIWrapper.sendStatement(stmt);
+}
+
+
 function courseMastered() {
     
     doConfig();
