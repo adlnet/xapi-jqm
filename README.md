@@ -32,3 +32,5 @@ A list of demos available for a starting point in using xapi-jqm.
 ### Homepage
 
 If you prefer reading more stylized information as a website instead of README.md files, you can [learn more about xapi-jqm](http://adlnet.github.com/xapi-jqm) on the homepage.
+
+:floppy_disk: [Download this repository](https://github.com/adlnet/xapi-jqm/zipball/master)
