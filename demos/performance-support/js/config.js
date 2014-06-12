@@ -11,7 +11,7 @@ Config.password = "xapijqm";
 //Config.actor = actor;
 
 // "global" variables
-var jobaidID = "http://adlnet.gov/xapi/samples/xapi-jqm/ps";
+var jobaidID = "http://adlnet.gov/xapi/samples/xapi-jqm/ps/";
 var jobaidType = "http://adlnet.gov/xapi/activities/interaction";
 var linkType = "http://adlnet.gov/xapi/activities/link";
 var mediaType = "http://adlnet.gov/xapi/activities/media";

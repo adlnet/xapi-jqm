@@ -4,23 +4,35 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1"> 
-    <title>Glossary - How to Make French Toast - xapi-jqm</title> 
+    <title>Introduction - How to Make French Toast - xapi-jqm</title> 
     <link rel="stylesheet" href="http://code.jquery.com/mobile/1.4.2/jquery.mobile-1.4.2.min.css" />
+    <link rel="stylesheet" href="../css/custom-styles.css" />
     <script src="http://code.jquery.com/jquery-1.10.2.min.js"></script>
     <script src="http://code.jquery.com/mobile/1.4.2/jquery.mobile-1.4.2.min.js"></script>
-    <script src="js/xapiwrapper.min.js"></script>
-    <script src="js/config.js"></script>
-    <script src="js/functions.js"></script>
+    <script src="http://popcornjs.org/code/dist/popcorn-complete.min.js"></script>
+    <script src="../js/xapiwrapper.min.js"></script>
+    <script src="../js/xapipopcorn.min.js"></script>
+    <script src="../js/config.js"></script>
+    <script src="../js/functions.js"></script>
+
 </head> 
 
-<body data-chapter="glossary">
+<body data-chapter="05-glossary"> 
 
-<div data-role="page" data-theme="b" id="glossary">
+<div data-role="page" data-theme="b" id="list">
 
-    <div data-role="header">
-        <a href="index.html#toc" name="home" data-role="button" data-theme="b" data-icon="home" data-transition="slide" data-ajax="false" class="ui-btn-left">Home</a>
-        <h1>Glossary</h1>
-    </div><!-- /header -->
+<div data-role="header">
+    <a href="../index.html" name="home" data-role="button" data-theme="b" data-icon="home" data-transition="slide" data-ajax="false" class="ui-btn-left">Home</a>
+<h1><span class="subline no-ellipses">How to Make French Toast</span></h1>
+    <div data-role="navbar">
+        <ul id="toc-list">
+            <li id="02-checklists"><a href="02-checklists.html" data-ajax="false" class="chapter no-ellipses">Checklists</a></li>
+            <li id="03-steps"><a href="03-steps.html" data-ajax="false" class="chapter no-ellipses">Steps</a></li> 
+            <li id="04-video"><a href="04-video.html" data-ajax="false" class="chapter no-ellipses">Video</a></li> 
+            <li id="05-glossary"><a href="05-glossary.html" data-ajax="false" class="chapter no-ellipses ui-btn-active ui-state-persist">Glossary</a></li> 
+        </ul>
+    </div><!-- /navbar -->
+</div><!-- /header -->
 
     <div data-role="content">
 
@@ -73,7 +85,7 @@
 </div><!-- /page glossary -->
 
 
-<div data-role="page" data-theme="b" id="bowl" data-dialog="true" data-overlay-theme="b">
+<div data-role="page" data-theme="b" id="bowl" data-overlay-theme="b">
 
     <div data-role="header">
         <h1>Glossary: Bowl</h1>
