@@ -139,7 +139,7 @@ var baseActivity = {
 
 This can be used to consolidate even further, for example:
 
-,,,js
+```js
 function courseLaunched() {
     
     doConfig();
@@ -155,7 +155,7 @@ function courseLaunched() {
     ADL.XAPIWrapper.sendStatement(stmt);
 
 }
-,,,
+```
 
 ### The State API
 
