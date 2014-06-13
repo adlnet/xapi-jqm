@@ -137,8 +137,7 @@ function makeAssessment() {
                 "max": CORRECT_QUIZ_ANSWERS.length
             }
         },
-        //hardcoded p1 in there, if put current page it would be the end of the quiz-we want the beginning
-        "context": createContext(chapter, "p1")
+        "context": createContext(chapter)
     };
     // Send a statement
     ADL.XAPIWrapper.sendStatement(stmt);
