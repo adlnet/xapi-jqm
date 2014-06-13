@@ -24,19 +24,7 @@ if ( actor  == false ) {
         var chapter = $("body").attr("data-chapter");
         var pageID = $.mobile.activePage.attr("id");
         var activityID = moduleID + chapter + "/" + pageID;
-
-        //added for glossary and toc since their IDs have the same chapters and pageIDs 
-        if (chapter === pageID){
-            var context = createContext();
-        }
-        else{
-            if (chapter === "glossary" || chapter === "toc") {
-                var context = createContext(chapter, chapter);
-            }
-            else{
-                var context = createContext(chapter)
-            }
-        }
+        var context = createContext(chapter);
 
         var stmt = {
             "actor": actor,

@@ -39,6 +39,33 @@ var courseType = "http://adlnet.gov/xapi/activities/course";
 
 *note:* Change the moduleID, moduleName and courseType to something appropriate for your app.
 
+##### Custom Verbs
+
+The [verbs.js](js/verbs.js) file allows you to setup custom verbs.
+
+**Example:**
+
+```js
+(function(ADL){
+   ADL.custom = {
+      "verbs": {
+         "read" : {
+            "id" : "http://example.com/xapi/verbs/read",
+            "display" : {"en-US" : "read"}
+         },
+         "checked" : {
+            "id" : "http://example.com/xapi/verbs/checked",
+            "display" : {"en-US" : "checked"}
+         },
+         "unchecked" : {
+            "id" : "http://example.com/xapi/verbs/unchecked",
+            "display" : {"en-US" : "unchecked"}
+         }           
+      }   
+   };
+}(window.ADL = window.ADL || {}));
+```
+
 ### Statements Built from Attributes in HTML
 
 A [statement](https://github.com/adlnet/xAPI-Spec/blob/master/xAPI.md#statement) is built in JSON that gets sent to your LRS of choice.
