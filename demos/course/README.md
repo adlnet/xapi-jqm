@@ -25,6 +25,16 @@ Config.password = "xapijqm";
 
 You can [register your own LRS user](http://lrs.adlnet.gov) on the ADL LRS.
 
+**Local Storage Key Names**
+
+Used to store values from the registration page.
+
+```js
+// Local Storage email names -- should / cloud be unique across apps
+var storageKeyName = "xapi-jqm/name";
+var storageKeyEmail = "xapi-jqm/email";
+````
+
 ##### "Global Variables"
 
 The [config.js](js/config.js) file also includes "global" variables, that are used in the building of statements. You can define variables you wish to use throughout your course with these.
