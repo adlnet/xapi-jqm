@@ -124,8 +124,8 @@ function getPage() {
 
 // Actor
 function getActor() {
-    var name = localStorage.getItem("xapi-jqm/name");
-    var email = localStorage.getItem("xapi-jqm/email");
+    var name = localStorage.getItem(storageKeyName);
+    var email = localStorage.getItem(storageKeyEmail);
     if ( name == null || email == null ) {
         return false;
     } else {
@@ -140,24 +140,24 @@ function setActor( name, email ) {
 
 // Name
 function getUserName() {
-    return localStorage.getItem("xapi-jqm/name");
+    return localStorage.getItem(storageKeyName);
 }
 function setUserName(name) {
-    localStorage.setItem("xapi-jqm/name", name);
+    localStorage.setItem(storageKeyName, name);
 }
 
 // Email
 function getUserEmail() {
-    return localStorage.getItem("xapi-jqm/email");
+    return localStorage.getItem(storageKeyEmail);
 }
 function setUserEmail(email) {
-    localStorage.setItem("xapi-jqm/email", email);
+    localStorage.setItem(storageKeyEmail, email);
 }
 
 // Destroy all the things
 function clearActor() {
-    localStorage.removeItem("xapi-jqm/name");
-    localStorage.removeItem("xapi-jqm/email");
+    localStorage.removeItem(storageKeyName);
+    localStorage.removeItem(storageKeyEmail);
 }
 
 /* Login / Logout functions */
@@ -244,7 +244,7 @@ function checkboxClicked(chapter, pageID, checkboxID, checkboxName) {
         "actor": actor,
         "verb": checkedVerb,
         "object": baseActivity,
-        "context":createContext(chapter, pageID, undefined, true)
+        "context": createContext(chapter, pageID, undefined, true)
     };
 
     // Send statement
@@ -342,8 +342,8 @@ function courseExited() {
 
 }
 
-//supply the chapter, the page, and any sub-activity in that chapter and page. add both if you want the parentChapter activity
-//added as a separate activity in the context from the parentChapter/parentPage activity
+// supply the chapter, the page, and any sub-activity in that chapter and page. add both if you want the parentChapter activity
+// added as a separate activity in the context from the parentChapter/parentPage activity
 function createContext( parentChapter, parentPage, subParentActivity, both ) {
     var baseContext = {
         "contextActivities": {
@@ -353,13 +353,13 @@ function createContext( parentChapter, parentPage, subParentActivity, both ) {
         }
     };
 
-    //set both
+    // set both
     if ( typeof both === "undefined") {
         both = false;
     }
 
-    //if parent chapter make the chapterActivity
-    if ( typeof parentChapter !== "undefined") {
+    // if parent chapter make the chapterActivity
+    if ( typeof parentChapter !== "undefined" ) {
         var chapterActivity = {
             "id": moduleID + parentChapter,
             "definition": {
@@ -370,13 +370,13 @@ function createContext( parentChapter, parentPage, subParentActivity, both ) {
             "objectType": "Activity"
         };
         
-        //if parent page and don't want both, just append the parent page to the end of the parentChapter activity
+        // if parent page and don't want both, just append the parent page to the end of the parentChapter activity
         if ( typeof parentPage !== "undefined" && !both ) {
             chapterActivity["id"] = chapterActivity["id"] + "/" + parentPage;
-            chapterActivity["definition"]["name"]["en-US"] = chapterActivity["definition"]["name"]["en-US"]  + ", page: " + parentPage
+            chapterActivity["definition"]["name"]["en-US"] = chapterActivity["definition"]["name"]["en-US"]  + ", page: " + parentPage;
         }
-        //else they want both
-        else if (typeof parentPage !== "undefined" && both) {
+        // else they want both
+        else if ( typeof parentPage !== "undefined" && both ) {
             var chapterParentActivity = {
                 "id": moduleID + parentChapter + "/" + parentPage,
                 "definition": {
@@ -390,7 +390,7 @@ function createContext( parentChapter, parentPage, subParentActivity, both ) {
         }
         baseContext.contextActivities.parent.push(chapterActivity);
     
-        //if there is a sub activity, add it
+        // if there is a sub activity, add it
         if ( typeof subParentActivity !== "undefined" ) {
             var subActivity = {
                 "id": moduleID + parentChapter + "/" + parentPage + "#" + subParentActivity,

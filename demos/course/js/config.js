@@ -8,6 +8,10 @@ Config.endpoint = "https://lrs.adlnet.gov/xapi/";
 Config.user = "jqm";
 Config.password = "xapijqm";
 
+// Local Storage email names -- should / cloud be unique across apps
+var storageKeyName = "xapi-jqm/name";
+var storageKeyEmail = "xapi-jqm/email";
+
 // "global" variables
 var moduleID = "http://adlnet.gov/xapi/samples/xapi-jqm/course/"; // trailing slash
 var moduleName = "How to Make French Toast xapi-jqm Course Demo";
