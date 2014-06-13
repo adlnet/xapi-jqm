@@ -149,7 +149,7 @@ function makeAssessment() {
     if ( percentage == 100 && chaptersCompleted.length == 5 ) {
         courseMastered();
         // show a badge by appending to display -- PoC
-        display += '<p><img src="../media/488px-badge-french-toast.jpg" alt="French Toast Badge" title="French Toast Badge" style="width:auto;max-width:488px" /></p><h4>French Toast Master</h4><p>Congratulations, you have mastered the course in How to Make French Toast</p>';
+        display += '<p><img src="../media/488px-badge-french-toast.jpg" alt="French Toast Badge" title="French Toast Badge" style="width:100%;max-width:488px" /></p><h4>French Toast Master</h4><p>Congratulations, you have mastered the course in How to Make French Toast</p>';
     }
 
     $("#quiz_results").html(display);

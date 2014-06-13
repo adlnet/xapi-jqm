@@ -1,0 +1,67 @@
+<!DOCTYPE html> 
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1"> 
+    <title>Introduction - How to Make French Toast - xapi-jqm</title> 
+    <link rel="stylesheet" href="http://code.jquery.com/mobile/1.4.2/jquery.mobile-1.4.2.min.css" />
+    <link rel="stylesheet" href="../css/custom-styles.css" />
+    <script src="http://code.jquery.com/jquery-1.10.2.min.js"></script>
+    <script src="http://code.jquery.com/mobile/1.4.2/jquery.mobile-1.4.2.min.js"></script>
+    <script src="../js/xapiwrapper.min.js"></script>
+    <script src="../js/config.js"></script>
+    <script src="../js/functions.js"></script>  
+	<script>
+        $(document).on("pagecreate", function () {
+            $(".selectAll").on("change", function () {
+                var value = $(this).prop("checked");
+                $(this).closest(".ui-controlgroup").find("[type=checkbox]:not(.selectAll)").prop("checked", value).checkboxradio("refresh");
+            });
+        });
+    </script> 
+</head> 
+
+<body data-chapter="02b-food-ingredients"> 
+
+<div data-role="page" data-theme="b" id="p1" class="ingredients-menu">
+<div data-role="header" class="fullscreen background" style="background-image:url('../media/toast-large.jpg');" data-img-width="1600" data-img-height="1064">
+    <a href="../index.html" name="home" data-role="button" data-theme="b" data-icon="home" data-transition="slide" data-ajax="false" class="ui-btn-left">Home</a>
+<h1><span class="subline no-ellipses">How to Make French Toast</span></h1>
+    <div data-role="navbar">
+        <ul id="toc-list">
+            <li id="02-checklists"><a href="02-checklists.html" data-ajax="false" class="chapter no-ellipses ui-btn-active ui-state-persist">Checklists</a></li>
+            <li id="03-steps"><a href="03-steps.html" data-ajax="false" class="chapter no-ellipses">Steps</a></li> 
+            <li id="04-video"><a href="04-video.html" data-ajax="false" class="chapter no-ellipses">Video</a></li> 
+            <li id="05-glossary"><a href="05-glossary.html" data-ajax="false" class="chapter no-ellipses">Glossary</a></li> 
+        </ul>
+    </div><!-- /navbar -->
+</div><!-- /header -->
+
+    <div data-role="content">    
+
+        <p>Before getting started, you should make sure you have the ingredients and supplies to get cooking! Check each item once you have confirmed you have it. </p>
+
+    <div role="main" class="ui-content">
+        <form>
+          <div class='ui-fieldcontain'>
+          <div data-role='controlgroup'>
+          		  <input type='checkbox' class='selectAll' class='custom' id="selectall"><label for="selectall">Check All</label>          
+                <input type="checkbox" name="checkbox-v-2a" id="checkbox-v-2a"><label for="checkbox-v-2a">1 egg for every 2 slices of bread</label>
+                <input type="checkbox" name="checkbox-v-2b" id="checkbox-v-2b"><label for="checkbox-v-2b">Non-stick spray, olive oil, or butter/margarine</label>
+                <input type="checkbox" name="checkbox-v-2c" id="checkbox-v-2c"><label for="checkbox-v-2c">Cinnamon (Season to taste)</label>
+                <input type="checkbox" name="checkbox-v-2d" id="checkbox-v-2d"><label for="checkbox-v-2d">1/2 teaspoon (3 ml) vanilla extract (vanilla essence, optional)</label>
+                <input type="checkbox" name="checkbox-v-2e" id="checkbox-v-2e"><label for="checkbox-v-2e">Bread (6 pieces), type of bread is up to your preference</label>
+                <input type="checkbox" name="checkbox-v-2f" id="checkbox-v-2f"><label for="checkbox-v-2f">Icing Sugar, syrup, jam, etc.</label>
+                <input type="checkbox" name="checkbox-v-2g" id="checkbox-v-2g"><label for="checkbox-v-2g">Milk (depending on number of eggs, 2 tablespoons per egg)</label>
+                              
+          </div>
+          </div>
+                <a href="02-checklists.html" class="ui-btn ui-btn-active ui-corner-all ui-mini">Save</a>  
+        </form>
+    </div> <!-- /main ui-content input boxes --> 
+    </div><!-- /content -->
+</div><!-- /page p1 -->
+
+</body>
+</html>
