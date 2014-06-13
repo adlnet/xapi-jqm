@@ -53,9 +53,9 @@
     <div data-role="footer" data-theme="b" data-position="fixed">
         <div data-role="navbar">
             <ul>
-                <li><a href="glossary.html" data-icon="info" data-iconpos="top" data-transition="slideup" data-ajax="false">Glossary</a></li>
-                <li><a href="#resources" data-icon="star" data-iconpos="top" data-rel="dialog" data-transition="slideup" data-ajax="false">Resources</a></li>
-                <li><a href="#help" data-icon="alert" data-iconpos="top" data-transition="slideup" data-ajax="false">Help</a></li>
+                <li id="glossary"><a href="glossary.html" data-icon="info" data-iconpos="top" data-transition="slideup" data-ajax="false" class="chapter">Glossary</a></li>
+                <li id="popup-resources"><a href="#resources" data-icon="star" data-iconpos="top" data-rel="dialog" data-transition="slideup" data-ajax="false" class="chapter">Resources</a></li>
+                <li id="popup-help"><a href="#help" data-icon="alert" data-iconpos="top" data-transition="slideup" data-ajax="false" class="chapter">Help</a></li>
             </ul>
         </div><!-- /navbar -->
     </div><!-- /footer -->
@@ -76,7 +76,7 @@
     </div><!-- /content -->
 
     <div data-role="footer" data-position="fixed">
-        <div style="text-align:center;"><a href="#toc" data-rel="back" class="ui-btn ui-shadow ui-corner-all ui-btn-inline ui-icon-back ui-btn-icon-left">Go Back</a></div>
+        <div style="text-align:center;"><a href="#list" data-rel="back" class="ui-btn ui-shadow ui-corner-all ui-btn-inline ui-icon-back ui-btn-icon-left">Go Back</a></div>
     </div><!-- /footer -->
 
 </div><!-- /page resources -->
@@ -111,7 +111,7 @@
     </div><!-- /content -->
 
     <div data-role="footer" data-position="fixed">
-        <div style="text-align:center;"><a href="#toc" data-rel="back" class="ui-btn ui-shadow ui-corner-all ui-btn-inline ui-icon-back ui-btn-icon-left">Go Back</a></div>
+        <div style="text-align:center;"><a href="#list" data-rel="back" class="ui-btn ui-shadow ui-corner-all ui-btn-inline ui-icon-back ui-btn-icon-left">Go Back</a></div>
     </div><!-- /footer -->
 
 </div><!-- /page help -->
