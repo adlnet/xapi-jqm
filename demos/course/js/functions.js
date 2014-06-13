@@ -25,10 +25,23 @@ if ( actor  == false ) {
         var pageID = $.mobile.activePage.attr("id");
         var activityID = moduleID + chapter + "/" + pageID;
 
+        //added for glossary and toc since their IDs have the same chapters and pageIDs 
+        if (chapter === pageID){
+            var context = createContext();
+        }
+        else{
+            if (chapter === "glossary" || chapter === "toc") {
+                var context = createContext(chapter, chapter);
+            }
+            else{
+                var context = createContext(chapter)
+            }
+        }
+
         var stmt = {
             "actor": actor,
-            "verb": ADL.verbs.experienced,
-            "context": createContext(),
+            "verb": ADL.custom.verbs.read,
+            "context": context,
             "object": {
                 "id" : activityID,
                 "objectType": "Activity",
@@ -223,30 +236,30 @@ function checkboxClicked(chapter, pageID, checkboxID, checkboxName) {
     
     // Figure out if it was checked or unchecked
     var isChecked = $("#"+checkboxID).prop('checked');
-    var checkedVerb = (isChecked) ? "checked" : "unchecked";
+    var checkedVerb = (isChecked) ? ADL.custom.verbs.checked : ADL.custom.verbs.unchecked;
 
     var baseActivity = {
-        "id": moduleID,
+        "id": moduleID + "/" + chapter + "/" + pageID + "#" + checkboxID,
         "definition": {
             "name": {
-                "en-US": moduleName + ": " + checkedVerb + " a checkbox, " + checkboxName
+                "en-US": checkboxName
             },
             "description": {
-                "en-US": "A sample HTML5 mobile app with xAPI tracking that teaches you how to make french toast."
+                "en-US": "The " + checkboxName + " checkbox from chapter " + chapter + "; page " + pageID
             }
         },
         "objectType": "Activity"
     };
 
-    // statement for launching content
+    // statement for checking content
     var stmt = {
         "actor": actor,
-        "verb": ADL.verbs.interacted,
+        "verb": checkedVerb,
         "object": baseActivity,
-        "context":createContext(chapter, checkboxID, checkedVerb)
+        "context":createContext(chapter, pageID, undefined, true)
     };
 
-    // Send launched statement
+    // Send statement
     ADL.XAPIWrapper.sendStatement(stmt);
 
 }
@@ -341,8 +354,9 @@ function courseExited() {
 
 }
 
-//suply the chapter, the page, and any sub-activity in that chapter and page
-function createContext( parentChapter, parentPage, subParentActivity ) {
+//supply the chapter, the page, and any sub-activity in that chapter and page. add both if you want the parentChapter activity
+//added as a separate activity in the context from the parentChapter/parentPage activity
+function createContext( parentChapter, parentPage, subParentActivity, both ) {
     var baseContext = {
         "contextActivities": {
             "parent": [
@@ -351,18 +365,44 @@ function createContext( parentChapter, parentPage, subParentActivity ) {
         }
     };
 
-    if ( typeof parentChapter !== "undefined" && typeof parentPage !== "undefined" ) {
+    //set both
+    if ( typeof both === "undefined") {
+        both = false;
+    }
+
+    //if parent chapter make the chapterActivity
+    if ( typeof parentChapter !== "undefined") {
         var chapterActivity = {
-            "id": moduleID + parentChapter + "/" + parentPage,
+            "id": moduleID + parentChapter,
             "definition": {
                 "name": {
-                    "en-US": moduleName + ": " + parentChapter + ", page: " + parentPage
+                    "en-US": moduleName + ": " + parentChapter
                 }
             },
             "objectType": "Activity"
         };
+        
+        //if parent page and don't want both, just append the parent page to the end of the parentChapter activity
+        if ( typeof parentPage !== "undefined" && !both ) {
+            chapterActivity["id"] = chapterActivity["id"] + "/" + parentPage;
+            chapterActivity["definition"]["name"]["en-US"] = chapterActivity["definition"]["name"]["en-US"]  + ", page: " + parentPage
+        }
+        //else they want both
+        else if (typeof parentPage !== "undefined" && both) {
+            var chapterParentActivity = {
+                "id": moduleID + parentChapter + "/" + parentPage,
+                "definition": {
+                    "name": {
+                        "en-US": moduleName + ": " + parentChapter + ", page: " + parentPage
+                    }
+                },
+                "objectType": "Activity"
+            };
+            baseContext.contextActivities.parent.push(chapterParentActivity);            
+        }
         baseContext.contextActivities.parent.push(chapterActivity);
     
+        //if there is a sub activity, add it
         if ( typeof subParentActivity !== "undefined" ) {
             var subActivity = {
                 "id": moduleID + parentChapter + "/" + parentPage + "#" + subParentActivity,
