@@ -35,16 +35,6 @@ if ( actor  == false ) {
         // Send a statement
         ADL.XAPIWrapper.sendStatement(stmt);
 
-        // Handle checkbox clicks -- basic no knowledge of context or checked
-        $(":checkbox").change(function(event) {
-            $checkbox = $(this);
-            var checkboxID = $checkbox.attr("id");
-            var checkboxName = $checkbox.siblings("label").text();
-            var chapter = $("body").attr("data-chapter");
-            var pageID = $.mobile.activePage.attr("id");
-            checkboxClicked(chapter, pageID, checkboxID, checkboxName);
-        });
-
     });
 } // end silly else
 
@@ -263,3 +253,15 @@ function createContext( parentChapter, parentPage, subParentActivity ) {
     }
     return baseContext;
 }
+
+$( document ).ready(function() {
+    // Handle checkbox clicks -- basic no knowledge of context or checked
+    $(":checkbox").change(function(event) {
+        $checkbox = $(this);
+        var checkboxID = $checkbox.attr("id");
+        var checkboxName = $checkbox.siblings("label").text();
+        var chapter = $("body").attr("data-chapter");
+        var pageID = $.mobile.activePage.attr("id");
+        checkboxClicked(chapter, pageID, checkboxID, checkboxName);
+    });
+});
