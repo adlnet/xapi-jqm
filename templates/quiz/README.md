@@ -148,8 +148,8 @@ Referencing the ```CORRECT_QUIZ_ANSWERS``` array, we'll notice the second item i
 
 **Javascript**:
 
-Referencing the ```CORRECT_QUIZ_ANSWERS``` array, ```"bread"``` is the defined string. This is case insensitive.
+Referencing the ```CORRECT_QUIZ_ANSWERS``` array, ```"bread"``` is the defined string, which is case-insensitive; "Bread" would also be a valid answer to the question.
 
 As the last question in the quiz, one other function is called in the ```onclick``` of the "next" or "get results" button, ```makeAssessment()``` which will calculate a score based on the number of questions answered correctly.
 
-Opotionally, this function can also fire ```courseMastered()```. In this template, "mastered" is defined by having completed all the steps and scoring 100% on the quiz. This also displays a french toast master badge. This function can be customized to fit the needs of what "mastered" means in the context of your app.
+Optionally, this function can also fire ```courseMastered()```. In this template, "mastered" is defined by having completed all the steps and scoring 100% on the quiz. This also displays a french toast master badge. This function can be customized to fit the needs of what "mastered" means in the context of your app.
