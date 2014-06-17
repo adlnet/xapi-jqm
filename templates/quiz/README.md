@@ -12,7 +12,7 @@ The HTML is consists of jQuery Mobile Widgets, a ```gradeQuestion()``` function 
 Answers for quizzes are defined in by an array ```CORRECT_QUIZ_ANSWERS```. The example below has answers that correspond with the input types listed above: checklist, radio, textbox.
 
 
-## Configuration
+### Configuration
 
 Most configuration is handled in the [quiz-functions.js](js/quiz-functions.js) file.
 
@@ -38,12 +38,12 @@ var CORRECT_QUIZ_ANSWERS = [ [2,3,6], [4], "bread" ];
 ```
 
 
-## Widgets
+### Widgets
 
 Lets dig a little deeper into these types with examples from the template.
 
 
-### Checkboxes (multiple choice selection)
+#### Checkboxes (multiple choice selection)
 
 **HTML**:
 
@@ -83,7 +83,7 @@ Make note of the ```onclick``` that is firing the javascript function to compare
 The answer array for this first question, has an array of ids that correspond with the index of the item in the list, ```[2,3,6]``` -- which translates into "bread, eggs, and butter" being the 2nd, 3rd and 6th list items.
 
 
-### Radio Selection (single choice selection)
+#### Radio Selection (single choice selection)
 
 **HTML**:
 
@@ -120,7 +120,7 @@ The answer array for this first question, has an array of ids that correspond wi
 Referencing the ```CORRECT_QUIZ_ANSWERS``` array, we'll notice the second item is ```[4]``` which means the 4th list item, "pan" as the correct answer.
 
 
-### Text Box (string comparison)
+#### Text Box (string comparison)
 
 **HTML**:
 
