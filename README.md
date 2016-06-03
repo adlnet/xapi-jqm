@@ -47,6 +47,9 @@ If you prefer reading more stylized information as a website instead of README.m
 
 :floppy_disk: [Download this repository](https://github.com/adlnet/xapi-jqm/zipball/master)
 
+## Contributing to the project
+We welcome contributions to this project. Fork this repository, make changes, and submit pull requests. If you're not comfortable with editing the code, please [submit an issue](https://github.com/adlnet/xapi-jqm/issues) and we'll be happy to address it. 
+
 ## License
    Copyright &copy;2016 Advanced Distributed Learning
 
