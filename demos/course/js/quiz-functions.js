@@ -117,31 +117,46 @@ function makeAssessment() {
         }
     });
 
-    var verb = ADL.verbs.failed;
+    // var verb = ADL.verbs.failed;
     var success = false;
     var percentage = Math.round( (correct/CORRECT_QUIZ_ANSWERS.length) * 100 )
     var display = "";
     if ( percentage > 60 ) {
-        verb = ADL.verbs.passed;
+        // verb = ADL.verbs.passed;
         success = true;
         display = "You passed the quiz! You scored " + percentage + "%"
     } else {
         display = "You failed the quiz! You scored " + percentage + "%"        
     }
+
     var stmt = {
         "actor": actor,
-        "verb": verb,
-        "object": quizActivity,
+        "verb": ADL.verbs.terminated,
+        "object": 
+            {
+              "definition": {
+                "name": {
+                  "en-US": "How to Make French Toast xapi-jqm Course Demo"
+                },
+                "description": {
+                  "en-US": "A sample HTML5 mobile app with xAPI tracking that teaches you how to make french toast."
+                }
+              },
+              "id": "http://adlnet.gov/xapi/samples/xapi-jqm/course/",
+              "objectType": "Activity"
+            },
         "result": {
             "score":{
                 "min": 0,
                 "raw": correct,
                 "max": CORRECT_QUIZ_ANSWERS.length
             },
-            "success": success
-        },
-        "context": createContext(chapter)
+            "success": success,
+            "completion": true
+        },            
+        "context": createContext(undefined, undefined, undefined, undefined, false)        
     };
+
     // Send a statement
     ADL.XAPIWrapper.sendStatement(stmt);
 
@@ -151,25 +166,6 @@ function makeAssessment() {
     var chaptersCompleted = getChaptersCompleted();
     if ( percentage == 100 && chaptersCompleted.length == 5 ) {
         // courseMastered();
-        var stmt = {
-            "actor": actor,
-            "verb": ADL.verbs.terminated,
-            "object": 
-                {
-                  "definition": {
-                    "name": {
-                      "en-US": "How to Make French Toast xapi-jqm Course Demo"
-                    },
-                    "description": {
-                      "en-US": "A sample HTML5 mobile app with xAPI tracking that teaches you how to make french toast."
-                    }
-                  },
-                  "id": "http://adlnet.gov/xapi/samples/xapi-jqm/course/",
-                  "objectType": "Activity"
-                },
-            "context": createContext(undefined, undefined, undefined, undefined, false)
-        };
-        ADL.XAPIWrapper.sendStatement(stmt);
         // show a badge by appending to display -- PoC
         display += '<p><img src="../media/488px-badge-french-toast.jpg" alt="French Toast Badge" title="French Toast Badge" style="width:100%;max-width:488px" /></p><h4>French Toast Master</h4><p>Congratulations, you have mastered the course in How to Make French Toast</p>';
     }
