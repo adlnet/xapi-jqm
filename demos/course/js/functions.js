@@ -199,10 +199,19 @@ function userRegister( name, email ) {
 // jqm's submission process is the reason I'm doing it this way
 function userRegisterSubmit() {
     if ( $("#reg-name").val() != "" && $("#reg-email").val() != "" ) {
-        userRegister($("#reg-name").val(), $("#reg-email").val());
-        courseLaunched();
-        window.location = "../index.html"
-    }
+        var regex = /^([a-zA-Z0-9_.+-])+\@(([a-zA-Z0-9-])+\.)+([a-zA-Z0-9]{2,4})+$/;
+        if (!regex.test($("#reg-email").val())){
+            alert("Invalid email!");
+        } else {
+            userRegister($("#reg-name").val(), $("#reg-email").val());
+            courseLaunched();
+            window.location = "../index.html"            
+        }
+    } else if ( $("#reg-name").val() == ""){    
+        alert("Missing name!");
+    } else if ( $("#reg-email").val() == ""){ 
+        alert("Missing email!");
+    }    
 }
 
 /*
@@ -253,7 +262,8 @@ function courseRegistered() {
     var stmt = {
         "actor": actor,
         "verb": ADL.verbs.registered,
-        "object": baseActivity
+        "object": baseActivity,
+        "context": createContext(undefined, undefined, undefined, undefined, false)
     };
 
     // Send registered statement
@@ -268,8 +278,10 @@ function courseLaunched() {
     // statement for launching content
     var stmt = {
         "actor": actor,
-        "verb": ADL.verbs.launched,
-        "object": baseActivity
+        // "verb": ADL.verbs.launched,
+        "verb": ADL.verbs.initialized,
+        "object": baseActivity,
+        "context": createContext(undefined, undefined, undefined, undefined, false)        
     };
 
     // Send launched statement
@@ -308,7 +320,8 @@ function courseMastered() {
     var stmt = {
         "actor": actor,
         "verb": ADL.verbs.mastered,
-        "object": baseActivity
+        "object": baseActivity,
+        "context": createContext(undefined, undefined, undefined, undefined, false)
     };
 
     // Send launched statement
@@ -324,7 +337,8 @@ function courseExited() {
     var stmt = {
         "actor": actor,
         "verb": ADL.verbs.exited,
-        "object": baseActivity
+        "object": baseActivity,
+        "context": createContext(undefined, undefined, undefined, undefined, false)
     };
 
     // Send exited statement
@@ -334,14 +348,53 @@ function courseExited() {
 
 // supply the chapter, the page, and any sub-activity in that chapter and page. add both if you want the parentChapter activity
 // added as a separate activity in the context from the parentChapter/parentPage activity
-function createContext( parentChapter, parentPage, subParentActivity, both ) {
-    var baseContext = {
-        "contextActivities": {
-            "parent": [
-                baseActivity
-            ]
-        }
-    };
+function createContext( parentChapter, parentPage, subParentActivity, both, includeBA ) {
+    if ( typeof includeBA === "undefined") {
+        includeBA = true;
+    }
+
+    if (includeBA){
+        var baseContext = {
+            "contextActivities": {
+                "parent": [
+                    baseActivity
+                ],
+                "grouping": [
+                    {
+                      "definition": {
+                        "name": {
+                          "en-US": "NATO E-Learning Forum xAPI Workshop"
+                        },
+                        "description": {
+                          "en-US": "NATO E-Learning Forum xAPI Workshop"
+                        }
+                      },
+                      "id": "http://adlnet.gov/xapi/workshops/2016/natoelearningforum/",
+                      "objectType": "Activity"
+                    }
+                ]
+            }
+        };        
+    } else{
+        var baseContext = {
+            "contextActivities": {
+                "grouping": [
+                    {
+                      "definition": {
+                        "name": {
+                          "en-US": "NATO E-Learning Forum xAPI Workshop"
+                        },
+                        "description": {
+                          "en-US": "NATO E-Learning Forum xAPI Workshop"
+                        }
+                      },
+                      "id": "http://adlnet.gov/xapi/workshops/2016/natoelearningforum/",
+                      "objectType": "Activity"
+                    }
+                ]
+            }
+        };        
+    }
 
     // set both
     if ( typeof both === "undefined") {
