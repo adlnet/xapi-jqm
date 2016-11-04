@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 var video = "vPrtNzvDS5M"; // Change this to your video ID
 // "global" variables read by ADL.XAPIYoutubeStatements
 ADL.XAPIYoutubeStatements.changeConfig({

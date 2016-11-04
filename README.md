@@ -46,7 +46,6 @@ Check out [templates directory](templates) for isolated examples.
 If you prefer reading more stylized information as a website instead of README.md files, you can [learn more about xapi-jqm](http://adlnet.github.com/xapi-jqm) on the homepage.
 
 :floppy_disk: [Download this repository](https://github.com/adlnet/xapi-jqm/zipball/master)
-<<<<<<< HEAD
 
 ## Contributing to the project
 We welcome contributions to this project. Fork this repository, make changes, and submit pull requests. If you're not comfortable with editing the code, please [submit an issue](https://github.com/adlnet/xapi-jqm/issues) and we'll be happy to address it. 
@@ -65,5 +64,3 @@ We welcome contributions to this project. Fork this repository, make changes, an
    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
    See the License for the specific language governing permissions and
    limitations under the License.
-=======
->>>>>>> 13c279c5339eab541926f9ee921972117aadc544
