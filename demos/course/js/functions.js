@@ -199,19 +199,10 @@ function userRegister( name, email ) {
 // jqm's submission process is the reason I'm doing it this way
 function userRegisterSubmit() {
     if ( $("#reg-name").val() != "" && $("#reg-email").val() != "" ) {
-        var regex = /^([a-zA-Z0-9_.+-])+\@(([a-zA-Z0-9-])+\.)+([a-zA-Z0-9]{2,4})+$/;
-        if (!regex.test($("#reg-email").val())){
-            alert("Invalid email!");
-        } else {
-            userRegister($("#reg-name").val(), $("#reg-email").val());
-            courseLaunched();
-            window.location = "../index.html"            
-        }
-    } else if ( $("#reg-name").val() == ""){    
-        alert("Missing name!");
-    } else if ( $("#reg-email").val() == ""){ 
-        alert("Missing email!");
-    }    
+        userRegister($("#reg-name").val(), $("#reg-email").val());
+        courseLaunched();
+        window.location = "../index.html"
+    }
 }
 
 /*
@@ -262,8 +253,7 @@ function courseRegistered() {
     var stmt = {
         "actor": actor,
         "verb": ADL.verbs.registered,
-        "object": baseActivity,
-        "context": createContext(undefined, undefined, undefined, undefined, false)
+        "object": baseActivity
     };
 
     // Send registered statement
@@ -278,10 +268,8 @@ function courseLaunched() {
     // statement for launching content
     var stmt = {
         "actor": actor,
-        // "verb": ADL.verbs.launched,
-        "verb": ADL.verbs.initialized,
-        "object": baseActivity,
-        "context": createContext(undefined, undefined, undefined, undefined, false)        
+        "verb": ADL.verbs.launched,
+        "object": baseActivity
     };
 
     // Send launched statement
@@ -320,8 +308,7 @@ function courseMastered() {
     var stmt = {
         "actor": actor,
         "verb": ADL.verbs.mastered,
-        "object": baseActivity,
-        "context": createContext(undefined, undefined, undefined, undefined, false)
+        "object": baseActivity
     };
 
     // Send launched statement
@@ -337,8 +324,7 @@ function courseExited() {
     var stmt = {
         "actor": actor,
         "verb": ADL.verbs.exited,
-        "object": baseActivity,
-        "context": createContext(undefined, undefined, undefined, undefined, false)
+        "object": baseActivity
     };
 
     // Send exited statement
@@ -348,53 +334,14 @@ function courseExited() {
 
 // supply the chapter, the page, and any sub-activity in that chapter and page. add both if you want the parentChapter activity
 // added as a separate activity in the context from the parentChapter/parentPage activity
-function createContext( parentChapter, parentPage, subParentActivity, both, includeBA ) {
-    if ( typeof includeBA === "undefined") {
-        includeBA = true;
-    }
-
-    if (includeBA){
-        var baseContext = {
-            "contextActivities": {
-                "parent": [
-                    baseActivity
-                ],
-                "grouping": [
-                    {
-                      "definition": {
-                        "name": {
-                          "en-US": "TECOM xAPI Workshop"
-                        },
-                        "description": {
-                          "en-US": "TECOM xAPI Workshop"
-                        }
-                      },
-                      "id": "http://adlnet.gov/event/xapiworkshop/tecom",
-                      "objectType": "Activity"
-                    }
-                ]
-            }
-        };        
-    } else{
-        var baseContext = {
-            "contextActivities": {
-                "grouping": [
-                    {
-                      "definition": {
-                        "name": {
-                          "en-US": "TECOM xAPI Workshop"
-                        },
-                        "description": {
-                          "en-US": "TECOM xAPI Workshop"
-                        }
-                      },
-                      "id": "http://adlnet.gov/event/xapiworkshop/tecom",
-                      "objectType": "Activity"
-                    }
-                ]
-            }
-        };        
-    }
+function createContext( parentChapter, parentPage, subParentActivity, both ) {
+    var baseContext = {
+        "contextActivities": {
+            "parent": [
+                baseActivity
+            ]
+        }
+    };
 
     // set both
     if ( typeof both === "undefined") {
@@ -449,7 +396,6 @@ function createContext( parentChapter, parentPage, subParentActivity, both, incl
     }
     return baseContext;
 }
-
 
 $( document ).ready(function() {
     // Handle checkbox clicks -- basic no knowledge of context or checked
