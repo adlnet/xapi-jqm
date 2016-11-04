@@ -35,16 +35,6 @@ if ( actor  == false ) {
         // Send a statement
         ADL.XAPIWrapper.sendStatement(stmt);
 
-        // Handle checkbox clicks -- basic no knowledge of context or checked
-        $(":checkbox").change(function(event) {
-            $checkbox = $(this);
-            var checkboxID = $checkbox.attr("id");
-            var checkboxName = $checkbox.siblings("label").text();
-            var chapter = $("body").attr("data-chapter");
-            var pageID = $.mobile.activePage.attr("id");
-            checkboxClicked(chapter, pageID, checkboxID, checkboxName);
-        });
-
     });
 } // end silly else
 
@@ -132,10 +122,20 @@ function userRegister( name, email ) {
 // jqm's submission process is the reason I'm doing it this way
 function userRegisterSubmit() {
     if ( $("#reg-name").val() != "" && $("#reg-email").val() != "" ) {
-        userRegister($("#reg-name").val(), $("#reg-email").val());
-        courseLaunched();
-        window.location = "../index.html"
-    }
+        var regex = /^([a-zA-Z0-9_.+-])+\@(([a-zA-Z0-9-])+\.)+([a-zA-Z0-9]{2,4})+$/;
+        if (!regex.test($("#reg-email").val())){
+            alert("Invalid email!");
+        } else {
+            userRegister($("#reg-name").val(), $("#reg-email").val());
+            courseLaunched();
+            window.location = "../index.html"            
+        }
+    } else if ( $("#reg-name").val() == ""){    
+        alert("Missing name!");
+    } else if ( $("#reg-email").val() == ""){ 
+        alert("Missing email!");
+    }    
+
 }
 
 /*
@@ -263,3 +263,16 @@ function createContext( parentChapter, parentPage, subParentActivity ) {
     }
     return baseContext;
 }
+
+$( document ).ready(function() {
+    // Handle checkbox clicks -- basic no knowledge of context or checked
+    $(":checkbox").change(function(event) {
+        $checkbox = $(this);
+        var checkboxID = $checkbox.attr("id");
+        var checkboxName = $checkbox.siblings("label").text();
+        var chapter = $("body").attr("data-chapter");
+        var pageID = $.mobile.activePage.attr("id");
+        checkboxClicked(chapter, pageID, checkboxID, checkboxName);
+    });
+});
+
