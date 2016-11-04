@@ -363,13 +363,13 @@ function createContext( parentChapter, parentPage, subParentActivity, both, incl
                     {
                       "definition": {
                         "name": {
-                          "en-US": "NATO E-Learning Forum xAPI Workshop"
+                          "en-US": "TECOM xAPI Workshop"
                         },
                         "description": {
-                          "en-US": "NATO E-Learning Forum xAPI Workshop"
+                          "en-US": "TECOM xAPI Workshop"
                         }
                       },
-                      "id": "http://adlnet.gov/xapi/workshops/2016/natoelearningforum/",
+                      "id": "http://adlnet.gov/event/xapiworkshop/tecom",
                       "objectType": "Activity"
                     }
                 ]
@@ -382,13 +382,13 @@ function createContext( parentChapter, parentPage, subParentActivity, both, incl
                     {
                       "definition": {
                         "name": {
-                          "en-US": "NATO E-Learning Forum xAPI Workshop"
+                          "en-US": "TECOM xAPI Workshop"
                         },
                         "description": {
-                          "en-US": "NATO E-Learning Forum xAPI Workshop"
+                          "en-US": "TECOM xAPI Workshop"
                         }
                       },
-                      "id": "http://adlnet.gov/xapi/workshops/2016/natoelearningforum/",
+                      "id": "http://adlnet.gov/event/xapiworkshop/tecom",
                       "objectType": "Activity"
                     }
                 ]
