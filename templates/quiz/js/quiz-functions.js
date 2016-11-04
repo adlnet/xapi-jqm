@@ -17,6 +17,7 @@ function gradeQuestion() {
     var quiz_name = "q" + pageID[1]
     var questionID = quizID + "-" + quiz_name;
 
+
     var q_form = $("#" + pageID + "_form :input")
     var question_type = q_form[0].type
     var correct_answer = CORRECT_QUIZ_ANSWERS[parseInt(pageID[1]) - 1];

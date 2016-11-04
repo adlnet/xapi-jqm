@@ -17,6 +17,7 @@ function gradeQuestion() {
     var quiz_name = "q" + pageID[1]
     var questionID = quizID + "-" + quiz_name;
 
+
     var q_form = $("#" + pageID + "_form :input")
     var question_type = q_form[0].type
     var correct_answer = CORRECT_QUIZ_ANSWERS[parseInt(pageID[1]) - 1];
@@ -139,6 +140,7 @@ function makeAssessment() {
                 "max": CORRECT_QUIZ_ANSWERS.length
             },
             "success": success
+
         },
         "context": createContext(chapter)
     };
@@ -170,6 +172,7 @@ function makeAssessment() {
             "context": createContext(undefined, undefined, undefined, undefined, false)
         };
         ADL.XAPIWrapper.sendStatement(stmt);
+
         // show a badge by appending to display -- PoC
         display += '<p><img src="../media/488px-badge-french-toast.jpg" alt="French Toast Badge" title="French Toast Badge" style="width:100%;max-width:488px" /></p><h4>French Toast Master</h4><p>Congratulations, you have mastered the course in How to Make French Toast</p>';
     }

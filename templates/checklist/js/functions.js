@@ -135,6 +135,7 @@ function userRegisterSubmit() {
     } else if ( $("#reg-email").val() == ""){ 
         alert("Missing email!");
     }    
+
 }
 
 /*
@@ -274,3 +275,4 @@ $( document ).ready(function() {
         checkboxClicked(chapter, pageID, checkboxID, checkboxName);
     });
 });
+

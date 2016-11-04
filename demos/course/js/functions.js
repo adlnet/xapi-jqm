@@ -450,6 +450,7 @@ function createContext( parentChapter, parentPage, subParentActivity, both, incl
     return baseContext;
 }
 
+
 $( document ).ready(function() {
     // Handle checkbox clicks -- basic no knowledge of context or checked
     $(":checkbox").change(function(event) {

@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 var video = "vPrtNzvDS5M"; // Change this to your video ID
 // "global" variables read by ADL.XAPIYoutubeStatements
 ADL.XAPIYoutubeStatements.changeConfig({
@@ -45,3 +46,4 @@ ADL.XAPIYoutubeStatements.onStateChangeCallback = function(event, stmt) {
     console.warn("no statement found in callback for event: " + event);
   }
 }
+

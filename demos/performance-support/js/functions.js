@@ -182,6 +182,7 @@ function userRegisterSubmit() {
     } else if ( $("#reg-email").val() == ""){ 
         alert("Missing email!");
     }    
+
 }
 
 /* SCORMy
