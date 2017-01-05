@@ -1,3 +1,4 @@
+var moduleID = "http://adlnet.gov/xapi/samples/xapi-jqm/course/"; // trailing slash
 var quizID = moduleID + "chapters/05-quiz#quiz"
 var quizActivity = {
     "id": quizID,

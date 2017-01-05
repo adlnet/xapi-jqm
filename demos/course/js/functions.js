@@ -1,63 +1,137 @@
 /* in progress */
+var baseActivity = {
+    "id": moduleID,
+    "definition": {
+        "name": {
+            "en-US": moduleName
+        },
+        "description": {
+            "en-US": "A sample HTML5 mobile app with xAPI tracking that teaches you how to make french toast."
+        }
+    },
+    "objectType": "Activity"
+};
+var actor;
+ADL.launch(function(err,apiData,xAPIWrapper){
 
+
+        if(err){
+            console.log(err);
+            ADL.XAPIWrapper.changeConfig({
+                endpoint: "https://lrs.adlnet.gov/xapi/",
+                user: 'Neat',
+                password: 'p356a012'
+            });
+            wrapper = ADL.XAPIWrapper;
+            
+            var stmt = new ADL.XAPIStatement(actor,"http://adlnet.gov/expapi/verbs/initialized","http://localhost:8081"+window.location.pathname);
+
+            
+            updateLRS(stmt);
+
+        } else {            
+            console.log("--- Launch ---");
+            lData = apiData;
+            wrapper = xAPIWrapper;
+            actor = lData.actor;
+            console.log(lData.actor);
+
+            var stmt = new ADL.XAPIStatement(actor,"http://adlnet.gov/expapi/verbs/initialized","http://localhost:8081"+window.location.pathname);
+
+            updateLRS(stmt);
+
+
+        }
+
+    },false);
 // Global Actor
-actor = getActor();
+// actor = getActor();
 
 /* Page Change Logic */
-if ( actor  == false ) {
-    checkLoggedIn();
-} else { // silly thing to wrap in an else but I need to restructure the code to handle a missing actor on login page
+// if ( actor  == false ) {
+//     checkLoggedIn();
+// } else { // silly thing to wrap in an else but I need to restructure the code to handle a missing actor on login page
 
-    doConfig();
+//     doConfig();
 
-    // Handle chapter clicks to send launch statements
-    $( document ).on("vclick", "a.chapter", function() {
-        $chapter = $(this);
-        var chapter = $chapter.parent("li").attr("id");
-        var name = $chapter.text();
-        chapterLaunched(chapter, name);
-    });
+//     // Handle chapter clicks to send launch statements
+//     $( document ).on("vclick", "a.chapter", function() {
+//         $chapter = $(this);
+//         var chapter = $chapter.parent("li").attr("id");
+//         var name = $chapter.text();
+//         chapterLaunched(chapter, name);
+//     });
 
-    // Abstracted page changing logic -- catch-all
-    $( window ).on("pagechange", function(event) {
+//     // Abstracted page changing logic -- catch-all
+//     $( window ).on("pagechange", function(event) {
 
-        var chapter = $("body").attr("data-chapter");
-        var pageID = $.mobile.activePage.attr("id");
-        var activityID = moduleID + chapter + "/" + pageID;
-        var context = createContext(chapter);
+//         var chapter = $("body").attr("data-chapter");
+//         var pageID = $.mobile.activePage.attr("id");
+//         var activityID = moduleID + chapter + "/" + pageID;
+//         var context = createContext(chapter);
 
-        var stmt = {
-            "actor": actor,
-            "verb": ADL.custom.verbs.read,
-            "context": context,
-            "object": {
-                "id" : activityID,
-                "objectType": "Activity",
-                "definition": {
-                    "name": {
-                        "en-US": moduleName + ": " + chapter + ", page: " + pageID
-                    }
+//         var stmt = {
+//             "actor": actor,
+//             "verb": ADL.custom.verbs.read,
+//             "context": context,
+//             "object": {
+//                 "id" : activityID,
+//                 "objectType": "Activity",
+//                 "definition": {
+//                     "name": {
+//                         "en-US": moduleName + ": " + chapter + ", page: " + pageID
+//                     }
+//                 }
+//             }
+//         };
+
+//         // Send a statement
+//         ADL.XAPIWrapper.sendStatement(stmt);
+//         ADL.XAPIWrapper.sendState(moduleID, actor, "session-state", null, { "info": "reading", "chapter": chapter, "page": pageID });
+
+//     });
+// } // end silly else
+
+
+function updateLRS(stmnt){
+    console.log("--- send stmnt ---");
+    console.log(stmnt);
+    wrapper.sendStatement(stmnt, outputResults);
+}
+
+//The callback for the LRS.
+var outputResults = function (resp, thing) {
+        var spanclass = "text-info";
+        var text = "";
+        if (resp.status >= 400) {
+            spanclass = "text-danger";
+            text = (thing.totalErrors > 1) ? "Errors: " : "Error: ";
+            for ( var res in thing.results ) {
+                text += "<br>" + ((thing.results[res].instance.id) ? thing.results[res].instance.id : "Statement " + res);
+                for ( var err in thing.results[res].errors ) {
+                    text += "<br>&nbsp;&nbsp;" + thing.results[res].errors[err].trace;
+                    text += "<br>&nbsp;&nbsp;&nbsp;&nbsp;" + thing.results[res].errors[err].message;
                 }
             }
-        };
+        } else {
+            if ( resp.responseText )
+                text = "Successfully sent " + resp.responseText;
+            else
+                text = thing;
+        }
 
-        // Send a statement
-        ADL.XAPIWrapper.sendStatement(stmt);
-        ADL.XAPIWrapper.sendState(moduleID, actor, "session-state", null, { "info": "reading", "chapter": chapter, "page": pageID });
-
-    });
-} // end silly else
-
+        console.log(text);
+    };
 /* State functions */
 function getState() {
-    return ADL.XAPIWrapper.getState(moduleID, actor, "session-state");
+    return wrapper.getState(moduleID, actor, "session-state");
 }
 
 /* Course Progress */
 
 // Get from State API
 function getChaptersCompleted() {
-    var chaptersCompleted = ADL.XAPIWrapper.getState(moduleID, actor, "chapters-completed");
+    var chaptersCompleted = wrapper.getState(moduleID, actor, "chapters-completed");
     return chaptersCompleted.chapters;
 }
 
@@ -73,7 +147,7 @@ function setChapterComplete() {
     $.each($.merge($.merge([], currentCompletedChapters), chapterCompleted), function (index, value) { hash[value] = value; });
     $.each(hash, function (key, value) { union.push(key); } );
     
-    ADL.XAPIWrapper.sendState(moduleID, actor, "chapters-completed", null, { "chapters": union });
+    wrapper.sendState(moduleID, actor, "chapters-completed", null, { "chapters": union });
 
     doConfig();
 
@@ -94,7 +168,7 @@ function setChapterComplete() {
     };
 
     // Send chapterComplete statement
-    ADL.XAPIWrapper.sendStatement(stmt);
+    // updateLRS(stmt);
 
 }
 
@@ -173,7 +247,7 @@ function getBaseURL() {
         var baseurl = "http://adlnet.github.io/xapi-jqm/demos/course/";
     }
     return baseurl;
-}*/
+}
 
 function userLogin() {
     // Should get the page root
@@ -204,13 +278,14 @@ function userRegisterSubmit() {
         window.location = "../index.html"
     }
 }
+*/
 
 /*
  * xAPIy
  */
 function checkboxClicked(chapter, pageID, checkboxID, checkboxName) {
     
-    doConfig();
+    // doConfig();
     
     // Figure out if it was checked or unchecked
     var isChecked = $("#"+checkboxID).prop('checked');
@@ -238,7 +313,7 @@ function checkboxClicked(chapter, pageID, checkboxID, checkboxName) {
     };
 
     // Send statement
-    ADL.XAPIWrapper.sendStatement(stmt);
+    updateLRS(stmt);
 
 }
 
@@ -273,7 +348,7 @@ function courseLaunched() {
     };
 
     // Send launched statement
-    ADL.XAPIWrapper.sendStatement(stmt);
+    updateLRS(stmt);
 
 }
 
@@ -296,7 +371,7 @@ function chapterLaunched(chapter, name) {
         };
 
         // Send a statement
-        ADL.XAPIWrapper.sendStatement(stmt);
+        updateLRS(stmt);
 }
 
 
@@ -312,7 +387,7 @@ function courseMastered() {
     };
 
     // Send launched statement
-    ADL.XAPIWrapper.sendStatement(stmt);
+    updateLRS(stmt);
 
 }
 
@@ -328,7 +403,7 @@ function courseExited() {
     };
 
     // Send exited statement
-    ADL.XAPIWrapper.sendStatement(stmt);
+    updateLRS(stmt);
 
 }
 
@@ -396,6 +471,173 @@ function createContext( parentChapter, parentPage, subParentActivity, both ) {
     }
     return baseContext;
 }
+
+
+/*
+    Quiz code
+*/
+var moduleID = "http://adlnet.gov/xapi/samples/xapi-jqm/course/"; // trailing slash
+var quizID = moduleID;
+var quizActivity = {
+    "id": quizID,
+    "definition": {
+        "name": {
+            "en-US": "xAPI for jQuery Mobile French Toast Demo quiz"
+        }
+    },
+    "objectType": "Activity"
+};
+
+var CORRECT_QUIZ_ANSWERS = [ [2,3,6], [4], "bread" ];
+
+function gradeQuestion() {
+    var chapter = $("body").attr("data-chapter");
+    var pageID = $.mobile.activePage.attr("id");
+    var quiz_name = "q" + pageID[1]
+    var questionID = quizID + "#" + quiz_name;
+
+    var q_form = $("#" + pageID + "_form :input")
+    var question_type = q_form[0].type
+    var correct_answer = CORRECT_QUIZ_ANSWERS[parseInt(pageID[1]) - 1];
+    var correct_answer_display = [];
+
+    switch ( question_type ) {
+        case 'radio':
+        case 'checkbox':
+            var user_answer = [];
+            var user_answer_display = [];
+            
+            //loop through radio/checkboxex and push ones that were selected
+            $("#" + pageID + "_form input").each(function(idx, val) {
+                    if ( val.checked ){
+                        user_answer.push(idx + 1);
+                        user_answer_display.push(this.previousSibling.textContent);
+                    }
+                    if ( $.inArray(idx+1, correct_answer ) > -1) {
+                        correct_answer_display.push(this.previousSibling.textContent);
+                    }
+                });
+
+            //compare radio/checkbox selections 
+            var success = false;
+            if ( correct_answer.join(',') === user_answer.sort().join(',') ) {
+                success = true;
+            }
+
+            var stmt = {
+                "actor": actor,
+                "verb": ADL.verbs.answered,
+                "object": {
+                    "id" : questionID,
+                    "objectType": "Activity",
+                    "definition": {
+                        "name": {
+                            "en-US": moduleName + " " + quiz_name
+                        }
+                    }
+                },
+                "result": {
+                    "success": success,
+                    "response": user_answer.toString() + " " + user_answer_display.toString(),
+                    "extensions":{
+                        "answer:correct_answer": correct_answer.toString() + " " + correct_answer_display.toString()
+                    }
+                },
+                "context":createContext(chapter, pageID, "quiz")
+            };            
+            break;
+        case 'text':
+            user_answer = q_form.val();
+            success = false;
+            if ( user_answer.toLowerCase() === correct_answer.toLowerCase() ) {
+                success = true;
+            }
+            var stmt = {
+                "actor": actor,
+                "verb": ADL.verbs.answered,
+                "object": {
+                    "id" : questionID,
+                    "objectType": "Activity",
+                    "definition": {
+                        "name": {
+                            "en-US": moduleName + " " + quiz_name
+                        }
+                    }
+                },
+                "result": {
+                    "success": success,
+                    "response": user_answer,
+                    "extensions":{
+                        "answer:correct_answer": correct_answer
+                    }
+                },
+                "context":createContext(chapter, pageID, "quiz")
+            };
+            break;
+    }
+
+    console.log("quiz stmt");
+    // Send a statement
+    updateLRS(stmt);
+    localStorage.setItem("xapi-jqm/" + actor["name"] + "/" + quiz_name, success);
+}
+
+function makeAssessment() { 
+    var chapter = $("body").attr("data-chapter");    
+    var results = [];
+    var correct = 0;
+
+    for ( var i=0; i < CORRECT_QUIZ_ANSWERS.length; i++ ) {
+        results.push(localStorage.getItem("xapi-jqm/" + actor['name'] + "/" + "q" + (i+1)));
+        localStorage.removeItem("xapi-jqm/" + actor['name'] + "/" + "q" + (i+1));
+    }
+
+    $.each(results, function(idx, val) {
+        if (val === "true"){
+            correct++;
+        }
+    });
+
+    var verb = ADL.verbs.failed;
+    var percentage = Math.round( (correct/CORRECT_QUIZ_ANSWERS.length) * 100 )
+    var display = "";
+    if ( percentage > 60 ) {
+        verb = ADL.verbs.passed;
+        display = "You passed the quiz! You scored " + percentage + "%"
+    } else {
+        display = "You failed the quiz! You scored " + percentage + "%"        
+    }
+    var stmt = {
+        "actor": actor,
+        "verb": verb,
+        "object": quizActivity,
+        "result": {
+            "score":{
+                "min": 0,
+                "raw": correct,
+                "max": CORRECT_QUIZ_ANSWERS.length
+            }
+        },
+        "context": createContext(chapter)
+    };
+    // Send a statement
+    updateLRS(stmt);
+
+    // setChapterComplete();
+
+    // // Mastered statement
+    // var chaptersCompleted = getChaptersCompleted();
+    // if ( percentage == 100 && chaptersCompleted.length == 5 ) {
+    //     courseMastered();
+    //     // show a badge by appending to display -- PoC
+    //     display += '<p><img src="../media/488px-badge-french-toast.jpg" alt="French Toast Badge" title="French Toast Badge" style="width:100%;max-width:488px" /></p><h4>French Toast Master</h4><p>Congratulations, you have mastered the course in How to Make French Toast</p>';
+    // }
+
+    $("#quiz_results").html(display);
+}
+
+// End Quiz Code
+
 
 $( document ).ready(function() {
     // Handle checkbox clicks -- basic no knowledge of context or checked
