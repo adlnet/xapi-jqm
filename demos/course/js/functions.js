@@ -132,13 +132,18 @@ function getState() {
 // Get from State API
 function getChaptersCompleted() {
     var chaptersCompleted = wrapper.getState(moduleID, actor, "chapters-completed");
+    if(!chaptersCompleted){
+        console.log("NULL");
+        chaptersCompleted = {"chapters":0};
+    }
     return chaptersCompleted.chapters;
 }
 
 // Set in State API
 function setChapterComplete() {
+   
     var chapterID = $("body").attr("data-chapter");
-    var currentCompletedChapters = getChaptersCompleted();   
+    var currentCompletedChapters = 0; //getChaptersCompleted();   
     var chapterCompleted = [ chapterID ];
 
     var hash = {}, union = [];
@@ -149,7 +154,7 @@ function setChapterComplete() {
     
     wrapper.sendState(moduleID, actor, "chapters-completed", null, { "chapters": union });
 
-    doConfig();
+    // doConfig();
 
     // statement for launching content
     var stmt = {
@@ -168,7 +173,8 @@ function setChapterComplete() {
     };
 
     // Send chapterComplete statement
-    // updateLRS(stmt);
+    updateLRS(stmt);
+
 
 }
 
@@ -623,15 +629,15 @@ function makeAssessment() {
     // Send a statement
     updateLRS(stmt);
 
-    // setChapterComplete();
+    setChapterComplete();
 
-    // // Mastered statement
-    // var chaptersCompleted = getChaptersCompleted();
-    // if ( percentage == 100 && chaptersCompleted.length == 5 ) {
-    //     courseMastered();
-    //     // show a badge by appending to display -- PoC
-    //     display += '<p><img src="../media/488px-badge-french-toast.jpg" alt="French Toast Badge" title="French Toast Badge" style="width:100%;max-width:488px" /></p><h4>French Toast Master</h4><p>Congratulations, you have mastered the course in How to Make French Toast</p>';
-    // }
+    // Mastered statement
+    var chaptersCompleted = getChaptersCompleted();
+    if ( percentage == 100 && chaptersCompleted.length == 5 ) {
+        courseMastered();
+        // show a badge by appending to display -- PoC
+        display += '<p><img src="../media/488px-badge-french-toast.jpg" alt="French Toast Badge" title="French Toast Badge" style="width:100%;max-width:488px" /></p><h4>French Toast Master</h4><p>Congratulations, you have mastered the course in How to Make French Toast</p>';
+    }
 
     $("#quiz_results").html(display);
 }
