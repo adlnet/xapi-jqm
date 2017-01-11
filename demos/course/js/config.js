@@ -12,20 +12,39 @@ Config.password = "xapijqm";
 var storageKeyName = "xapi-jqm/name";
 var storageKeyEmail = "xapi-jqm/email";
 
-// "global" variables
-var moduleID = "http://adlnet.gov/xapi/samples/xapi-jqm/course/"; // trailing slash
-var moduleName = "How to Make French Toast xapi-jqm Course Demo";
-var courseType = "http://adlnet.gov/xapi/activities/course";
+// jqm's submission process is the reason I'm doing it this way
+function userRegisterSubmit() {
+    console.log("submit")
+    if ( $("#reg-name").val() != "" && $("#reg-email").val() != "" ) {
+        userRegister($("#reg-name").val(), $("#reg-email").val());
+        
+        window.location = "../index.html"
+    }
+}
 
-var baseActivity = {
-    "id": moduleID,
-    "definition": {
-        "name": {
-            "en-US": moduleName
-        },
-        "description": {
-            "en-US": "A sample HTML5 mobile app with xAPI tracking that teaches you how to make french toast."
-        }
-    },
-    "objectType": "Activity"
-};
+//Handle manual login
+
+function userRegister( name, email ) {
+    // should error check this
+    setActor(name, email);
+}
+
+function setActor( name, email ) {
+    console.log(email);
+    setUserName(name);
+    setUserEmail(email);
+}
+
+function setUserName(name) {
+    localStorage.setItem(storageKeyName, name);
+}
+
+function setUserEmail(email) {
+    localStorage.setItem(storageKeyEmail, email);
+}
+
+function userLogout() {
+    localStorage.removeItem(storageKeyName);
+    localStorage.removeItem(storageKeyEmail);
+    window.location = "00-account.html"
+}

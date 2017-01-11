@@ -17,16 +17,7 @@
             padding-left:40px;
         }
     </style>
-<!--     <script type="text/javascript">
-        $(function(){
-            var chaptersCompleted = getChaptersCompleted()
-            $("#toc-list li").each(function() {
-                if ( $.inArray( $(this).attr("id"), chaptersCompleted ) !== -1 ) {
-                    $(this).addClass("ui-icon-check");
-                }
-            });
-        });
-    </script> -->
+
 </head> 
 
 <body data-chapter="toc"> 
@@ -35,7 +26,7 @@
 
     <div data-role="header">
         <h1>How to Make French Toast</h1>
-        <a href="chapters/00-account.html#logout" data-ajax="false" data-theme="b" data-transition="slidedown" data-icon="delete" class="ui-btn-right">Exit</a>
+        <a href="chapters/00-account.html#logout" data-ajax="false" data-theme="b" data-transition="slidedown" data-icon="delete" class="ui-btn-right" onclick="courseExited();">Exit</a>
     </div><!-- /header -->
 
     <div data-role="content">

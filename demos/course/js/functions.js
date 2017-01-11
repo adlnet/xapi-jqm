@@ -1,4 +1,9 @@
 /* in progress */
+
+// "global" variables
+var moduleID = "http://adlnet.gov/xapi/samples/xapi-jqm/course/"; // trailing slash
+var moduleName = "How to Make French Toast xapi-jqm Course Demo";
+var courseType = "http://adlnet.gov/xapi/activities/course";
 var baseActivity = {
     "id": moduleID,
     "definition": {
@@ -11,39 +16,68 @@ var baseActivity = {
     },
     "objectType": "Activity"
 };
+
 var actor;
+var wrapper;
+
 ADL.launch(function(err,apiData,xAPIWrapper){
 
+    // No launch server, so configure manually.
+    if(err){
+        wrapper = ADL.XAPIWrapper;
 
-        if(err){
-            console.log(err);
-            ADL.XAPIWrapper.changeConfig({
-                endpoint: "https://lrs.adlnet.gov/xapi/",
-                user: 'Neat',
-                password: 'p356a012'
-            });
-            wrapper = ADL.XAPIWrapper;
-            
-            var stmt = new ADL.XAPIStatement(actor,"http://adlnet.gov/expapi/verbs/initialized","http://localhost:8081"+window.location.pathname);
-
-            
-            updateLRS(stmt);
+        if(!getUserName()){
+            // No user so login.
+            window.location = "/chapters/00-account.html";
 
         } else {            
-            console.log("--- Launch ---");
-            lData = apiData;
-            wrapper = xAPIWrapper;
-            actor = lData.actor;
-            console.log(lData.actor);
-
-            var stmt = new ADL.XAPIStatement(actor,"http://adlnet.gov/expapi/verbs/initialized","http://localhost:8081"+window.location.pathname);
-
-            updateLRS(stmt);
-
-
+            actor = getActor();
+            Config.actor = actor;
+            wrapper.changeConfig(Config);
+            // courseRegistered();
         }
 
-    },false);
+    } else {            
+
+        wrapper = xAPIWrapper;
+        actor = apiData.actor;
+        // courseLaunched();
+
+    }
+
+    var chapter = $("body").attr("data-chapter");
+    // var pageID = $.mobile.activePage.attr("id");
+    var activityID = moduleID + chapter// + "/" + pageID;
+    var context = createContext(chapter);
+
+    var stmt = {
+        "actor": actor,
+        "verb": ADL.verbs.launched,
+        "context": context,
+        "object": {
+            "id" : activityID,
+            "objectType": "Activity",
+            "definition": {
+                "name": {
+                    "en-US": moduleName + ": " + chapter //+ ", page: " + pageID
+                }
+            }
+        }
+    };
+
+    updateLRS(stmt);
+    wrapper.sendState(moduleID, actor, "session-state", null, { "info": "reading", "chapter": chapter});//, "page": pageID });
+    
+
+    var chaptersCompleted = getChaptersCompleted()
+    $("#toc-list li").each(function() {
+        if ( $.inArray( $(this).attr("id"), chaptersCompleted ) !== -1 ) {
+            $(this).addClass("ui-icon-check");
+        }
+    });
+
+},false);
+
 // Global Actor
 // actor = getActor();
 
@@ -92,36 +126,36 @@ ADL.launch(function(err,apiData,xAPIWrapper){
 //     });
 // } // end silly else
 
-
+//Send statements to the LRS.
 function updateLRS(stmnt){
-    console.log("--- send stmnt ---");
-    console.log(stmnt);
-    wrapper.sendStatement(stmnt, outputResults);
+
+    wrapper.sendStatement(stmnt);
 }
 
 //The callback for the LRS.
 var outputResults = function (resp, thing) {
-        var spanclass = "text-info";
-        var text = "";
-        if (resp.status >= 400) {
-            spanclass = "text-danger";
-            text = (thing.totalErrors > 1) ? "Errors: " : "Error: ";
-            for ( var res in thing.results ) {
-                text += "<br>" + ((thing.results[res].instance.id) ? thing.results[res].instance.id : "Statement " + res);
-                for ( var err in thing.results[res].errors ) {
-                    text += "<br>&nbsp;&nbsp;" + thing.results[res].errors[err].trace;
-                    text += "<br>&nbsp;&nbsp;&nbsp;&nbsp;" + thing.results[res].errors[err].message;
-                }
+    var spanclass = "text-info";
+    var text = "";
+    if (resp.status >= 400) {
+        spanclass = "text-danger";
+        text = (thing.totalErrors > 1) ? "Errors: " : "Error: ";
+        for ( var res in thing.results ) {
+            text += "<br>" + ((thing.results[res].instance.id) ? thing.results[res].instance.id : "Statement " + res);
+            for ( var err in thing.results[res].errors ) {
+                text += "<br>&nbsp;&nbsp;" + thing.results[res].errors[err].trace;
+                text += "<br>&nbsp;&nbsp;&nbsp;&nbsp;" + thing.results[res].errors[err].message;
             }
-        } else {
-            if ( resp.responseText )
-                text = "Successfully sent " + resp.responseText;
-            else
-                text = thing;
         }
+    } else {
+        if ( resp.responseText )
+            text = "Successfully sent " + resp.responseText;
+        else
+            text = thing;
+    }
 
-        console.log(text);
-    };
+    console.log(text);
+};
+
 /* State functions */
 function getState() {
     return wrapper.getState(moduleID, actor, "session-state");
@@ -132,9 +166,9 @@ function getState() {
 // Get from State API
 function getChaptersCompleted() {
     var chaptersCompleted = wrapper.getState(moduleID, actor, "chapters-completed");
+
     if(!chaptersCompleted){
-        console.log("NULL");
-        chaptersCompleted = {"chapters":0};
+        chaptersCompleted = {"chapters": []};
     }
     return chaptersCompleted.chapters;
 }
@@ -143,7 +177,7 @@ function getChaptersCompleted() {
 function setChapterComplete() {
    
     var chapterID = $("body").attr("data-chapter");
-    var currentCompletedChapters = 0; //getChaptersCompleted();   
+    var currentCompletedChapters = getChaptersCompleted();   
     var chapterCompleted = [ chapterID ];
 
     var hash = {}, union = [];
@@ -153,8 +187,6 @@ function setChapterComplete() {
     $.each(hash, function (key, value) { union.push(key); } );
     
     wrapper.sendState(moduleID, actor, "chapters-completed", null, { "chapters": union });
-
-    // doConfig();
 
     // statement for launching content
     var stmt = {
@@ -175,67 +207,60 @@ function setChapterComplete() {
     // Send chapterComplete statement
     updateLRS(stmt);
 
+    stmt = {
+        "actor": actor,
+        "verb": ADL.custom.verbs.read,
+        "context": createContext(chapterCompleted),
+        "object": {
+            "id" : moduleID + chapterCompleted,
+            "objectType": "Activity",
+            "definition": {
+                "name": {
+                    "en-US": moduleName + ": " + chapterCompleted 
+                }
+            }
+        }
+    };
 
+    updateLRS(stmt);
+
+    window.location = "../index.html";
 }
 
 /* Helpers */
-function doConfig() { // sorry
-    Config.actor = actor;
-    ADL.XAPIWrapper.changeConfig(Config);
-}
-
 function getPage() {
     var url = window.location.pathname;
     var filename = url.substring(url.lastIndexOf('/')+1);
     return filename;
 }
 
-/* Name, Email, Actor, gets and sets */
+/* Name, Email, Actor, gets */
 
 // Actor
 function getActor() {
     var name = localStorage.getItem(storageKeyName);
     var email = localStorage.getItem(storageKeyEmail);
-    if ( name == null || email == null ) {
+    if ( name == null  ) {
         return false;
     } else {
         var actor = { "mbox": "mailto:" + email, "name": name };
         return actor;
     }
 }
-function setActor( name, email ) {
-    setUserName(name);
-    setUserEmail(email);
-}
-
 // Name
 function getUserName() {
     return localStorage.getItem(storageKeyName);
-}
-function setUserName(name) {
-    localStorage.setItem(storageKeyName, name);
 }
 
 // Email
 function getUserEmail() {
     return localStorage.getItem(storageKeyEmail);
 }
-function setUserEmail(email) {
-    localStorage.setItem(storageKeyEmail, email);
-}
 
 // Destroy all the things
 function clearActor() {
     localStorage.removeItem(storageKeyName);
     localStorage.removeItem(storageKeyEmail);
-}
-
-/* Login / Logout functions */
-function checkLoggedIn() {
-    // If the actor doesn't exist, send them to the login page
-    if ( getPage() != "00-account.html" ) {
-        userLogin();
-    }
 }
 
 /*
@@ -254,44 +279,24 @@ function getBaseURL() {
     }
     return baseurl;
 }
+*/
 
-function userLogin() {
-    // Should get the page root
-    window.location = "chapters/00-account.html#login";
-}
 
 function userLogout() {
-    courseExited();
+    // courseExited();
     clearActor();
     window.location = "../"; // lol
 }
 
-function userRegister( name, email ) {
-    // should error check this
-    setActor(name, email);
-    // Set global actor var so other functions can use it
-    actor = getActor();
-    courseRegistered();
-    // Setup chapters-complete
-    ADL.XAPIWrapper.sendState(moduleID, actor, "chapters-completed", null, { "chapters": [] });
-}
 
-// jqm's submission process is the reason I'm doing it this way
-function userRegisterSubmit() {
-    if ( $("#reg-name").val() != "" && $("#reg-email").val() != "" ) {
-        userRegister($("#reg-name").val(), $("#reg-email").val());
-        courseLaunched();
-        window.location = "../index.html"
-    }
-}
-*/
+
+
+
 
 /*
  * xAPIy
  */
 function checkboxClicked(chapter, pageID, checkboxID, checkboxName) {
-    
-    // doConfig();
     
     // Figure out if it was checked or unchecked
     var isChecked = $("#"+checkboxID).prop('checked');
@@ -327,8 +332,6 @@ function checkboxClicked(chapter, pageID, checkboxID, checkboxName) {
  * SCORMy
  */
 function courseRegistered() {
-    
-    doConfig();
 
     // statement for launching content
     var stmt = {
@@ -337,14 +340,12 @@ function courseRegistered() {
         "object": baseActivity
     };
 
-    // Send registered statement
-    ADL.XAPIWrapper.sendStatement(stmt);
+    // Send statement
+    updateLRS(stmt);
 
 }
 
 function courseLaunched() {
-    
-    doConfig();
 
     // statement for launching content
     var stmt = {
@@ -359,31 +360,29 @@ function courseLaunched() {
 }
 
 function chapterLaunched(chapter, name) {
-        var activityID = moduleID + chapter;
 
-        var stmt = {
-            "actor": actor,
-            "verb": ADL.verbs.launched,
-            "context": createContext(),
-            "object": {
-                "id":  activityID,
-                "objectType": "Activity",
-                "definition": {
-                    "name": {
-                        "en-US": moduleName + ": " + chapter
-                    }
+    var activityID = moduleID + chapter;
+    var stmt = {
+        "actor": actor,
+        "verb": ADL.verbs.launched,
+        "context": createContext(),
+        "object": {
+            "id":  activityID,
+            "objectType": "Activity",
+            "definition": {
+                "name": {
+                    "en-US": moduleName + ": " + chapter
                 }
             }
-        };
+        }
+    };
 
-        // Send a statement
-        updateLRS(stmt);
+    // Send a statement
+    updateLRS(stmt);
 }
 
 
 function courseMastered() {
-    
-    doConfig();
 
     // statement for launching content
     var stmt = {
@@ -392,14 +391,12 @@ function courseMastered() {
         "object": baseActivity
     };
 
-    // Send launched statement
+    // Send statement
     updateLRS(stmt);
 
 }
 
 function courseExited() {
-
-    doConfig();
 
     // statement for launching content
     var stmt = {
@@ -582,7 +579,6 @@ function gradeQuestion() {
             break;
     }
 
-    console.log("quiz stmt");
     // Send a statement
     updateLRS(stmt);
     localStorage.setItem("xapi-jqm/" + actor["name"] + "/" + quiz_name, success);
@@ -655,4 +651,5 @@ $( document ).ready(function() {
         var pageID = $.mobile.activePage.attr("id");
         checkboxClicked(chapter, pageID, checkboxID, checkboxName);
     });
+
 });
