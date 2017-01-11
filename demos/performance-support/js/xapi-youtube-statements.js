@@ -16,6 +16,7 @@
 
       var actor = {"mbox":"mailto:anon@example.com", "name":"anonymous"};
       var videoActivity = {};
+      var started = false;
 
       this.changeConfig = function(options) {
         actor = options.actor;
@@ -37,6 +38,7 @@
           case -1:
             e = "unstarted";
             log("yt: " + e);
+            stmt = playVideo(ISOTime);
             break;
           case 0:
             e = "ended";
@@ -75,21 +77,23 @@
 
       var convertISOSecondsToNumber = function(time) { return Number(time.slice(2, -1)); };
 
-      // Referencing http://xapi.vocab.pub/datasets/video/
       function playVideo(ISOTime) {
         var stmt = {};
         /*if (competency) {
           stmt["context"] = {"contextActivities":{"other" : [{"id": "compID:" + competency}]}};
         }*/
 
-        if (convertISOSecondsToNumber(ISOTime) === 0) {
-            stmt.verb = ADL.verbs.initialized;
+        if (ISOTime == "PT0S") {
+          // stmt.verb = ADL.verbs.launched;
+          stmt.verb = ADL.verbs.initialized;
+          started = true;
         } else {
-          stmt.verb = {
-              id: ADL.videoprofile.verbs.played['@id'],
-              display: ADL.videoprofile.verbs.played.prefLabel
-          };
-          stmt.result = {"extensions":{"resultExt:resumed":ISOTime}};
+          if (!started) {
+            stmt.verb = ADL.verbs.resumed;
+            stmt.result = {"extensions":{"resultExt:resumed":ISOTime}};
+            started = false;
+
+          }
         }
         return buildStatement(stmt);
       }
@@ -97,11 +101,8 @@
       function pauseVideo(ISOTime) {
         var stmt = {};
 
-        stmt.verb = {
-            id: ADL.videoprofile.verbs.paused['@id'],
-            display: ADL.videoprofile.verbs.paused.prefLabel
-        };
-        // stmt.verb = ADL.verbs.suspended;
+        started = false;
+        stmt.verb = ADL.verbs.suspended;
         stmt.result = {"extensions":{"resultExt:paused":ISOTime}};
 
         /*if (competency) {
@@ -113,9 +114,10 @@
       function completeVideo(ISOTime) {
         var stmt = {};
 
-        stmt.verb = ADL.verbs.completed;
+        // stmt.verb = ADL.verbs.completed;
+        stmt.verb = {"id": "http://adlnet.gov/expapi/verbs/watched", "display":{"en-US": "watched"}}
         stmt.result = {"duration":ISOTime, "completion": true};
-
+        started = false;
         /*if (competency) {
             stmt["context"] = {"contextActivities":{"other" : [{"id": "compID:" + competency}]}};
         }*/

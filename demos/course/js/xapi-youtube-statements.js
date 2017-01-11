@@ -1,5 +1,5 @@
 (function(ADL){
-    
+
     var debug = true;
     var log = function(message)
     {
@@ -67,13 +67,15 @@
         }
         ADL.XAPIYoutubeStatements.onStateChangeCallback(e, stmt);
       }
-      
+
       function buildStatement(stmt) {
         var stmt = stmt;
         stmt.actor = actor;
         stmt.object = videoActivity;
         return stmt;
       }
+
+      var convertISOSecondsToNumber = function(time) { return Number(time.slice(2, -1)); };
 
       function playVideo(ISOTime) {
         var stmt = {};
@@ -83,14 +85,14 @@
 
         if (ISOTime == "PT0S") {
           // stmt.verb = ADL.verbs.launched;
-          stmt.verb = {"id": "http://adlnet.gov/expapi/verbs/started", "display":{"en-US": "started"}}
+          stmt.verb = ADL.verbs.initialized;
           started = true;
         } else {
           if (!started) {
             stmt.verb = ADL.verbs.resumed;
             stmt.result = {"extensions":{"resultExt:resumed":ISOTime}};
             started = false;
-         
+
           }
         }
         return buildStatement(stmt);
@@ -98,7 +100,7 @@
 
       function pauseVideo(ISOTime) {
         var stmt = {};
-        
+
         started = false;
         stmt.verb = ADL.verbs.suspended;
         stmt.result = {"extensions":{"resultExt:paused":ISOTime}};
@@ -111,7 +113,7 @@
 
       function completeVideo(ISOTime) {
         var stmt = {};
-        
+
         // stmt.verb = ADL.verbs.completed;
         stmt.verb = {"id": "http://adlnet.gov/expapi/verbs/watched", "display":{"en-US": "watched"}}
         stmt.result = {"duration":ISOTime, "completion": true};
