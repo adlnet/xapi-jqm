@@ -26,6 +26,14 @@ function onYouTubeIframeAPIReady() {
 
 initYT();
 
+// Auth for the LRS
+var conf = {
+    "endpoint" : "https://lrs.adlnet.gov/xapi/",
+    "auth" : "Basic " + toBase64("xapi-tools:xapi-tools"),
+};
+
+ADL.XAPIWrapper.changeConfig(conf);
+
 /*
  * Custom Callbacks
  */
@@ -37,12 +45,8 @@ ADL.XAPIYoutubeStatements.onStateChangeCallback = function(event, stmt) {
   console.log(stmt);
   if (stmt) {
     stmt['timestamp'] = (new Date()).toISOString();
-	var chapterID = $("body").attr("data-chapter");
-	var pageID = "p1"; // lazy    
-    stmt['context'] = createContext(chapterID, pageID, undefined, true);
     ADL.XAPIWrapper.sendStatement(stmt, function(){});
   } else {
     console.warn("no statement found in callback for event: " + event);
   }
 }
-
