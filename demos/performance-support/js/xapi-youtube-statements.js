@@ -16,6 +16,8 @@
 
       var actor = {"mbox":"mailto:anon@example.com", "name":"anonymous"};
       var videoActivity = {};
+      var seeking = false;
+      var prevTime = 0.0;
 
       this.changeConfig = function(options) {
         actor = options.actor;
@@ -33,6 +35,7 @@
         var ISOTime = "PT" + curTime.slice(0, curTime.indexOf(".")+3) + "S";
         var stmt = null;
         var e = "";
+        console.log(seeking);
         switch(event.data) {
           case -1:
             e = "unstarted";
@@ -52,7 +55,8 @@
           case 2:
             e = "paused";
             log("yt: " + e);
-            stmt = pauseVideo(ISOTime);
+            prevTime = Date.now();
+            setTimeout(function() {pauseVideo(ISOTime);}, 100);
             break;
           case 3:
             e = "buffering";
@@ -82,10 +86,12 @@
 
       function initializeVideo(ISOTime) {
         var stmt = {};
+
         stmt.verb = {
           id: ADL.videoprofile.references.initialized['@id'],
           display: {"en-US": "initialized"}
         };
+
         return buildStatement(stmt);
       }
 
@@ -95,26 +101,59 @@
           stmt["context"] = {"contextActivities":{"other" : [{"id": "compID:" + competency}]}};
         }*/
 
-        stmt.verb = {
-          id: ADL.videoprofile.verbs.played['@id'],
-          display: ADL.videoprofile.verbs.played.prefLabel
-        };
-        stmt.result = {"extensions":{"resultExt:resumed":ISOTime}};
+        // calculate time from paused state
+        var elapTime = (Date.now() - prevTime) / 1000.0;
+
+        if (prevTime == 0.0 || elapTime > 0.075) {
+          stmt.verb = {
+            id: ADL.videoprofile.verbs.played['@id'],
+            display: ADL.videoprofile.verbs.played.prefLabel
+          };
+          stmt.result = {"extensions":{"resultExt:resumed":ISOTime}};
+        }
+        else {
+          seeking = true;
+          return seekVideo(ISOTime);
+        }
+
         return buildStatement(stmt);
       }
 
       function pauseVideo(ISOTime) {
         var stmt = {};
 
-        stmt.verb = {
-          id: ADL.videoprofile.verbs.paused['@id'],
-          display: ADL.videoprofile.verbs.paused.prefLabel
-        };
-        stmt.result = {"extensions":{"resultExt:paused":ISOTime}};
+        // check for seeking
+        if (!seeking) {
+          stmt.verb = {
+            id: ADL.videoprofile.verbs.paused['@id'],
+            display: ADL.videoprofile.verbs.paused.prefLabel
+          };
+          stmt.result = {"extensions":{"resultExt:paused":ISOTime}};
+
+          // manually send 'paused' statement because of interval delay
+          stmt = buildStatement(stmt);
+          if (stmt) {
+            ADL.XAPIYoutubeStatements.onStateChangeCallback("paused", stmt);
+          }
+        }
+        else {
+          seeking = false;
+        }
 
         /*if (competency) {
             stmt["context"] = {"contextActivities":{"other" : [{"id": "compID:" + competency}]}};
         }*/
+      }
+
+      function seekVideo(ISOTime) {
+        var stmt = {};
+
+        stmt.verb = {
+          id: ADL.videoprofile.verbs.seeked['@id'],
+          display: ADL.videoprofile.verbs.seeked.prefLabel
+        }
+        stmt.result = {"extensions":{"resultExt:seeked":ISOTime}};
+
         return buildStatement(stmt);
       }
 
