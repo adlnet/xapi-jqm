@@ -78,53 +78,6 @@ ADL.launch(function(err,apiData,xAPIWrapper){
 
 },false);
 
-// Global Actor
-// actor = getActor();
-
-/* Page Change Logic */
-// if ( actor  == false ) {
-//     checkLoggedIn();
-// } else { // silly thing to wrap in an else but I need to restructure the code to handle a missing actor on login page
-
-//     doConfig();
-
-//     // Handle chapter clicks to send launch statements
-//     $( document ).on("vclick", "a.chapter", function() {
-//         $chapter = $(this);
-//         var chapter = $chapter.parent("li").attr("id");
-//         var name = $chapter.text();
-//         chapterLaunched(chapter, name);
-//     });
-
-//     // Abstracted page changing logic -- catch-all
-//     $( window ).on("pagechange", function(event) {
-
-//         var chapter = $("body").attr("data-chapter");
-//         var pageID = $.mobile.activePage.attr("id");
-//         var activityID = moduleID + chapter + "/" + pageID;
-//         var context = createContext(chapter);
-
-//         var stmt = {
-//             "actor": actor,
-//             "verb": ADL.custom.verbs.read,
-//             "context": context,
-//             "object": {
-//                 "id" : activityID,
-//                 "objectType": "Activity",
-//                 "definition": {
-//                     "name": {
-//                         "en-US": moduleName + ": " + chapter + ", page: " + pageID
-//                     }
-//                 }
-//             }
-//         };
-
-//         // Send a statement
-//         ADL.XAPIWrapper.sendStatement(stmt);
-//         ADL.XAPIWrapper.sendState(moduleID, actor, "session-state", null, { "info": "reading", "chapter": chapter, "page": pageID });
-
-//     });
-// } // end silly else
 
 //Send statements to the LRS.
 function updateLRS(stmnt){
@@ -132,7 +85,7 @@ function updateLRS(stmnt){
     wrapper.sendStatement(stmnt);
 }
 
-//The callback for the LRS.
+// A callback for the sendStatement.
 var outputResults = function (resp, thing) {
     var spanclass = "text-info";
     var text = "";
@@ -223,8 +176,6 @@ function setChapterComplete() {
     };
 
     updateLRS(stmt);
-
-    window.location = "../index.html";
 }
 
 /* Helpers */
@@ -256,41 +207,6 @@ function getUserName() {
 function getUserEmail() {
     return localStorage.getItem(storageKeyEmail);
 }
-
-// Destroy all the things
-function clearActor() {
-    localStorage.removeItem(storageKeyName);
-    localStorage.removeItem(storageKeyEmail);
-}
-
-/*
-function getBaseURL() {
-    // silly regex hack for now #helpWanted
-    var regex = new RegExp("(index.html|.*\/chapters\/.*|.*\/glossary.html)");
-    var location = window.location.href;
-    if ( regex.test(location) ) {
-        var str = location.split("/").pop();
-        var baseurl = location.replace(str, "");
-        var str = "chapters/"
-        var baseurl = baseurl.replace(str, "");
-    } else {
-        // otherwise give up and send them to the github version
-        var baseurl = "http://adlnet.github.io/xapi-jqm/demos/course/";
-    }
-    return baseurl;
-}
-*/
-
-
-function userLogout() {
-    // courseExited();
-    clearActor();
-    window.location = "../"; // lol
-}
-
-
-
-
 
 
 /*
@@ -581,6 +497,8 @@ function gradeQuestion() {
 
     // Send a statement
     updateLRS(stmt);
+
+    //??
     localStorage.setItem("xapi-jqm/" + actor["name"] + "/" + quiz_name, success);
 }
 

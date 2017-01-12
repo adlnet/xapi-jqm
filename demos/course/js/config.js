@@ -14,7 +14,6 @@ var storageKeyEmail = "xapi-jqm/email";
 
 // jqm's submission process is the reason I'm doing it this way
 function userRegisterSubmit() {
-    console.log("submit")
     if ( $("#reg-name").val() != "" && $("#reg-email").val() != "" ) {
         userRegister($("#reg-name").val(), $("#reg-email").val());
         
@@ -30,7 +29,6 @@ function userRegister( name, email ) {
 }
 
 function setActor( name, email ) {
-    console.log(email);
     setUserName(name);
     setUserEmail(email);
 }
@@ -43,6 +41,7 @@ function setUserEmail(email) {
     localStorage.setItem(storageKeyEmail, email);
 }
 
+// Clear the stored user values.
 function userLogout() {
     localStorage.removeItem(storageKeyName);
     localStorage.removeItem(storageKeyEmail);
