@@ -16,7 +16,6 @@
 
       var actor = {"mbox":"mailto:anon@example.com", "name":"anonymous"};
       var videoActivity = {};
-      var started = false;
 
       this.changeConfig = function(options) {
         actor = options.actor;
@@ -38,7 +37,7 @@
           case -1:
             e = "unstarted";
             log("yt: " + e);
-            stmt = playVideo(ISOTime);
+            stmt = initializeVideo(ISOTime);
             break;
           case 0:
             e = "ended";
@@ -74,12 +73,21 @@
         if (stmt){
           var stmt = stmt;
           stmt.actor = actor;
-          stmt.object = videoActivity;          
+          stmt.object = videoActivity;
         }
         return stmt;
       }
 
       var convertISOSecondsToNumber = function(time) { return Number(time.slice(2, -1)); };
+
+      function initializeVideo(ISOTime) {
+        var stmt = {};
+        stmt.verb = {
+          id: ADL.videoprofile.references.initialized['@id'],
+          display: {"en-US": "initialized"}
+        };
+        return buildStatement(stmt);
+      }
 
       function playVideo(ISOTime) {
         var stmt = {};
@@ -87,33 +95,21 @@
           stmt["context"] = {"contextActivities":{"other" : [{"id": "compID:" + competency}]}};
         }*/
 
-        if (convertISOSecondsToNumber(ISOTime) == 0) {
-          // stmt.verb = ADL.verbs.launched;
-          if (!started){
-            stmt.verb = ADL.verbs.initialized;
-            started = true;            
-          }
-          else {
-            stmt = null;
-          }
-        } else {
-          if (!started) {
-            stmt.verb = ADL.verbs.resumed;
-            stmt.result = {"extensions":{"resultExt:resumed":ISOTime}};
-            started = false;
-          }
-          else{
-            stmt = null;
-          }
-        }
+        stmt.verb = {
+          id: ADL.videoprofile.verbs.played['@id'],
+          display: ADL.videoprofile.verbs.played.prefLabel
+        };
+        stmt.result = {"extensions":{"resultExt:resumed":ISOTime}};
         return buildStatement(stmt);
       }
 
       function pauseVideo(ISOTime) {
         var stmt = {};
 
-        started = false;
-        stmt.verb = ADL.verbs.suspended;
+        stmt.verb = {
+          id: ADL.videoprofile.verbs.paused['@id'],
+          display: ADL.videoprofile.verbs.paused.prefLabel
+        };
         stmt.result = {"extensions":{"resultExt:paused":ISOTime}};
 
         /*if (competency) {
@@ -125,10 +121,11 @@
       function completeVideo(ISOTime) {
         var stmt = {};
 
-        // stmt.verb = ADL.verbs.completed;
-        stmt.verb = {"id": "http://adlnet.gov/expapi/verbs/watched", "display":{"en-US": "watched"}}
+        stmt.verb = {
+          id: ADL.videoprofile.references.completed['@id'],
+          display: {"en-US": "completed"}
+        }
         stmt.result = {"duration":ISOTime, "completion": true};
-        started = false;
         /*if (competency) {
             stmt["context"] = {"contextActivities":{"other" : [{"id": "compID:" + competency}]}};
         }*/
