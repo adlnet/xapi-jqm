@@ -65,13 +65,17 @@
             break;
           default:
         }
-        ADL.XAPIYoutubeStatements.onStateChangeCallback(e, stmt);
+        if (stmt){
+          ADL.XAPIYoutubeStatements.onStateChangeCallback(e, stmt);
+        }
       }
 
       function buildStatement(stmt) {
-        var stmt = stmt;
-        stmt.actor = actor;
-        stmt.object = videoActivity;
+        if (stmt){
+          var stmt = stmt;
+          stmt.actor = actor;
+          stmt.object = videoActivity;          
+        }
         return stmt;
       }
 
@@ -83,16 +87,23 @@
           stmt["context"] = {"contextActivities":{"other" : [{"id": "compID:" + competency}]}};
         }*/
 
-        if (ISOTime == "PT0S") {
+        if (convertISOSecondsToNumber(ISOTime) == 0) {
           // stmt.verb = ADL.verbs.launched;
-          stmt.verb = ADL.verbs.initialized;
-          started = true;
+          if (!started){
+            stmt.verb = ADL.verbs.initialized;
+            started = true;            
+          }
+          else {
+            stmt = null;
+          }
         } else {
           if (!started) {
             stmt.verb = ADL.verbs.resumed;
             stmt.result = {"extensions":{"resultExt:resumed":ISOTime}};
             started = false;
-
+          }
+          else{
+            stmt = null;
           }
         }
         return buildStatement(stmt);
