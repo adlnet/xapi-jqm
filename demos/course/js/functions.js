@@ -46,8 +46,7 @@ ADL.launch(function(err,apiData,xAPIWrapper){
     }
 
     var chapter = $("body").attr("data-chapter");
-    // var pageID = $.mobile.activePage.attr("id");
-    var activityID = moduleID + chapter// + "/" + pageID;
+    var activityID = moduleID + chapter
     var context = createContext(chapter);
 
     var stmt = {
@@ -59,14 +58,14 @@ ADL.launch(function(err,apiData,xAPIWrapper){
             "objectType": "Activity",
             "definition": {
                 "name": {
-                    "en-US": moduleName + ": " + chapter //+ ", page: " + pageID
+                    "en-US": moduleName + ": " + chapter
                 }
             }
         }
     };
 
     updateLRS(stmt);
-    wrapper.sendState(moduleID, actor, "session-state", null, { "info": "reading", "chapter": chapter});//, "page": pageID });
+    wrapper.sendState(moduleID, actor, "session-state", null, { "info": "reading", "chapter": chapter});
     
 
     var chaptersCompleted = getChaptersCompleted()
@@ -523,6 +522,7 @@ function makeAssessment() {
     var display = "";
     if ( percentage > 60 ) {
         verb = ADL.verbs.passed;
+        setChapterComplete();
         display = "You passed the quiz! You scored " + percentage + "%"
     } else {
         display = "You failed the quiz! You scored " + percentage + "%"        
@@ -543,7 +543,7 @@ function makeAssessment() {
     // Send a statement
     updateLRS(stmt);
 
-    setChapterComplete();
+    
 
     // Mastered statement
     var chaptersCompleted = getChaptersCompleted();
