@@ -253,6 +253,11 @@ function getActor() {
         return actor;
     }
 }
+function setActor(name, email) {
+    setUserName(name);
+    setUserEmail(email);
+}
+
 // Name
 function getUserName() {
     return localStorage.getItem(storageKeyName);
@@ -263,6 +268,11 @@ function getUserEmail() {
     return localStorage.getItem(storageKeyEmail);
 }
 
+// Destroy all the things
+function clearActor() {
+    localStorage.removeItem("xapi-jqm/name");
+    localStorage.removeItem("xapi-jqm/email");
+}
 
 /*
  * xAPIy
@@ -297,6 +307,13 @@ function checkboxClicked(chapter, pageID, checkboxID, checkboxName) {
     // Send statement
     updateLRS(stmt);
 
+// jqm's submission process is the reason I'm doing it this way
+function userRegisterSubmit() {
+    if ( $("#reg-name").val() != "" && $("#reg-email").val() != "" ) {
+        userRegister($("#reg-name").val(), $("#reg-email").val());
+        jobaidLaunched();
+        window.location = "../index.html"
+    }
 }
 
 /* 
@@ -352,6 +369,7 @@ function chapterLaunched(chapter, name) {
     updateLRS(stmt);
 }
 
+function jobaidExited() {
 
 function courseMastered() {
 
@@ -625,6 +643,8 @@ function setVideoID(val) {
 
 function videoViewed() {
     
+    doConfig();
+	//alert(vidID);
     // statement for viewing video or media
     var stmt = {
         "actor": actor,

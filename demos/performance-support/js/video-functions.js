@@ -13,8 +13,8 @@ function initYT() {
 var player;
 function onYouTubeIframeAPIReady() {
   player = new YT.Player('How-to-make-french-toast-xapi-jqm-video', {
-    height: '360',
-    width: '640',
+    height: '190',
+    width: '300',
     videoId: video,
     playerVars: { 'autoplay': 0 },
     events: {
