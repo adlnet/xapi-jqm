@@ -110,7 +110,7 @@ var outputResults = function (resp, thing) {
 
 /* State functions */
 function getState() {
-    return ADL.XAPIWrapper.getState(moduleID, actor, "session-state");
+    return wrapper.getState(moduleID, actor, "session-state");
 }
 
 /* Course Progress */
@@ -178,11 +178,6 @@ function setChapterComplete() {
 }
 
 /* Helpers */
-function doConfig() { // sorry
-    Config.actor = actor;
-    ADL.XAPIWrapper.changeConfig(Config);
-}
-
 function getPage() {
     var url = window.location.pathname;
     var filename = url.substring(url.lastIndexOf('/')+1);
@@ -202,94 +197,21 @@ function getActor() {
         return actor;
     }
 }
-function setActor( name, email ) {
-    setUserName(name);
-    setUserEmail(email);
-}
-
 // Name
 function getUserName() {
     return localStorage.getItem(storageKeyName);
-}
-function setUserName(name) {
-    localStorage.setItem(storageKeyName, name);
 }
 
 // Email
 function getUserEmail() {
     return localStorage.getItem(storageKeyEmail);
 }
-function setUserEmail(email) {
-    localStorage.setItem(storageKeyEmail, email);
-}
 
-// Destroy all the things
-function clearActor() {
-    localStorage.removeItem(storageKeyName);
-    localStorage.removeItem(storageKeyEmail);
-}
-
-/* Login / Logout functions */
-function checkLoggedIn() {
-    // If the actor doesn't exist, send them to the login page
-    if ( getPage() != "00-account.html" ) {
-        userLogin();
-    }
-}
-
-/*
-function getBaseURL() {
-    // silly regex hack for now #helpWanted
-    var regex = new RegExp("(index.html|.*\/chapters\/.*|.*\/glossary.html)");
-    var location = window.location.href;
-    if ( regex.test(location) ) {
-        var str = location.split("/").pop();
-        var baseurl = location.replace(str, "");
-        var str = "chapters/"
-        var baseurl = baseurl.replace(str, "");
-    } else {
-        // otherwise give up and send them to the github version
-        var baseurl = "http://adlnet.github.io/xapi-jqm/demos/course/";
-    }
-    return baseurl;
-}*/
-
-function userLogin() {
-    // Should get the page root
-    window.location = "chapters/00-account.html#login";
-}
-
-function userLogout() {
-    courseExited();
-    clearActor();
-    window.location = "../"; // lol
-}
-
-function userRegister( name, email ) {
-    // should error check this
-    setActor(name, email);
-    // Set global actor var so other functions can use it
-    actor = getActor();
-    courseRegistered();
-    // Setup chapters-complete
-    ADL.XAPIWrapper.sendState(moduleID, actor, "chapters-completed", null, { "chapters": [] });
-}
-
-// jqm's submission process is the reason I'm doing it this way
-function userRegisterSubmit() {
-    if ( $("#reg-name").val() != "" && $("#reg-email").val() != "" ) {
-        userRegister($("#reg-name").val(), $("#reg-email").val());
-        courseLaunched();
-        window.location = "../index.html"
-    }
-}
 
 /*
  * xAPIy
  */
 function checkboxClicked(chapter, pageID, checkboxID, checkboxName) {
-    
-    doConfig();
     
     // Figure out if it was checked or unchecked
     var isChecked = $("#"+checkboxID).prop('checked');
@@ -325,8 +247,6 @@ function checkboxClicked(chapter, pageID, checkboxID, checkboxName) {
  * SCORMy
  */
 function courseRegistered() {
-    
-    doConfig();
 
     // statement for launching content
     var stmt = {
@@ -341,8 +261,6 @@ function courseRegistered() {
 }
 
 function courseLaunched() {
-    
-    doConfig();
 
     // statement for launching content
     var stmt = {
@@ -357,7 +275,6 @@ function courseLaunched() {
 }
 
 function chapterLaunched(chapter, name) {
-        var activityID = moduleID + chapter;
 
     var activityID = moduleID + chapter;
     var stmt = {
@@ -381,8 +298,6 @@ function chapterLaunched(chapter, name) {
 
 
 function courseMastered() {
-    
-    doConfig();
 
     // statement for launching content
     var stmt = {
@@ -397,8 +312,6 @@ function courseMastered() {
 }
 
 function courseExited() {
-
-    doConfig();
 
     // statement for launching content
     var stmt = {

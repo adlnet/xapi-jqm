@@ -1,61 +1,5 @@
 /* in progress */
 
-// Generate UUID for unique id requirement in object ids
-var generateGUID = (typeof(window.crypto) != 'undefined' && 
-                    typeof(window.crypto.getRandomValues) != 'undefined') ?
-        function() {
-            // If we have a cryptographically secure PRNG, use that
-            // http://stackoverflow.com/questions/6906916/collisions-when-generating-uuids-in-javascript
-            var buf = new Uint16Array(8);
-            window.crypto.getRandomValues(buf);
-            var S4 = function(num) {
-                var ret = num.toString(16);
-                while(ret.length < 4){
-                    ret = "0"+ret;
-                }
-                return ret;
-            };
-            return (S4(buf[0])+S4(buf[1])+"-"+S4(buf[2])+"-"+S4(buf[3])+"-"+S4(buf[4])+"-"+S4(buf[5])+S4(buf[6])+S4(buf[7]));
-        }
-    
-        :
-    
-        function() {
-            // Otherwise, just use Math.random
-            // http://stackoverflow.com/questions/105034/how-to-create-a-guid-uuid-in-javascript/2117523#2117523
-            return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
-                var r = Math.random()*16|0, v = c == 'x' ? r : (r&0x3|0x8);
-                return v.toString(16);
-            });
-        };
-        
-
-// "global" variables
-var jobaidID = "http://adlnet.gov/xapi/samples/xapi-jqm/ps/";
-var jobaidType = "http://adlnet.gov/xapi/activities/interaction";
-var linkType = "http://adlnet.gov/xapi/activities/link";
-var mediaType = "http://adlnet.gov/xapi/activities/media";
-
-// simplify the repetition of this context for performance support statements
-var jobaidContext = {
-    "contextActivities": {
-        "parent": [
-            {
-                "id": jobaidID,
-                "definition": {
-                    "name": {
-                        "en-US": "xAPI Performance Support Demo"
-                    },
-                    "description": {
-                        "en-US": "A sample HTML5 app with xAPI tracking using how to make french toast as an example job aid."
-                    }
-                },
-                "objectType": "Activity"
-            }
-        ]
-    }
-};
-
 // "global" variables
 var moduleID = "http://adlnet.gov/xapi/samples/xapi-jqm/course/"; // trailing slash
 var moduleName = "How to Make French Toast xapi-jqm Course Demo";
@@ -253,11 +197,6 @@ function getActor() {
         return actor;
     }
 }
-function setActor(name, email) {
-    setUserName(name);
-    setUserEmail(email);
-}
-
 // Name
 function getUserName() {
     return localStorage.getItem(storageKeyName);
@@ -268,11 +207,6 @@ function getUserEmail() {
     return localStorage.getItem(storageKeyEmail);
 }
 
-// Destroy all the things
-function clearActor() {
-    localStorage.removeItem("xapi-jqm/name");
-    localStorage.removeItem("xapi-jqm/email");
-}
 
 /*
  * xAPIy
@@ -307,13 +241,6 @@ function checkboxClicked(chapter, pageID, checkboxID, checkboxName) {
     // Send statement
     updateLRS(stmt);
 
-// jqm's submission process is the reason I'm doing it this way
-function userRegisterSubmit() {
-    if ( $("#reg-name").val() != "" && $("#reg-email").val() != "" ) {
-        userRegister($("#reg-name").val(), $("#reg-email").val());
-        jobaidLaunched();
-        window.location = "../index.html"
-    }
 }
 
 /* 
@@ -369,7 +296,6 @@ function chapterLaunched(chapter, name) {
     updateLRS(stmt);
 }
 
-function jobaidExited() {
 
 function courseMastered() {
 
@@ -631,43 +557,6 @@ function makeAssessment() {
 }
 
 // End Quiz Code
-
-
-/* set global variable id of video or media */ 
-var vidID;
-
-// set the id to the value of the parent div from the onclick event handler
-function setVideoID(val) {
-    vidID = val;
-}
-
-function videoViewed() {
-    
-    doConfig();
-	//alert(vidID);
-    // statement for viewing video or media
-    var stmt = {
-        "actor": actor,
-        "verb": ADL.custom.verbs.viewed,
-        "context": jobaidContext,
-        "object": {
-            "id": "http://xapi.adlnet.mobi/demos/ps/media/" + vidID,
-            "objectType": "Activity",
-            "definition": {
-                "name": {
-                    "en-US": "How to Make French Toast Video: " + vidID + ".",
-                },
-            "type": mediaType,
-            "moreInfo": "http://xapi.adlnet.mobi/demos/ps/media/" + vidID + ".gif",
-            }
-        }
-    };
-
-    // Send viewed statement
-    wrapper.sendStatement(stmt);
-
-}
-
 
 
 $( document ).ready(function() {
