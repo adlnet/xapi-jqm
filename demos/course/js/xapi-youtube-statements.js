@@ -16,8 +16,10 @@
 
       var actor = {"mbox":"mailto:anon@example.com", "name":"anonymous"};
       var videoActivity = {};
+      var started = false;
       var seeking = false;
       var prevTime = 0.0;
+      var completed = false;
 
       this.changeConfig = function(options) {
         actor = options.actor;
@@ -28,6 +30,7 @@
         var message = "yt: player ready";
         log(message);
         ADL.XAPIYoutubeStatements.onPlayerReadyCallback(message);
+        window.onunload = exitVideo;
       }
 
       this.onStateChange = function(event) {
@@ -35,7 +38,6 @@
         var ISOTime = "PT" + curTime.slice(0, curTime.indexOf(".")+3) + "S";
         var stmt = null;
         var e = "";
-        console.log(seeking);
         switch(event.data) {
           case -1:
             e = "unstarted";
@@ -49,12 +51,10 @@
             break;
           case 1:
             e = "playing";
-            log("yt: " + e);
             stmt = playVideo(ISOTime);
             break;
           case 2:
             e = "paused";
-            log("yt: " + e);
             prevTime = Date.now();
             setTimeout(function() {pauseVideo(ISOTime);}, 100);
             break;
@@ -69,7 +69,7 @@
           default:
         }
         if (stmt){
-          ADL.XAPIYoutubeStatements.onStateChangeCallback(e, stmt);
+          ADL.XAPIWrapper.sendStatement(stmt);
         }
       }
 
@@ -104,14 +104,17 @@
         // calculate time from paused state
         var elapTime = (Date.now() - prevTime) / 1000.0;
 
-        if (prevTime == 0.0 || elapTime > 0.075) {
+        if (!started || elapTime > 0.3) {
+          log("yt: playing");
           stmt.verb = {
             id: ADL.videoprofile.verbs.played['@id'],
             display: ADL.videoprofile.verbs.played.prefLabel
           };
           stmt.result = {"extensions":{"resultExt:resumed":ISOTime}};
+          started = true;
         }
         else {
+          log("yt: seeking");
           seeking = true;
           return seekVideo(ISOTime);
         }
@@ -124,6 +127,7 @@
 
         // check for seeking
         if (!seeking) {
+          log("yt: paused");
           stmt.verb = {
             id: ADL.videoprofile.verbs.paused['@id'],
             display: ADL.videoprofile.verbs.paused.prefLabel
@@ -131,10 +135,7 @@
           stmt.result = {"extensions":{"resultExt:paused":ISOTime}};
 
           // manually send 'paused' statement because of interval delay
-          stmt = buildStatement(stmt);
-          if (stmt) {
-            ADL.XAPIYoutubeStatements.onStateChangeCallback("paused", stmt);
-          }
+          ADL.XAPIWrapper.sendStatement(buildStatement(stmt));
         }
         else {
           seeking = false;
@@ -158,6 +159,10 @@
       }
 
       function completeVideo(ISOTime) {
+        if (completed) {
+          return null;
+        }
+
         var stmt = {};
 
         stmt.verb = {
@@ -165,10 +170,35 @@
           display: {"en-US": "completed"}
         }
         stmt.result = {"duration":ISOTime, "completion": true};
+        completed = true;
         /*if (competency) {
             stmt["context"] = {"contextActivities":{"other" : [{"id": "compID:" + competency}]}};
         }*/
         return buildStatement(stmt);
+      }
+
+      function exitVideo() {
+        var stmt = {};
+        var e = "";
+
+        // 'terminated' statement for completed video
+        if (completed) {
+          e = "terminated";
+          stmt.verb = {
+            id: ADL.videoprofile.references.terminated['@id'],
+            display: { "en-US": "terminated" }
+          };
+          // 'abandoned' statement for incomplete video
+        } else {
+          e = "abandoned";
+          stmt.verb = {
+            id: ADL.videoprofile.references.abandoned['@id'],
+            display: { "en-US": "abandoned" }
+          };
+        }
+
+        // send statement immediately to avoid event delay
+        ADL.XAPIWrapper.sendStatement(buildStatement(stmt));
       }
 
     }
