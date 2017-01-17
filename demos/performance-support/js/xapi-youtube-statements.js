@@ -178,6 +178,10 @@
       }
 
       function exitVideo() {
+        if (!started) {
+          return;
+        }
+
         var stmt = {};
         var e = "";
 
