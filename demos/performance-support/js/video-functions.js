@@ -26,14 +26,6 @@ function onYouTubeIframeAPIReady() {
 
 initYT();
 
-// Auth for the LRS
-var conf = {
-    "endpoint" : "https://lrs.adlnet.gov/xapi/",
-    "auth" : "Basic " + toBase64("xapi-tools:xapi-tools"),
-};
-
-ADL.XAPIWrapper.changeConfig(conf);
-
 /*
  * Custom Callbacks
  */
