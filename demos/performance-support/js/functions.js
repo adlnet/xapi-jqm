@@ -16,7 +16,7 @@ var baseActivity = {
     },
     "objectType": "Activity"
 };
-
+var video = "vPrtNzvDS5M"; // Change this to your video ID
 var actor;
 var wrapper;
 
@@ -43,6 +43,17 @@ ADL.launch(function(err,apiData,xAPIWrapper){
         actor = apiData.actor;
         // courseLaunched();
 
+    }
+
+    // Only call when the video is loaded.
+    if(window.location.pathname == "/chapters/04-video.html") {
+        var options = {    
+            "actor":  actor,
+            "videoActivity": {"id":"https://www.youtube.com/watch?v=" + video, "definition":{"name": {"en-US":video}} }
+        };
+        ADL.XAPIYoutubeStatements.changeConfig(options, wrapper);
+
+        initYT();
     }
 
     var chapter = $("body").attr("data-chapter");
@@ -558,6 +569,47 @@ function makeAssessment() {
 
 // End Quiz Code
 
+
+// Video Code
+
+function initYT() {
+  var tag = document.createElement('script');
+  tag.src = "https://www.youtube.com/iframe_api";
+  var firstScriptTag = document.getElementsByTagName('script')[0];
+  firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
+}
+var player;
+function onYouTubeIframeAPIReady() {
+  player = new YT.Player('How-to-make-french-toast-xapi-jqm-video', {
+    height: '360',
+    width: '640',
+    videoId: video,
+    playerVars: { 'autoplay': 0 },
+    events: {
+      'onReady': ADL.XAPIYoutubeStatements.onPlayerReady,
+      'onStateChange': ADL.XAPIYoutubeStatements.onStateChange
+    }
+  });
+}
+
+/*
+ * Custom Callbacks
+ */
+ADL.XAPIYoutubeStatements.onPlayerReadyCallback = function(stmt) {
+  console.log("on ready callback");
+}
+// Dispatch Youtube statements with XAPIWrapper
+ADL.XAPIYoutubeStatements.onStateChangeCallback = function(event, stmt) {
+  console.log(stmt);
+  if (stmt) {
+    stmt['timestamp'] = (new Date()).toISOString();
+    wrapper.sendStatement(stmt, function(){});
+  } else {
+    console.warn("no statement found in callback for event: " + event);
+  }
+}
+
+// End Video Code
 
 $( document ).ready(function() {
     // Handle checkbox clicks -- basic no knowledge of context or checked
