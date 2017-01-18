@@ -54,6 +54,23 @@ ADL.launch(function(err,apiData,xAPIWrapper){
         ADL.XAPIYoutubeStatements.changeConfig(options, wrapper);
 
         initYT();
+
+        /*
+         * Custom Callbacks
+         */
+        ADL.XAPIYoutubeStatements.onPlayerReadyCallback = function(stmt) {
+          console.log("on ready callback");
+        }
+        // Dispatch Youtube statements with XAPIWrapper
+        ADL.XAPIYoutubeStatements.onStateChangeCallback = function(event, stmt) {
+          console.log(stmt);
+          if (stmt) {
+            stmt['timestamp'] = (new Date()).toISOString();
+            wrapper.sendStatement(stmt, function(){});
+          } else {
+            console.warn("no statement found in callback for event: " + event);
+          }
+        }
     }
 
     var chapter = $("body").attr("data-chapter");
@@ -590,23 +607,6 @@ function onYouTubeIframeAPIReady() {
       'onStateChange': ADL.XAPIYoutubeStatements.onStateChange
     }
   });
-}
-
-/*
- * Custom Callbacks
- */
-ADL.XAPIYoutubeStatements.onPlayerReadyCallback = function(stmt) {
-  console.log("on ready callback");
-}
-// Dispatch Youtube statements with XAPIWrapper
-ADL.XAPIYoutubeStatements.onStateChangeCallback = function(event, stmt) {
-  console.log(stmt);
-  if (stmt) {
-    stmt['timestamp'] = (new Date()).toISOString();
-    wrapper.sendStatement(stmt, function(){});
-  } else {
-    console.warn("no statement found in callback for event: " + event);
-  }
 }
 
 // End Video Code

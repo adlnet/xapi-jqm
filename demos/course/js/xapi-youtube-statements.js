@@ -20,18 +20,16 @@
       var seeking = false;
       var prevTime = 0.0;
       var completed = false;
-
       var wrapper = ADL.XAPIWrapper;
 
       this.changeConfig = function(options, xAPIwrapper) {
         if(!xAPIwrapper){
-        console.log("NO LAUNCH")
-      } else {
-        wrapper = xAPIwrapper;
-          console.log("LAUNCH")
-      }
-        actor = options.actor;
-        videoActivity = options.videoActivity;
+          console.log("No wrapper param. Using default ADL.XAPIwrapper");
+        } else {
+          wrapper = xAPIwrapper;
+        }
+          actor = options.actor;
+          videoActivity = options.videoActivity;
       }
 
       this.onPlayerReady = function(event) {
