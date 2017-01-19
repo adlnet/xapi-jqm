@@ -28,7 +28,7 @@ ADL.launch(function(err,apiData,xAPIWrapper){
 
         if(!getUserName()){
             // No user so login.
-            window.location = "/chapters/00-account.html";
+            window.location = "/demos/performance-support/chapters/00-account.html";
 
         } else {            
             actor = getActor();
