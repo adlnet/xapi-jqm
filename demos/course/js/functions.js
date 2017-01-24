@@ -34,14 +34,12 @@ ADL.launch(function(err,apiData,xAPIWrapper){
             actor = getActor();
             Config.actor = actor;
             wrapper.changeConfig(Config);
-            // courseRegistered();
         }
 
     } else {            
 
         wrapper = xAPIWrapper;
         actor = apiData.actor;
-        // courseLaunched();
 
     }
 
@@ -75,24 +73,27 @@ ADL.launch(function(err,apiData,xAPIWrapper){
 
     var chapter = $("body").attr("data-chapter");
     var activityID = moduleID + chapter
-    var context = createContext(chapter);
+    var context = createContext();
 
-    var stmt = {
-        "actor": actor,
-        "verb": ADL.verbs.launched,
-        "context": context,
-        "object": {
-            "id" : activityID,
-            "objectType": "Activity",
-            "definition": {
-                "name": {
-                    "en-US": moduleName + ": " + chapter
+    if(chapter == "toc"){
+        
+        var stmt = {
+            "actor": actor,
+            "verb": ADL.verbs.launched,
+            "context": context,
+            "object": {
+                "id" : activityID,
+                "objectType": "Activity",
+                "definition": {
+                    "name": {
+                        "en-US": moduleName + ": " + chapter
+                    }
                 }
             }
-        }
-    };
-
-    updateLRS(stmt);
+        };
+        
+        updateLRS(stmt);
+    }
     wrapper.sendState(moduleID, actor, "session-state", null, { "info": "reading", "chapter": chapter});
     
 
@@ -186,17 +187,33 @@ function setChapterComplete() {
 
     // Send chapterComplete statement
     updateLRS(stmt);
+   
+}
 
+// Abstracted page changing logic -- for xapi read
+$( window ).on("click", function(event) {
+    var chapter = $("body").attr("data-chapter");
+    var pageID = $.mobile.activePage.attr("id");
+
+    if(chapter == "glossary"){
+        setRead(pageID, chapter);
+    }else {
+        setRead(pageID);
+    }
+    
+});
+
+function setRead(id, chapter){
     stmt = {
         "actor": actor,
         "verb": ADL.custom.verbs.read,
-        "context": createContext(chapterCompleted),
+        "context": createContext(chapter),
         "object": {
-            "id" : moduleID + chapterCompleted,
+            "id" : moduleID + id,
             "objectType": "Activity",
             "definition": {
                 "name": {
-                    "en-US": moduleName + ": " + chapterCompleted 
+                    "en-US": moduleName + ": " + id 
                 }
             }
         }
@@ -246,7 +263,7 @@ function checkboxClicked(chapter, pageID, checkboxID, checkboxName) {
     var checkedVerb = (isChecked) ? ADL.custom.verbs.checked : ADL.custom.verbs.unchecked;
 
     var baseActivity = {
-        "id": moduleID + "/" + chapter + "/" + pageID + "#" + checkboxID,
+        "id": moduleID  + chapter + "/" + pageID + "#" + checkboxID,
         "definition": {
             "name": {
                 "en-US": checkboxName
@@ -422,7 +439,6 @@ function createContext( parentChapter, parentPage, subParentActivity, both ) {
 /*
     Quiz code
 */
-var moduleID = "http://adlnet.gov/xapi/samples/xapi-jqm/course/"; // trailing slash
 var quizID = moduleID;
 var quizActivity = {
     "id": quizID,

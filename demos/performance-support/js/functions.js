@@ -2,8 +2,9 @@
 
 // "global" variables
 var moduleID = "http://adlnet.gov/xapi/samples/xapi-jqm/course/"; // trailing slash
-var moduleName = "How to Make French Toast xapi-jqm Course Demo";
+var moduleName = "How to Make French Toast xapi-jqm Performance Support Demo";
 var courseType = "http://adlnet.gov/xapi/activities/course";
+var mediaType = "http://adlnet.gov/xapi/activities/media";
 var baseActivity = {
     "id": moduleID,
     "definition": {
@@ -34,14 +35,12 @@ ADL.launch(function(err,apiData,xAPIWrapper){
             actor = getActor();
             Config.actor = actor;
             wrapper.changeConfig(Config);
-            // courseRegistered();
         }
 
     } else {            
 
         wrapper = xAPIWrapper;
         actor = apiData.actor;
-        // courseLaunched();
 
     }
 
@@ -75,24 +74,27 @@ ADL.launch(function(err,apiData,xAPIWrapper){
 
     var chapter = $("body").attr("data-chapter");
     var activityID = moduleID + chapter
-    var context = createContext(chapter);
+    var context = createContext();
 
-    var stmt = {
-        "actor": actor,
-        "verb": ADL.verbs.launched,
-        "context": context,
-        "object": {
-            "id" : activityID,
-            "objectType": "Activity",
-            "definition": {
-                "name": {
-                    "en-US": moduleName + ": " + chapter
+
+    if(chapter == "toc"){
+        var stmt = {
+            "actor": actor,
+            "verb": ADL.verbs.launched,
+            "context": context,
+            "object": {
+                "id" : activityID,
+                "objectType": "Activity",
+                "definition": {
+                    "name": {
+                        "en-US": moduleName + ": " + chapter
+                    }
                 }
             }
-        }
-    };
+        };
 
-    updateLRS(stmt);
+        updateLRS(stmt);
+    }   
     wrapper.sendState(moduleID, actor, "session-state", null, { "info": "reading", "chapter": chapter});
     
 
@@ -186,17 +188,32 @@ function setChapterComplete() {
 
     // Send chapterComplete statement
     updateLRS(stmt);
+}
 
+// Abstracted page changing logic -- for xapi read
+$( window ).on("click", function(event) {
+    var chapter = $("body").attr("data-chapter");
+    var pageID = $.mobile.activePage.attr("id");
+
+    if(chapter == "glossary"){
+        setRead(pageID, chapter);
+    }else {
+        setRead(pageID);
+    }
+    
+});
+
+function setRead(id, chapter){
     stmt = {
         "actor": actor,
         "verb": ADL.custom.verbs.read,
-        "context": createContext(chapterCompleted),
+        "context": createContext(chapter),
         "object": {
-            "id" : moduleID + chapterCompleted,
+            "id" : moduleID + id,
             "objectType": "Activity",
             "definition": {
                 "name": {
-                    "en-US": moduleName + ": " + chapterCompleted 
+                    "en-US": moduleName + ": " + id 
                 }
             }
         }
@@ -422,7 +439,6 @@ function createContext( parentChapter, parentPage, subParentActivity, both ) {
 /*
     Quiz code
 */
-var moduleID = "http://adlnet.gov/xapi/samples/xapi-jqm/course/"; // trailing slash
 var quizID = moduleID;
 var quizActivity = {
     "id": quizID,
@@ -623,3 +639,88 @@ $( document ).ready(function() {
     });
 
 });
+
+/* set global variable id of video or media */ 
+var vidID;
+
+// set the id to the value of the parent div from the onclick event handler
+function setVideoID(val) {
+    vidID = val;
+}
+
+function videoViewed() {
+    
+    // statement for viewing video or media
+    var stmt = {
+        "actor": actor,
+        "verb": ADL.custom.verbs.viewed,
+        "context": createContext(),
+        "object": {
+            "id": "http://xapi.adlnet.mobi/demos/ps/media/" + vidID,
+            "objectType": "Activity",
+            "definition": {
+                "name": {
+                    "en-US": "How to Make French Toast Video: " + vidID + ".",
+                },
+            "type": mediaType,
+            "moreInfo": "http://xapi.adlnet.mobi/demos/ps/media/" + vidID + ".gif",
+            }
+        }
+    };
+
+    // Send viewed statement
+    wrapper.sendStatement(stmt);
+
+}
+
+/* Responsive background image - fix vertical when not overflow
+call fullscreenFix() if .fullscreen content changes */
+function fullscreenFix(){
+    var h = $('body').height();
+    // set .fullscreen height
+    $(".content-b").each(function(i){
+        if($(this).innerHeight() <= h){
+            $(this).closest(".fullscreen").addClass("not-overflow");
+        }
+    });
+}
+$(window).resize(fullscreenFix);
+fullscreenFix();
+
+/* resize background images */
+function backgroundResize(){
+    var windowH = $(window).height();
+    $(".background").each(function(i){
+        var path = $(this);
+        // variables
+        var contW = path.width();
+        var contH = path.height();
+        var imgW = path.attr("data-img-width");
+        var imgH = path.attr("data-img-height");
+        var ratio = imgW / imgH;
+        // overflowing difference
+        var diff = parseFloat(path.attr("data-diff"));
+        diff = diff ? diff : 0;
+        // remaining height to have fullscreen image only on parallax
+        var remainingH = 0;
+        if(path.hasClass("parallax")){
+            var maxH = contH > windowH ? contH : windowH;
+            remainingH = windowH - contH;
+        }
+        // set img values depending on cont
+        imgH = contH + remainingH + diff;
+        imgW = imgH * ratio;
+        // fix when too large
+        if(contW > imgW){
+            imgW = contW;
+            imgH = imgW / ratio;
+        }
+        //
+        path.data("resized-imgW", imgW);
+        path.data("resized-imgH", imgH);
+        path.css("background-size", imgW + "px " + imgH + "px");
+    });
+}
+$(window).resize(backgroundResize);
+$(window).focus(backgroundResize);
+backgroundResize();
