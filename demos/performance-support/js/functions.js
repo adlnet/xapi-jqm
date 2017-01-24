@@ -45,7 +45,7 @@ ADL.launch(function(err,apiData,xAPIWrapper){
     }
 
     // Only call when the video is loaded.
-    if(window.location.pathname == "/chapters/04-video.html") {
+    if(window.location.pathname.includes("/chapters/04-video.html")) {
         var options = {    
             "actor":  actor,
             "videoActivity": {"id":"https://www.youtube.com/watch?v=" + video, "definition":{"name": {"en-US":video}} }
