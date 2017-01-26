@@ -17,8 +17,6 @@
     <script src="../js/functions.js"></script>  
 </head> 
 
-<body> 
-
 <body data-chapter="03-steps"> 
 
 <div data-role="page" data-theme="b" id="steps">
@@ -28,10 +26,18 @@
 <h1><span class="subline no-ellipses">How to Make French Toast</span></h1>
     <div data-role="navbar">
         <ul id="toc-list">
-            <li id="02-checklists"><a href="02-checklists.html" data-ajax="false" class="chapter no-ellipses" courselink="true">Checklists</a></li>
-            <li id="03-steps"><a href="03-steps.html" data-ajax="false" class="chapter no-ellipses ui-btn-active ui-state-persist" courselink="true">Steps</a></li> 
-            <li id="04-video"><a href="04-video.html" data-ajax="false" class="chapter no-ellipses" courselink="true"> Video</a></li> 
-            <li id="05-glossary"><a href="05-glossary.html" data-ajax="false" class="chapter no-ellipses" courselink="true">Glossary</a></li> 
+            <li id="02-checklists">
+              <a href="02-checklists.html" data-ajax="false" class="chapter no-ellipses" courselink="true" onclick="chapterLaunched('02-checklists');">Checklists</a>
+            </li>
+            <li id="03-steps">
+              <a href="03-steps.html" data-ajax="false" class="chapter no-ellipses ui-btn-active ui-state-persist" courselink="true" onclick="chapterLaunched('03-steps');">Steps</a>
+            </li> 
+            <li id="04-video">
+              <a href="04-video.html" data-ajax="false" class="chapter no-ellipses" courselink="true" onclick="chapterLaunched('04-video');">Video</a>
+            </li> 
+            <li id="05-glossary">
+              <a href="05-glossary.html" data-ajax="false" class="chapter no-ellipses" courselink="true" onclick="chapterLaunched('05-glossary');">Glossary</a>
+            </li> 
         </ul>
     </div><!-- /navbar -->
 </div><!-- /header -->

@@ -4,6 +4,7 @@
 var moduleID = "http://adlnet.gov/xapi/samples/xapi-jqm/course/"; // trailing slash
 var moduleName = "How to Make French Toast xapi-jqm Course Demo";
 var courseType = "http://adlnet.gov/xapi/activities/course";
+var mediaType = "http://adlnet.gov/xapi/activities/media";
 var baseActivity = {
     "id": moduleID,
     "definition": {
@@ -76,7 +77,6 @@ ADL.launch(function(err,apiData,xAPIWrapper){
     var context = createContext();
 
     if(chapter == "toc"){
-        
         var stmt = {
             "actor": actor,
             "verb": ADL.verbs.launched,
@@ -91,9 +91,10 @@ ADL.launch(function(err,apiData,xAPIWrapper){
                 }
             }
         };
-        
+
         updateLRS(stmt);
-    }
+    }   
+
     wrapper.sendState(moduleID, actor, "session-state", null, { "info": "reading", "chapter": chapter});
     
 
@@ -190,26 +191,13 @@ function setChapterComplete() {
    
 }
 
-// Abstracted page changing logic -- for xapi read
-$( window ).on("click", function(event) {
-    var chapter = $("body").attr("data-chapter");
-    var pageID = $.mobile.activePage.attr("id");
-
-    if(chapter == "glossary"){
-        setRead(pageID, chapter);
-    }else {
-        setRead(pageID);
-    }
-    
-});
-
-function setRead(id, chapter){
+function setRead(chapter, id, parentChapter){
     stmt = {
         "actor": actor,
         "verb": ADL.custom.verbs.read,
-        "context": createContext(chapter),
+        "context": createContext(parentChapter),
         "object": {
-            "id" : moduleID + id,
+            "id" : moduleID + chapter +'/'+id,
             "objectType": "Activity",
             "definition": {
                 "name": {
@@ -221,6 +209,16 @@ function setRead(id, chapter){
 
     updateLRS(stmt);
 }
+
+// Abstracted page changing logic -- for xapi read of glossary
+$( window ).on("click", function(event) {
+    var chapter = $("body").attr("data-chapter");
+    var pageID = $.mobile.activePage.attr("id");
+
+    if(chapter == "glossary" && pageID != 'list'){
+        setRead(chapter, pageID, chapter);
+    }
+});
 
 /* Helpers */
 function getPage() {
@@ -319,8 +317,8 @@ function courseLaunched() {
 
 }
 
-function chapterLaunched(chapter, name) {
-
+function chapterLaunched(chapter) {
+ console.log("---"+chapter);
     var activityID = moduleID + chapter;
     var stmt = {
         "actor": actor,
