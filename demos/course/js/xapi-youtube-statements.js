@@ -16,6 +16,7 @@
 
       var actor = {"mbox":"mailto:anon@example.com", "name":"anonymous"};
       var videoActivity = {};
+      var context = {};
       var started = false;
       var seeking = false;
       var prevTime = 0.0;
@@ -30,6 +31,7 @@
         }
           actor = options.actor;
           videoActivity = options.videoActivity;
+          context = options.context;
       }
 
       this.onPlayerReady = function(event) {
@@ -84,6 +86,7 @@
           var stmt = stmt;
           stmt.actor = actor;
           stmt.object = videoActivity;
+          stmt.context = context;
         }
         return stmt;
       }

@@ -48,7 +48,8 @@ ADL.launch(function(err,apiData,xAPIWrapper){
     if(window.location.pathname.includes("/chapters/04-video.html")) {
         var options = {    
             "actor":  actor,
-            "videoActivity": {"id":"https://www.youtube.com/watch?v=" + video, "definition":{"name": {"en-US":video}} }
+            "videoActivity": {"id":"https://www.youtube.com/watch?v=" + video, "definition":{"name": {"en-US":video}} },
+            "context": createContext('04-video')
         };
         ADL.XAPIYoutubeStatements.changeConfig(options, wrapper);
 
@@ -201,7 +202,7 @@ function setRead(chapter, id, parentChapter){
             "objectType": "Activity",
             "definition": {
                 "name": {
-                    "en-US": moduleName + ": " + id 
+                    "en-US": moduleName + ": " + chapter + ', ' + id 
                 }
             }
         }
@@ -268,6 +269,38 @@ function checkboxClicked(chapter, pageID, checkboxID, checkboxName) {
             },
             "description": {
                 "en-US": "The " + checkboxName + " checkbox from chapter " + chapter + "; page " + pageID
+            }
+        },
+        "objectType": "Activity"
+    };
+
+    // statement for checking content
+    var stmt = {
+        "actor": actor,
+        "verb": checkedVerb,
+        "object": baseActivity,
+        "context": createContext(chapter, pageID, undefined, true)
+    };
+
+    // Send statement
+    updateLRS(stmt);
+
+}
+
+function radioButtonClicked(chapter, pageID, btnID, btnName) {
+    
+    // Figure out if it was checked or unchecked
+    var isChecked = $("#"+btnID).prop('checked');
+    var checkedVerb = (isChecked) ? ADL.custom.verbs.checked : ADL.custom.verbs.unchecked;
+
+    var baseActivity = {
+        "id": moduleID  + chapter + "/" + pageID + "#" + btnID,
+        "definition": {
+            "name": {
+                "en-US": btnName
+            },
+            "description": {
+                "en-US": "The " + btnName + " radio button from chapter " + chapter + "; page " + pageID
             }
         },
         "objectType": "Activity"
@@ -579,8 +612,7 @@ function makeAssessment() {
                 "raw": correct,
                 "max": CORRECT_QUIZ_ANSWERS.length
             }
-        },
-        "context": createContext(chapter)
+        }
     };
     // Send a statement
     updateLRS(stmt);
@@ -636,4 +668,15 @@ $( document ).ready(function() {
         checkboxClicked(chapter, pageID, checkboxID, checkboxName);
     });
 
+    // Handle checkbox clicks -- basic no knowledge of context or checked
+    $(":radio").change(function(event) {
+        $radio = $(this);
+        var btnID = $radio.attr("id");
+        var btnName = $radio.siblings("label").text();
+        var chapter = $("body").attr("data-chapter");
+        var pageID = $.mobile.activePage.attr("id");
+        radioButtonClicked(chapter, pageID, btnID, btnName);
+    });
+
 });
+
