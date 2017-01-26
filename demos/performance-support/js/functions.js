@@ -319,7 +319,6 @@ function courseLaunched() {
 }
 
 function chapterLaunched(chapter) {
- console.log("---"+chapter);
     var activityID = moduleID + chapter;
     var stmt = {
         "actor": actor,
@@ -722,4 +721,3 @@ function backgroundResize(){
 }
 $(window).resize(backgroundResize);
 $(window).focus(backgroundResize);
-backgroundResize();
