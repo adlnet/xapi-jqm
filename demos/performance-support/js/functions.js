@@ -49,7 +49,8 @@ ADL.launch(function(err,apiData,xAPIWrapper){
     if(window.location.pathname.includes("/chapters/04-video.html")) {
         var options = {    
             "actor":  actor,
-            "videoActivity": {"id":"https://www.youtube.com/watch?v=" + video, "definition":{"name": {"en-US":video}} }
+            "videoActivity": {"id":"https://www.youtube.com/watch?v=" + video, "definition":{"name": {"en-US":video}} },
+            "context": createContext('04-video')
         };
         ADL.XAPIYoutubeStatements.changeConfig(options, wrapper);
 
@@ -216,7 +217,7 @@ $( window ).on("click", function(event) {
     var chapter = $("body").attr("data-chapter");
     var pageID = $.mobile.activePage.attr("id");
 
-    if(chapter == "glossary" && pageID != 'list'){
+    if(chapter == "05-glossary" && pageID != 'list'){
         setRead(chapter, pageID, chapter);
     } 
 });
@@ -480,14 +481,14 @@ function setVideoID(val) {
 }
 
 function videoViewed() {
-    
+    var chapter = $("body").attr("data-chapter");
     // statement for viewing video or media
     var stmt = {
         "actor": actor,
         "verb": ADL.custom.verbs.viewed,
-        "context": createContext(),
+        "context": createContext(chapter),
         "object": {
-            "id": "http://xapi.adlnet.mobi/demos/ps/media/" + vidID,
+            "id" : moduleID + chapter +'/'+vidID,
             "objectType": "Activity",
             "definition": {
                 "name": {

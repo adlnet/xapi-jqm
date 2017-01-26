@@ -612,7 +612,8 @@ function makeAssessment() {
                 "raw": correct,
                 "max": CORRECT_QUIZ_ANSWERS.length
             }
-        }
+        },
+        "context": createContext(chapter)
     };
     // Send a statement
     updateLRS(stmt);
