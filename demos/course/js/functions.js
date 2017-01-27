@@ -351,7 +351,6 @@ function courseLaunched() {
 }
 
 function chapterLaunched(chapter) {
- console.log("---"+chapter);
     var activityID = moduleID + chapter;
     var stmt = {
         "actor": actor,
@@ -471,16 +470,6 @@ function createContext( parentChapter, parentPage, subParentActivity, both ) {
     Quiz code
 */
 var quizID = moduleID;
-var quizActivity = {
-    "id": quizID,
-    "definition": {
-        "name": {
-            "en-US": "xAPI for jQuery Mobile French Toast Demo quiz"
-        }
-    },
-    "objectType": "Activity"
-};
-
 var CORRECT_QUIZ_ANSWERS = [ [2,3,6], [4], "bread" ];
 
 function gradeQuestion() {
@@ -581,6 +570,16 @@ function makeAssessment() {
     var results = [];
     var correct = 0;
 
+    var quizActivity = {
+        "id": quizID  + chapter,
+        "definition": {
+            "name": {
+                "en-US": "xAPI for jQuery Mobile French Toast Demo quiz"
+            }
+        },
+        "objectType": "Activity"
+    };
+
     for ( var i=0; i < CORRECT_QUIZ_ANSWERS.length; i++ ) {
         results.push(localStorage.getItem("xapi-jqm/" + actor['name'] + "/" + "q" + (i+1)));
         localStorage.removeItem("xapi-jqm/" + actor['name'] + "/" + "q" + (i+1));
@@ -622,7 +621,7 @@ function makeAssessment() {
 
     // Mastered statement
     var chaptersCompleted = getChaptersCompleted();
-    if ( percentage == 100 && chaptersCompleted.length == 5 ) {
+    if ( percentage == 100 && chaptersCompleted.length > 5 ) {
         courseMastered();
         // show a badge by appending to display -- PoC
         display += '<p><img src="../media/488px-badge-french-toast.jpg" alt="French Toast Badge" title="French Toast Badge" style="width:100%;max-width:488px" /></p><h4>French Toast Master</h4><p>Congratulations, you have mastered the course in How to Make French Toast</p>';
