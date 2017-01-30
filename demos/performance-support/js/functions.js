@@ -1,7 +1,7 @@
 /* in progress */
 
 // "global" variables
-var moduleID = "http://adlnet.gov/xapi/samples/xapi-jqm/course/"; // trailing slash
+var moduleID = "http://adlnet.gov/xapi/samples/xapi-jqm/ps/"; // trailing slash
 var moduleName = "How to Make French Toast xapi-jqm Performance Support Demo";
 var courseType = "http://adlnet.gov/xapi/activities/course";
 var mediaType = "http://adlnet.gov/xapi/activities/media";
