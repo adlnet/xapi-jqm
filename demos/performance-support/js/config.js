@@ -3,47 +3,36 @@
 function Config() {
 	"use strict";
 }
-
 Config.endpoint = "https://lrs.adlnet.gov/xapi/";
+//Config.endpoint = "http://10.100.21.46:8080/xapi/";
 Config.user = "jqm";
 Config.password = "xapijqm";
 
-// Local Storage email names -- should / cloud be unique across apps
-var storageKeyName = "xapi-jqm/name";
-var storageKeyEmail = "xapi-jqm/email";
+//Config.actor = actor;
 
-// jqm's submission process is the reason I'm doing it this way
-function userRegisterSubmit() {
-    if ( $("#reg-name").val() != "" && $("#reg-email").val() != "" ) {
-        userRegister($("#reg-name").val(), $("#reg-email").val());
-        
-        window.location = "../index.html"
+// "global" variables
+var jobaidID = "http://adlnet.gov/xapi/samples/xapi-jqm/ps/";
+var jobaidType = "http://adlnet.gov/xapi/activities/interaction";
+var linkType = "http://adlnet.gov/xapi/activities/link";
+var mediaType = "http://adlnet.gov/xapi/activities/media";
+
+// simplify the repetition of this context for performance support statements
+var jobaidContext = {
+    "contextActivities": {
+        "parent": [
+            {
+                "id": jobaidID,
+                "definition": {
+                    "name": {
+                        "en-US": "xAPI Performance Support Demo"
+                    },
+                    "description": {
+                        "en-US": "A sample HTML5 app with xAPI tracking using how to make french toast as an example job aid."
+                    }
+                },
+                "objectType": "Activity"
+            }
+        ]
     }
-}
+};
 
-//Handle manual login
-
-function userRegister( name, email ) {
-    // should error check this
-    setActor(name, email);
-}
-
-function setActor( name, email ) {
-    setUserName(name);
-    setUserEmail(email);
-}
-
-function setUserName(name) {
-    localStorage.setItem(storageKeyName, name);
-}
-
-function setUserEmail(email) {
-    localStorage.setItem(storageKeyEmail, email);
-}
-
-// Clear the stored user values.
-function userLogout() {
-    localStorage.removeItem(storageKeyName);
-    localStorage.removeItem(storageKeyEmail);
-    window.location = "00-account.html"
-}

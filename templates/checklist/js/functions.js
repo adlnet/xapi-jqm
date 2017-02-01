@@ -122,20 +122,10 @@ function userRegister( name, email ) {
 // jqm's submission process is the reason I'm doing it this way
 function userRegisterSubmit() {
     if ( $("#reg-name").val() != "" && $("#reg-email").val() != "" ) {
-        var regex = /^([a-zA-Z0-9_.+-])+\@(([a-zA-Z0-9-])+\.)+([a-zA-Z0-9]{2,4})+$/;
-        if (!regex.test($("#reg-email").val())){
-            alert("Invalid email!");
-        } else {
-            userRegister($("#reg-name").val(), $("#reg-email").val());
-            courseLaunched();
-            window.location = "../index.html"            
-        }
-    } else if ( $("#reg-name").val() == ""){    
-        alert("Missing name!");
-    } else if ( $("#reg-email").val() == ""){ 
-        alert("Missing email!");
-    }    
-
+        userRegister($("#reg-name").val(), $("#reg-email").val());
+        courseLaunched();
+        window.location = "../index.html"
+    }
 }
 
 /*
@@ -275,4 +265,3 @@ $( document ).ready(function() {
         checkboxClicked(chapter, pageID, checkboxID, checkboxName);
     });
 });
-

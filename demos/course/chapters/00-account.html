@@ -10,7 +10,18 @@
     <script src="http://code.jquery.com/mobile/1.4.2/jquery.mobile-1.4.2.min.js"></script>
     <script src="../js/xapiwrapper.min.js"></script>
     <script src="../js/config.js"></script>
-
+    <script src="../js/verbs.js"></script>    
+    <script src="../js/functions.js"></script>
+    <script type="text/javascript">
+        // Had to do this to get the login firing properly
+        jQuery(document).ready(function ($) {
+            $('#submit-register').click(function(e){
+                $.mobile.ignoreContentEnabled = true;
+                userRegisterSubmit();
+                e.preventDefault();
+            });
+        });
+    </script>
 </head> 
 
 <body data-chapter="account"> 
@@ -18,7 +29,7 @@
 <div data-role="page" id="login">
 
     <div data-role="header">
-        <a href="../index.html" name="home" data-role="button" data-theme="b" data-icon="home" data-transition="slide" data-ajax="false" class="ui-btn-left">Home</a>
+        <a href="../index.html#list" name="home" data-role="button" data-theme="b" data-icon="home" data-transition="slide" data-ajax="false" class="ui-btn-left">Home</a>
         <h1>Register</h1>
     </div><!-- /header -->
 
@@ -30,7 +41,9 @@
         <form name="register" id="register" method="post" data-ajax="false">
             <label>Name: <input type="text" name="name" placeholder="John Smith" id="reg-name" required /></label><br />
             <label>Email: <input type="email" name="email" placeholder="user@example.com" id="reg-email" required /></label><br />
-            <input type="button" value="Submit" onclick="userRegisterSubmit()" />
+            <input type="submit" id="submit-register" value="Submit" />
+            <!-- jqm is trying to force submission, so we get a button for now. -->
+            <!--<input type="button" value="Submit" onclick="userRegisterSubmit()" />-->
         </form>
 
     </div><!-- /content -->
