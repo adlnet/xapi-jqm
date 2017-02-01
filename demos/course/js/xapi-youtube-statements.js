@@ -16,14 +16,22 @@
 
       var actor = {"mbox":"mailto:anon@example.com", "name":"anonymous"};
       var videoActivity = {};
+      var context = {};
       var started = false;
       var seeking = false;
       var prevTime = 0.0;
       var completed = false;
+      var wrapper = ADL.XAPIWrapper;
 
-      this.changeConfig = function(options) {
-        actor = options.actor;
-        videoActivity = options.videoActivity;
+      this.changeConfig = function(options, xAPIwrapper) {
+        if(!xAPIwrapper){
+          console.log("No wrapper param. Using default ADL.XAPIwrapper");
+        } else {
+          wrapper = xAPIwrapper;
+        }
+          actor = options.actor;
+          videoActivity = options.videoActivity;
+          context = options.context;
       }
 
       this.onPlayerReady = function(event) {
@@ -69,7 +77,7 @@
           default:
         }
         if (stmt){
-          ADL.XAPIWrapper.sendStatement(stmt);
+          wrapper.sendStatement(stmt);
         }
       }
 
@@ -78,6 +86,7 @@
           var stmt = stmt;
           stmt.actor = actor;
           stmt.object = videoActivity;
+          stmt.context = context;
         }
         return stmt;
       }
@@ -135,7 +144,7 @@
           stmt.result = {"extensions":{"resultExt:paused":ISOTime}};
 
           // manually send 'paused' statement because of interval delay
-          ADL.XAPIWrapper.sendStatement(buildStatement(stmt));
+          wrapper.sendStatement(buildStatement(stmt));
         }
         else {
           seeking = false;
@@ -202,7 +211,7 @@
         }
 
         // send statement immediately to avoid event delay
-        ADL.XAPIWrapper.sendStatement(buildStatement(stmt));
+        wrapper.sendStatement(buildStatement(stmt));
       }
 
     }

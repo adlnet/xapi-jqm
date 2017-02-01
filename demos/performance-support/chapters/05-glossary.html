@@ -1,34 +1,43 @@
-<!DOCTYPE html>
+<!DOCTYPE html> 
 <html>
 
 <head>
     <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Introduction - How to Make French Toast - xapi-jqm</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1"> 
+    <title>Introduction - How to Make French Toast - xapi-jqm</title> 
     <link rel="stylesheet" href="http://code.jquery.com/mobile/1.4.2/jquery.mobile-1.4.2.min.css" />
     <link rel="stylesheet" href="../css/custom-styles.css" />
     <script src="http://code.jquery.com/jquery-1.10.2.min.js"></script>
     <script src="http://code.jquery.com/mobile/1.4.2/jquery.mobile-1.4.2.min.js"></script>
-    <script src="http://popcornjs.org/code/dist/popcorn-complete.min.js"></script>
     <script src="../js/xapiwrapper.min.js"></script>
+    <script src="../js/xapi-youtube-statements.js"></script>
+	<script src="../js/verbs.js"></script>
     <script src="../js/config.js"></script>
     <script src="../js/functions.js"></script>
 
-</head>
+</head> 
 
-<body data-chapter="05-glossary">
+<body data-chapter="05-glossary"> 
 
-<div data-role="page" data-theme="b" id="list">
+<div data-role="page" data-theme="b" id="glossary">
 
 <div data-role="header">
-    <a href="../index.html" name="home" data-role="button" data-theme="b" data-icon="home" data-transition="slide" data-ajax="false" class="ui-btn-left">Home</a>
+    <a href="../index.html" name="home" data-role="button" data-theme="b" data-icon="home" data-transition="slide" data-ajax="false" class="ui-btn-left" courselink="true">Home</a>
 <h1><span class="subline no-ellipses">How to Make French Toast</span></h1>
     <div data-role="navbar">
         <ul id="toc-list">
-            <li id="02-checklists"><a href="02-checklists.html" data-ajax="false" class="chapter no-ellipses">Checklists</a></li>
-            <li id="03-steps"><a href="03-steps.html" data-ajax="false" class="chapter no-ellipses">Steps</a></li>
-            <li id="04-video"><a href="04-video.html" data-ajax="false" class="chapter no-ellipses">Video</a></li>
-            <li id="05-glossary"><a href="05-glossary.html" data-ajax="false" class="chapter no-ellipses ui-btn-active ui-state-persist">Glossary</a></li>
+            <li id="02-checklists">
+                <a href="02-checklists.html" data-ajax="false" class="chapter no-ellipses" courselink="true" onclick="chapterLaunched('02-checklists');">Checklists</a>
+            </li>
+            <li id="03-steps">
+                <a href="03-steps.html" data-ajax="false" class="chapter no-ellipses" courselink="true" onclick="chapterLaunched('03-steps');">Steps</a>
+            </li> 
+            <li id="04-video">
+                <a href="04-video.html" data-ajax="false" class="chapter no-ellipses" courselink="true" onclick="chapterLaunched('04-video');">Video</a>
+            </li> 
+            <li id="05-glossary">
+                <a href="05-glossary.html" data-ajax="false" class="chapter no-ellipses ui-btn-active ui-state-persist" courselink="true" onclick="chapterLaunched('05-glossary');">Glossary</a>
+            </li> 
         </ul>
     </div><!-- /navbar -->
 </div><!-- /header -->
@@ -78,7 +87,7 @@
             <li><a href="#whisk" data-transition="slidefade">Whisk</a></li>
         </ul>
         <br />
-        <p><a name="close" data-role="button" data-theme="b" data-rel="back" data-direction="reverse">Close</a></p>
+        <p><a name="close" data-role="button" data-theme="b" data-rel="back" data-direction="reverse">Close</a></p> 
     </div><!-- /content -->
 
 </div><!-- /page glossary -->
@@ -93,7 +102,7 @@
     <div data-role="content" data-theme="d">
         <h2>Bowl</h2>
         <p>A bowl will be needed to mix your ingredients.</p>
-        <p><a href="#glossary" data-rel="back" data-role="button" data-theme="b" data-inline="true" data-icon="back">Go Back</a></p>
+        <p><a href="#glossary" data-rel="back" data-role="button" data-theme="b" data-inline="true" data-icon="back">Go Back</a></p>    
     </div><!-- /content -->
 
 </div><!-- /page definition -->
@@ -108,7 +117,7 @@
     <div data-role="content" data-theme="d">
         <h2>Bread</h2>
         <p>Bread is the main ingredient in french toast and also the answer to the 3rd question in the quiz.</p>
-        <p><a href="#glossary" data-rel="back" data-role="button" data-theme="b" data-inline="true" data-icon="back">Go Back</a></p>
+        <p><a href="#glossary" data-rel="back" data-role="button" data-theme="b" data-inline="true" data-icon="back">Go Back</a></p>    
     </div><!-- /content -->
 
 </div><!-- /page definition -->
@@ -123,7 +132,7 @@
     <div data-role="content" data-theme="d">
         <h2>Butter</h2>
         <p>Butter can be melted on the pan so the bread will not stick to the pan.</p>
-        <p><a href="#glossary" data-rel="back" data-role="button" data-theme="b" data-inline="true" data-icon="back">Go Back</a></p>
+        <p><a href="#glossary" data-rel="back" data-role="button" data-theme="b" data-inline="true" data-icon="back">Go Back</a></p>    
     </div><!-- /content -->
 
 </div><!-- /page definition -->
@@ -138,7 +147,7 @@
     <div data-role="content" data-theme="d">
         <h2>Cinnamon</h2>
         <p>Cinnamon is needed to mix into the batter.</p>
-        <p><a href="#glossary" data-rel="back" data-role="button" data-theme="b" data-inline="true" data-icon="back">Go Back</a></p>
+        <p><a href="#glossary" data-rel="back" data-role="button" data-theme="b" data-inline="true" data-icon="back">Go Back</a></p>    
     </div><!-- /content -->
 
 </div><!-- /page definition -->
@@ -153,7 +162,7 @@
     <div data-role="content" data-theme="d">
         <h2>Egg</h2>
         <p>Eggs will be the main componenet of the mixture.</p>
-        <p><a href="#glossary" data-rel="back" data-role="button" data-theme="b" data-inline="true" data-icon="back">Go Back</a></p>
+        <p><a href="#glossary" data-rel="back" data-role="button" data-theme="b" data-inline="true" data-icon="back">Go Back</a></p>    
     </div><!-- /content -->
 
 </div><!-- /page definition -->
@@ -168,7 +177,7 @@
     <div data-role="content" data-theme="d">
         <h2>Fork</h2>
         <p>A fork will help with covering the bread in the mixture and flipping it.</p>
-        <p><a href="#glossary" data-rel="back" data-role="button" data-theme="b" data-inline="true" data-icon="back">Go Back</a></p>
+        <p><a href="#glossary" data-rel="back" data-role="button" data-theme="b" data-inline="true" data-icon="back">Go Back</a></p>    
     </div><!-- /content -->
 
 </div><!-- /page definition -->
@@ -183,7 +192,7 @@
     <div data-role="content" data-theme="d">
         <h2>Icing Sugar</h2>
         <p>Put icing sugar on the french toast afterwards for extra deliciousness.</p>
-        <p><a href="#glossary" data-rel="back" data-role="button" data-theme="b" data-inline="true" data-icon="back">Go Back</a></p>
+        <p><a href="#glossary" data-rel="back" data-role="button" data-theme="b" data-inline="true" data-icon="back">Go Back</a></p>    
     </div><!-- /content -->
 
 </div><!-- /page definition -->
@@ -198,7 +207,7 @@
     <div data-role="content" data-theme="d">
         <h2>Margarine</h2>
         <p>Margarine can be melted on the pan so the bread will not stick to the pan.</p>
-        <p><a href="#glossary" data-rel="back" data-role="button" data-theme="b" data-inline="true" data-icon="back">Go Back</a></p>
+        <p><a href="#glossary" data-rel="back" data-role="button" data-theme="b" data-inline="true" data-icon="back">Go Back</a></p>    
     </div><!-- /content -->
 
 </div><!-- /page definition -->
@@ -213,7 +222,7 @@
     <div data-role="content" data-theme="d">
         <h2>Milk</h2>
         <p>Milk is added to the mixture to dip the bread into.</p>
-        <p><a href="#glossary" data-rel="back" data-role="button" data-theme="b" data-inline="true" data-icon="back">Go Back</a></p>
+        <p><a href="#glossary" data-rel="back" data-role="button" data-theme="b" data-inline="true" data-icon="back">Go Back</a></p>    
     </div><!-- /content -->
 
 </div><!-- /page definition -->
@@ -228,7 +237,7 @@
     <div data-role="content" data-theme="d">
         <h2>Non-stick Spray</h2>
         <p>Non-stick Spray can be added to the pan so the bread will not stick to the pan.</p>
-        <p><a href="#glossary" data-rel="back" data-role="button" data-theme="b" data-inline="true" data-icon="back">Go Back</a></p>
+        <p><a href="#glossary" data-rel="back" data-role="button" data-theme="b" data-inline="true" data-icon="back">Go Back</a></p>    
     </div><!-- /content -->
 
 </div><!-- /page definition -->
@@ -243,7 +252,7 @@
     <div data-role="content" data-theme="d">
         <h2>Olive Oil</h2>
         <p>Olive Oil can be added to the pan so the bread will not stick to the pan.</p>
-        <p><a href="#glossary" data-rel="back" data-role="button" data-theme="b" data-inline="true" data-icon="back">Go Back</a></p>
+        <p><a href="#glossary" data-rel="back" data-role="button" data-theme="b" data-inline="true" data-icon="back">Go Back</a></p>    
     </div><!-- /content -->
 
 </div><!-- /page definition -->
@@ -258,7 +267,7 @@
     <div data-role="content" data-theme="d">
         <h2>Pan</h2>
         <p>A pan will be used to cook the bread.</p>
-        <p><a href="#glossary" data-rel="back" data-role="button" data-theme="b" data-inline="true" data-icon="back">Go Back</a></p>
+        <p><a href="#glossary" data-rel="back" data-role="button" data-theme="b" data-inline="true" data-icon="back">Go Back</a></p>    
     </div><!-- /content -->
 
 </div><!-- /page definition -->
@@ -273,7 +282,7 @@
     <div data-role="content" data-theme="d">
         <h2>Serving Plate</h2>
         <p>Place the french toast on a serving plate when finished cooking.</p>
-        <p><a href="#glossary" data-rel="back" data-role="button" data-theme="b" data-inline="true" data-icon="back">Go Back</a></p>
+        <p><a href="#glossary" data-rel="back" data-role="button" data-theme="b" data-inline="true" data-icon="back">Go Back</a></p>    
     </div><!-- /content -->
 
 </div><!-- /page definition -->
@@ -288,7 +297,7 @@
     <div data-role="content" data-theme="d">
         <h2>Spatula</h2>
         <p>A Spatula will be needed to flip the french toast in the pan.</p>
-        <p><a href="#glossary" data-rel="back" data-role="button" data-theme="b" data-inline="true" data-icon="back">Go Back</a></p>
+        <p><a href="#glossary" data-rel="back" data-role="button" data-theme="b" data-inline="true" data-icon="back">Go Back</a></p>    
     </div><!-- /content -->
 
 </div><!-- /page definition -->
@@ -303,7 +312,7 @@
     <div data-role="content" data-theme="d">
         <h2>Stove</h2>
         <p>A Stove will be needed to cook the bread.</p>
-        <p><a href="#glossary" data-rel="back" data-role="button" data-theme="b" data-inline="true" data-icon="back">Go Back</a></p>
+        <p><a href="#glossary" data-rel="back" data-role="button" data-theme="b" data-inline="true" data-icon="back">Go Back</a></p>    
     </div><!-- /content -->
 
 </div><!-- /page definition -->
@@ -318,7 +327,7 @@
     <div data-role="content" data-theme="d">
         <h2>Vanilla Extract</h2>
         <p>Vanilla Extract is needed to mix into the batter.</p>
-        <p><a href="#glossary" data-rel="back" data-role="button" data-theme="b" data-inline="true" data-icon="back">Go Back</a></p>
+        <p><a href="#glossary" data-rel="back" data-role="button" data-theme="b" data-inline="true" data-icon="back">Go Back</a></p>    
     </div><!-- /content -->
 
 </div><!-- /page definition -->
@@ -333,7 +342,7 @@
     <div data-role="content" data-theme="d">
         <h2>Whisk</h2>
         <p>A Whisk is needed to mix the batter once all the ingredients are added.</p>
-        <p><a href="#glossary" data-rel="back" data-role="button" data-theme="b" data-inline="true" data-icon="back">Go Back</a></p>
+        <p><a href="#glossary" data-rel="back" data-role="button" data-theme="b" data-inline="true" data-icon="back">Go Back</a></p>    
     </div><!-- /content -->
 
 </div><!-- /page definition -->

@@ -171,6 +171,10 @@
 			'showXAxis': true,
 			'showYAxis': true,
 			'showLegend': false,
+			'tooltipContent': function(key, x, y, e, graph) {
+		        return '<h3>' + x + '</h3>' +
+		               '<p>' +  y + '</p>'
+		      },
 			'transitionDuration': 250,
 			'margin': {left: 80, bottom: 100}
 		};
