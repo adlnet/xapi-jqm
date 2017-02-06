@@ -9,35 +9,27 @@
     <link rel="stylesheet" href="../css/custom-styles.css" />
     <script src="http://code.jquery.com/jquery-1.10.2.min.js"></script>
     <script src="http://code.jquery.com/mobile/1.4.2/jquery.mobile-1.4.2.min.js"></script>
+    <script src="http://popcornjs.org/code/dist/popcorn-complete.min.js"></script>
     <script src="../js/xapiwrapper.min.js"></script>
-    <script src="../js/videoprofile.js"></script>
-    <script src="../js/xapi-youtube-statements.js"></script>
+    <script src="../js/xapipopcorn.min.js"></script>
     <script src="../js/config.js"></script>
-    
+    <script src="../js/functions.js"></script>
 
 </head> 
 
 <body data-chapter="04-video"> 
 
-<div data-role="page" data-theme="b" id="video">
+<div data-role="page" data-theme="b">
 
 <div data-role="header" class="fullscreen background" style="background-image:url('../media/toast-large.jpg');" data-img-width="1600" data-img-height="1064">
-    <a href="../index.html" name="home" data-role="button" data-theme="b" data-icon="home" data-transition="slide" data-ajax="false" class="ui-btn-left" courselink="true">Home</a>
+    <a href="../index.html" name="home" data-role="button" data-theme="b" data-icon="home" data-transition="slide" data-ajax="false" class="ui-btn-left">Home</a>
 <h1><span class="subline no-ellipses">How to Make French Toast</span></h1>
     <div data-role="navbar">
         <ul id="toc-list">
-            <li id="02-checklists">
-                <a href="02-checklists.html" data-ajax="false" class="chapter no-ellipses" courselink="true" onclick="chapterLaunched('02-checklists');">Checklists</a>
-            </li>
-            <li id="03-steps">
-                <a href="03-steps.html" data-ajax="false" class="chapter no-ellipses" courselink="true" onclick="chapterLaunched('03-steps');">Steps</a>
-            </li> 
-            <li id="04-video">
-                <a href="04-video.html" data-ajax="false" class="chapter no-ellipses ui-btn-active ui-state-persist" courselink="true" onclick="chapterLaunched('04-video');">Video</a>
-            </li> 
-            <li id="05-glossary">
-                <a href="05-glossary.html" data-ajax="false" class="chapter no-ellipses" courselink="true" onclick="chapterLaunched('05-glossary');">Glossary</a>
-            </li> 
+            <li id="02-checklists"><a href="02-checklists.html" data-ajax="false" class="chapter no-ellipses">Checklists</a></li>
+            <li id="03-steps"><a href="03-steps.html" data-ajax="false" class="chapter no-ellipses">Steps</a></li> 
+            <li id="04-video"><a href="04-video.html" data-ajax="false" class="chapter no-ellipses ui-btn-active ui-state-persist"> Video</a></li> 
+            <li id="05-glossary"><a href="05-glossary.html" data-ajax="false" class="chapter no-ellipses">Glossary</a></li> 
         </ul>
     </div><!-- /navbar -->
 </div><!-- /header -->
@@ -47,14 +39,11 @@
             <h2>See How It's Done</h2>
         </div>
 
-        <div id="How-to-make-french-toast-xapi-jqm-video" align="center"></div>
+        <div align="center"><iframe width="300" height="169" src="http://www.youtube.com/embed/vPrtNzvDS5M" frameborder="0" allowfullscreen></iframe></div>
         <p>Video shows all of the steps.</p>
 
     </div><!-- /content -->
-</div><!-- /page video -->
-
-<!-- need to keep this guy at the bottom -->
-<script src="../js/functions.js"></script>
+</div><!-- /page p1 -->
 
 </body>
 </html>

@@ -9,35 +9,26 @@
     <link rel="stylesheet" href="../css/custom-styles.css" />
     <script src="http://code.jquery.com/jquery-1.10.2.min.js"></script>
     <script src="http://code.jquery.com/mobile/1.4.2/jquery.mobile-1.4.2.min.js"></script>
-    
     <script src="../js/xapiwrapper.min.js"></script>
-    <script src="../js/xapi-youtube-statements.js"></script>
-    <script src="../js/verbs.js"></script>
     <script src="../js/config.js"></script>
-    <script src="../js/functions.js"></script>  
+    <script src="../js/functions.js"></script>
 </head> 
+
+<body> 
 
 <body data-chapter="03-steps"> 
 
-<div data-role="page" data-theme="b" id="steps">
+<div data-role="page" data-theme="b" id="mainlist">
 
 <div data-role="header" class="fullscreen background" style="background-image:url('../media/toast-large.jpg');" data-img-width="1600" data-img-height="1064">
-    <a href="../index.html" name="home" data-role="button" data-theme="b" data-icon="home" data-transition="slide" data-ajax="false" class="ui-btn-left" courselink="true">Home</a>
+    <a href="../index.html" name="home" data-role="button" data-theme="b" data-icon="home" data-transition="slide" data-ajax="false" class="ui-btn-left">Home</a>
 <h1><span class="subline no-ellipses">How to Make French Toast</span></h1>
     <div data-role="navbar">
         <ul id="toc-list">
-            <li id="02-checklists">
-              <a href="02-checklists.html" data-ajax="false" class="chapter no-ellipses" courselink="true" onclick="chapterLaunched('02-checklists');">Checklists</a>
-            </li>
-            <li id="03-steps">
-              <a href="03-steps.html" data-ajax="false" class="chapter no-ellipses ui-btn-active ui-state-persist" courselink="true" onclick="chapterLaunched('03-steps');">Steps</a>
-            </li> 
-            <li id="04-video">
-              <a href="04-video.html" data-ajax="false" class="chapter no-ellipses" courselink="true" onclick="chapterLaunched('04-video');">Video</a>
-            </li> 
-            <li id="05-glossary">
-              <a href="05-glossary.html" data-ajax="false" class="chapter no-ellipses" courselink="true" onclick="chapterLaunched('05-glossary');">Glossary</a>
-            </li> 
+            <li id="02-checklists"><a href="02-checklists.html" data-ajax="false" class="chapter no-ellipses">Checklists</a></li>
+            <li id="03-steps"><a href="03-steps.html" data-ajax="false" class="chapter no-ellipses ui-btn-active ui-state-persist">Steps</a></li> 
+            <li id="04-video"><a href="04-video.html" data-ajax="false" class="chapter no-ellipses"> Video</a></li> 
+            <li id="05-glossary"><a href="05-glossary.html" data-ajax="false" class="chapter no-ellipses">Glossary</a></li> 
         </ul>
     </div><!-- /navbar -->
 </div><!-- /header -->
@@ -46,7 +37,7 @@
 
 	  <!-- step 1 -->  
   <ul data-role="listview" data-split-icon="video" data-theme="a" data-split-theme="b" data-inset="true" class="no-ellipses">        
-      <li><a href="#" ><p class="no-ellipses stepsize"><strong>Step 1:</strong><br>Set the stove or electric pan to medium high heat. Place the pan over the burner if cooking over the stove. Add non-stick spray, olive oil or butter so that the bread will not stick to the pan. For additional support, watch the video.</p></a>
+      <li><a href="#"><p class="no-ellipses stepsize"><strong>Step 1:</strong><br>Set the stove or electric pan to medium high heat. Place the pan over the burner if cooking over the stove. Add non-stick spray, olive oil or butter so that the bread will not stick to the pan. For additional support, watch the video.</p></a>
           <a href="#step1" data-rel="popup" data-position-to="window" data-transition="pop" class="ui-btn-active">Watch Video</a>
       </li>
   </ul>
@@ -63,7 +54,7 @@
   <ul data-role="listview" data-split-icon="video" data-theme="a" data-split-theme="b" data-inset="true" class="no-ellipses">
   
         <li><a href="#"><p class="no-ellipses stepsize"><strong>Step 2:</strong><br>Crack the eggs into a bowl. For additional support, watch the video.</p></a>
-          <a href="#step2" data-rel="popup" data-position-to="window" data-transition="pop" class="ui-btn-active" >Watch Video</a>
+          <a href="#step2" data-rel="popup" data-position-to="window" data-transition="pop" class="ui-btn-active">Watch Video</a>
       </li>
   </ul>
   
@@ -110,7 +101,7 @@
 	  <!-- step 5 -->    
   <ul data-role="listview" data-split-icon="video" data-theme="a" data-split-theme="b" data-inset="true" class="no-ellipses">
   
-        <li><a href="#"><p class="no-ellipses stepsize"><strong>Step 5:</strong><br>Place the bread into your mixture so it soaks some of it up.</p></a>
+        <li><a href="#"><p class="no-ellipses stepsize"><strong>Step 5:</strong><br>Turn the heat down to medium-low, once the pan is heated sufficiently. For additional support, watch the video.</p></a>
           <a href="#step5" data-rel="popup" data-position-to="window" data-transition="pop" class="ui-btn-active">Watch Video</a>
       </li>
   </ul>

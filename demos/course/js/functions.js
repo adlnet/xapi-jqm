@@ -1,164 +1,68 @@
 /* in progress */
 
-// "global" variables
-var moduleID = "http://adlnet.gov/xapi/samples/xapi-jqm/course/"; // trailing slash
-var moduleName = "How to Make French Toast xapi-jqm Course Demo";
-var courseType = "http://adlnet.gov/xapi/activities/course";
-var mediaType = "http://adlnet.gov/xapi/activities/media";
-var baseActivity = {
-    "id": moduleID,
-    "definition": {
-        "name": {
-            "en-US": moduleName
-        },
-        "description": {
-            "en-US": "A sample HTML5 mobile app with xAPI tracking that teaches you how to make french toast."
-        }
-    },
-    "objectType": "Activity"
-};
-var video = "vPrtNzvDS5M"; // Change this to your video ID
-var actor;
-var wrapper;
+// Global Actor
+actor = getActor();
 
-ADL.launch(function(err,apiData,xAPIWrapper){
+/* Page Change Logic */
+if ( actor  == false ) {
+    checkLoggedIn();
+} else { // silly thing to wrap in an else but I need to restructure the code to handle a missing actor on login page
 
-    // No launch server, so configure manually.
-    if(err){
-        wrapper = ADL.XAPIWrapper;
+    doConfig();
 
-        if(!getUserName()){
-            // No user so login.
-            window.location = "chapters/00-account.html";
+    // Handle chapter clicks to send launch statements
+    $( document ).on("vclick", "a.chapter", function() {
+        $chapter = $(this);
+        var chapter = $chapter.parent("li").attr("id");
+        var name = $chapter.text();
+        chapterLaunched(chapter, name);
+    });
 
-        } else {            
-            actor = getActor();
-            Config.actor = actor;
-            wrapper.changeConfig(Config);
-        }
+    // Abstracted page changing logic -- catch-all
+    $( window ).on("pagechange", function(event) {
 
-    } else {            
+        var chapter = $("body").attr("data-chapter");
+        var pageID = $.mobile.activePage.attr("id");
+        var activityID = moduleID + chapter + "/" + pageID;
+        var context = createContext(chapter);
 
-        wrapper = xAPIWrapper;
-        actor = apiData.actor;
-
-    }
-
-    // Only call when the video is loaded.
-    if(window.location.pathname.includes("/chapters/04-video.html")) {
-        var options = {    
-            "actor":  actor,
-            "videoActivity": {"id":"https://www.youtube.com/watch?v=" + video, "definition":{"name": {"en-US":video}} },
-            "context": createContext('04-video')
-        };
-        ADL.XAPIYoutubeStatements.changeConfig(options, wrapper);
-
-        initYT();
-
-        /*
-         * Custom Callbacks
-         */
-        ADL.XAPIYoutubeStatements.onPlayerReadyCallback = function(stmt) {
-          console.log("on ready callback");
-        }
-        // Dispatch Youtube statements with XAPIWrapper
-        ADL.XAPIYoutubeStatements.onStateChangeCallback = function(event, stmt) {
-          console.log(stmt);
-          if (stmt) {
-            stmt['timestamp'] = (new Date()).toISOString();
-            wrapper.sendStatement(stmt, function(){});
-          } else {
-            console.warn("no statement found in callback for event: " + event);
-          }
-        }
-    }
-
-    var chapter = $("body").attr("data-chapter");
-    var activityID = moduleID + chapter
-    var context = createContext();
-
-    if(chapter == "toc"){
         var stmt = {
             "actor": actor,
-            "verb": ADL.verbs.launched,
+            "verb": ADL.custom.verbs.read,
             "context": context,
             "object": {
                 "id" : activityID,
                 "objectType": "Activity",
                 "definition": {
                     "name": {
-                        "en-US": moduleName + ": " + chapter
+                        "en-US": moduleName + ": " + chapter + ", page: " + pageID
                     }
                 }
             }
         };
 
-        updateLRS(stmt);
-    }   
+        // Send a statement
+        ADL.XAPIWrapper.sendStatement(stmt);
+        ADL.XAPIWrapper.sendState(moduleID, actor, "session-state", null, { "info": "reading", "chapter": chapter, "page": pageID });
 
-    wrapper.sendState(moduleID, actor, "session-state", null, { "info": "reading", "chapter": chapter});
-    
-
-    var chaptersCompleted = getChaptersCompleted()
-    $("#toc-list li").each(function() {
-        if ( $.inArray( $(this).attr("id"), chaptersCompleted ) !== -1 ) {
-            $(this).addClass("ui-icon-check");
-        }
     });
-
-},false);
-
-
-//Send statements to the LRS.
-function updateLRS(stmnt){
-
-    wrapper.sendStatement(stmnt);
-}
-
-// A callback for the sendStatement.
-var outputResults = function (resp, thing) {
-    var spanclass = "text-info";
-    var text = "";
-    if (resp.status >= 400) {
-        spanclass = "text-danger";
-        text = (thing.totalErrors > 1) ? "Errors: " : "Error: ";
-        for ( var res in thing.results ) {
-            text += "<br>" + ((thing.results[res].instance.id) ? thing.results[res].instance.id : "Statement " + res);
-            for ( var err in thing.results[res].errors ) {
-                text += "<br>&nbsp;&nbsp;" + thing.results[res].errors[err].trace;
-                text += "<br>&nbsp;&nbsp;&nbsp;&nbsp;" + thing.results[res].errors[err].message;
-            }
-        }
-    } else {
-        if ( resp.responseText )
-            text = "Successfully sent " + resp.responseText;
-        else
-            text = thing;
-    }
-
-    console.log(text);
-};
+} // end silly else
 
 /* State functions */
 function getState() {
-    return wrapper.getState(moduleID, actor, "session-state");
+    return ADL.XAPIWrapper.getState(moduleID, actor, "session-state");
 }
 
 /* Course Progress */
 
 // Get from State API
 function getChaptersCompleted() {
-    var chaptersCompleted = wrapper.getState(moduleID, actor, "chapters-completed");
-
-    if(!chaptersCompleted){
-        chaptersCompleted = {"chapters": []};
-    }
+    var chaptersCompleted = ADL.XAPIWrapper.getState(moduleID, actor, "chapters-completed");
     return chaptersCompleted.chapters;
 }
 
 // Set in State API
 function setChapterComplete() {
-   
     var chapterID = $("body").attr("data-chapter");
     var currentCompletedChapters = getChaptersCompleted();   
     var chapterCompleted = [ chapterID ];
@@ -169,7 +73,9 @@ function setChapterComplete() {
     $.each($.merge($.merge([], currentCompletedChapters), chapterCompleted), function (index, value) { hash[value] = value; });
     $.each(hash, function (key, value) { union.push(key); } );
     
-    wrapper.sendState(moduleID, actor, "chapters-completed", null, { "chapters": union });
+    ADL.XAPIWrapper.sendState(moduleID, actor, "chapters-completed", null, { "chapters": union });
+
+    doConfig();
 
     // statement for launching content
     var stmt = {
@@ -188,81 +94,130 @@ function setChapterComplete() {
     };
 
     // Send chapterComplete statement
-    updateLRS(stmt);
-   
+    ADL.XAPIWrapper.sendStatement(stmt);
+
 }
-
-function setRead(chapter, id, parentChapter){
-    stmt = {
-        "actor": actor,
-        "verb": ADL.custom.verbs.read,
-        "context": createContext(parentChapter),
-        "object": {
-            "id" : moduleID + chapter +'/'+id,
-            "objectType": "Activity",
-            "definition": {
-                "name": {
-                    "en-US": moduleName + ": " + chapter + ', ' + id 
-                }
-            }
-        }
-    };
-
-    updateLRS(stmt);
-}
-
-// Abstracted page changing logic -- for xapi read of glossary
-$( window ).on("click", function(event) {
-    var chapter = $("body").attr("data-chapter");
-    var pageID = $.mobile.activePage.attr("id");
-
-    if(chapter == "glossary" && pageID != 'list'){
-        setRead(chapter, pageID, chapter);
-    }
-});
 
 /* Helpers */
+function doConfig() { // sorry
+    Config.actor = actor;
+    ADL.XAPIWrapper.changeConfig(Config);
+}
+
 function getPage() {
     var url = window.location.pathname;
     var filename = url.substring(url.lastIndexOf('/')+1);
     return filename;
 }
 
-/* Name, Email, Actor, gets */
+/* Name, Email, Actor, gets and sets */
 
 // Actor
 function getActor() {
     var name = localStorage.getItem(storageKeyName);
     var email = localStorage.getItem(storageKeyEmail);
-    if ( name == null  ) {
+    if ( name == null || email == null ) {
         return false;
     } else {
         var actor = { "mbox": "mailto:" + email, "name": name };
         return actor;
     }
 }
+function setActor( name, email ) {
+    setUserName(name);
+    setUserEmail(email);
+}
+
 // Name
 function getUserName() {
     return localStorage.getItem(storageKeyName);
+}
+function setUserName(name) {
+    localStorage.setItem(storageKeyName, name);
 }
 
 // Email
 function getUserEmail() {
     return localStorage.getItem(storageKeyEmail);
 }
+function setUserEmail(email) {
+    localStorage.setItem(storageKeyEmail, email);
+}
 
+// Destroy all the things
+function clearActor() {
+    localStorage.removeItem(storageKeyName);
+    localStorage.removeItem(storageKeyEmail);
+}
+
+/* Login / Logout functions */
+function checkLoggedIn() {
+    // If the actor doesn't exist, send them to the login page
+    if ( getPage() != "00-account.html" ) {
+        userLogin();
+    }
+}
+
+/*
+function getBaseURL() {
+    // silly regex hack for now #helpWanted
+    var regex = new RegExp("(index.html|.*\/chapters\/.*|.*\/glossary.html)");
+    var location = window.location.href;
+    if ( regex.test(location) ) {
+        var str = location.split("/").pop();
+        var baseurl = location.replace(str, "");
+        var str = "chapters/"
+        var baseurl = baseurl.replace(str, "");
+    } else {
+        // otherwise give up and send them to the github version
+        var baseurl = "http://adlnet.github.io/xapi-jqm/demos/course/";
+    }
+    return baseurl;
+}*/
+
+function userLogin() {
+    // Should get the page root
+    window.location = "chapters/00-account.html#login";
+}
+
+function userLogout() {
+    courseExited();
+    clearActor();
+    window.location = "../"; // lol
+}
+
+function userRegister( name, email ) {
+    // should error check this
+    setActor(name, email);
+    // Set global actor var so other functions can use it
+    actor = getActor();
+    courseRegistered();
+    // Setup chapters-complete
+    ADL.XAPIWrapper.sendState(moduleID, actor, "chapters-completed", null, { "chapters": [] });
+}
+
+// jqm's submission process is the reason I'm doing it this way
+function userRegisterSubmit() {
+    if ( $("#reg-name").val() != "" && $("#reg-email").val() != "" ) {
+        userRegister($("#reg-name").val(), $("#reg-email").val());
+        courseLaunched();
+        window.location = "../index.html"
+    }
+}
 
 /*
  * xAPIy
  */
 function checkboxClicked(chapter, pageID, checkboxID, checkboxName) {
     
+    doConfig();
+    
     // Figure out if it was checked or unchecked
     var isChecked = $("#"+checkboxID).prop('checked');
     var checkedVerb = (isChecked) ? ADL.custom.verbs.checked : ADL.custom.verbs.unchecked;
 
     var baseActivity = {
-        "id": moduleID  + chapter + "/" + pageID + "#" + checkboxID,
+        "id": moduleID + "/" + chapter + "/" + pageID + "#" + checkboxID,
         "definition": {
             "name": {
                 "en-US": checkboxName
@@ -283,39 +238,7 @@ function checkboxClicked(chapter, pageID, checkboxID, checkboxName) {
     };
 
     // Send statement
-    updateLRS(stmt);
-
-}
-
-function radioButtonClicked(chapter, pageID, btnID, btnName) {
-    
-    // Figure out if it was checked or unchecked
-    var isChecked = $("#"+btnID).prop('checked');
-    var checkedVerb = (isChecked) ? ADL.custom.verbs.checked : ADL.custom.verbs.unchecked;
-
-    var baseActivity = {
-        "id": moduleID  + chapter + "/" + pageID + "#" + btnID,
-        "definition": {
-            "name": {
-                "en-US": btnName
-            },
-            "description": {
-                "en-US": "The " + btnName + " radio button from chapter " + chapter + "; page " + pageID
-            }
-        },
-        "objectType": "Activity"
-    };
-
-    // statement for checking content
-    var stmt = {
-        "actor": actor,
-        "verb": checkedVerb,
-        "object": baseActivity,
-        "context": createContext(chapter, pageID, undefined, true)
-    };
-
-    // Send statement
-    updateLRS(stmt);
+    ADL.XAPIWrapper.sendStatement(stmt);
 
 }
 
@@ -323,6 +246,8 @@ function radioButtonClicked(chapter, pageID, btnID, btnName) {
  * SCORMy
  */
 function courseRegistered() {
+    
+    doConfig();
 
     // statement for launching content
     var stmt = {
@@ -331,12 +256,14 @@ function courseRegistered() {
         "object": baseActivity
     };
 
-    // Send statement
-    updateLRS(stmt);
+    // Send registered statement
+    ADL.XAPIWrapper.sendStatement(stmt);
 
 }
 
 function courseLaunched() {
+    
+    doConfig();
 
     // statement for launching content
     var stmt = {
@@ -346,33 +273,36 @@ function courseLaunched() {
     };
 
     // Send launched statement
-    updateLRS(stmt);
+    ADL.XAPIWrapper.sendStatement(stmt);
 
 }
 
-function chapterLaunched(chapter) {
-    var activityID = moduleID + chapter;
-    var stmt = {
-        "actor": actor,
-        "verb": ADL.verbs.launched,
-        "context": createContext(),
-        "object": {
-            "id":  activityID,
-            "objectType": "Activity",
-            "definition": {
-                "name": {
-                    "en-US": moduleName + ": " + chapter
+function chapterLaunched(chapter, name) {
+        var activityID = moduleID + chapter;
+
+        var stmt = {
+            "actor": actor,
+            "verb": ADL.verbs.launched,
+            "context": createContext(),
+            "object": {
+                "id":  activityID,
+                "objectType": "Activity",
+                "definition": {
+                    "name": {
+                        "en-US": moduleName + ": " + chapter
+                    }
                 }
             }
-        }
-    };
+        };
 
-    // Send a statement
-    updateLRS(stmt);
+        // Send a statement
+        ADL.XAPIWrapper.sendStatement(stmt);
 }
 
 
 function courseMastered() {
+    
+    doConfig();
 
     // statement for launching content
     var stmt = {
@@ -381,12 +311,14 @@ function courseMastered() {
         "object": baseActivity
     };
 
-    // Send statement
-    updateLRS(stmt);
+    // Send launched statement
+    ADL.XAPIWrapper.sendStatement(stmt);
 
 }
 
 function courseExited() {
+
+    doConfig();
 
     // statement for launching content
     var stmt = {
@@ -396,7 +328,7 @@ function courseExited() {
     };
 
     // Send exited statement
-    updateLRS(stmt);
+    ADL.XAPIWrapper.sendStatement(stmt);
 
 }
 
@@ -667,16 +599,4 @@ $( document ).ready(function() {
         var pageID = $.mobile.activePage.attr("id");
         checkboxClicked(chapter, pageID, checkboxID, checkboxName);
     });
-
-    // Handle checkbox clicks -- basic no knowledge of context or checked
-    $(":radio").change(function(event) {
-        $radio = $(this);
-        var btnID = $radio.attr("id");
-        var btnName = $radio.siblings("label").text();
-        var chapter = $("body").attr("data-chapter");
-        var pageID = $.mobile.activePage.attr("id");
-        radioButtonClicked(chapter, pageID, btnID, btnName);
-    });
-
 });
-

@@ -15,8 +15,7 @@ function gradeQuestion() {
     var chapter = $("body").attr("data-chapter");
     var pageID = $.mobile.activePage.attr("id");
     var quiz_name = "q" + pageID[1]
-    var questionID = quizID + "-" + quiz_name;
-
+    var questionID = quizID + "#" + quiz_name;
 
     var q_form = $("#" + pageID + "_form :input")
     var question_type = q_form[0].type
