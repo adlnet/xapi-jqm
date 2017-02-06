@@ -111,7 +111,8 @@
         <div data-role="navbar">
             <ul>
                 <li><a href="#p2" data-theme="b" data-rel="back" data-icon="carat-l" data-iconpos="top" data-transition="slide" data-direction="reverse" data-ajax="false">Previous</a></li>
-                <li><a onclick="gradeQuestion();makeAssessment()" href="#results" id="results" data-theme="b" data-icon="carat-r" data-iconpos="top" data-transition="slide" data-ajax="false">Get Results</a></li>
+                <li><a onclick="gradeQuestion();makeAssessment();" href="#results" id="resultsBtn" data-theme="b" data-icon="carat-r" data-iconpos="top" data-transition="slide" data-ajax="false">Get Results</a></li>
+
             </ul>
         </div><!-- /navbar -->
     </div><!-- /footer -->
@@ -135,5 +136,17 @@
     </div><!-- /content -->
     
 </div><!-- /page results -->
+
+<script type="text/javascript">
+    //This correctly handles pressing the enter button on the text inpt field. 
+    document.getElementById("q3-text").addEventListener("keypress", function(event) {
+        if (event.keyCode == 13) {
+            // prevent default here prevents the temporary flashing of the first question.
+            event.preventDefault();
+            gradeQuestion();makeAssessment();
+            window.location.href = "#results";
+        } 
+    });
+</script>
 </body>
 </html>
