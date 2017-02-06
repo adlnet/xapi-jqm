@@ -20,9 +20,9 @@ var baseActivity = {
 var video = "vPrtNzvDS5M"; // Change this to your video ID
 var actor;
 var wrapper;
+var customContextID;
 
-
-ADL.launch(function(err,apiData,xAPIWrapper){
+ADL.launch(function(err,launchData,xAPIWrapper){
 
     // No launch server, so configure manually.
     if(err){
@@ -41,8 +41,10 @@ ADL.launch(function(err,apiData,xAPIWrapper){
     } else {            
 
         wrapper = xAPIWrapper;
-        actor = apiData.actor;
-
+        actor = launchData.actor;
+        if (launchData.customData.content) {
+            customContextID = launchData.customData.content;
+        } 
     }
 
     // Only call when the video is loaded.
@@ -429,6 +431,21 @@ function createContext( parentChapter, parentPage, subParentActivity, both ) {
                 "objectType": "Activity"
             };
             baseContext.contextActivities.parent.push(subActivity);
+        }
+
+        // if there is a custom context ID, add it
+        if ( typeof customContextID !== "undefined" ) {
+            
+            var customContext = {
+                "id": customContextID,
+            };
+            
+            if(baseContext.contextActivities.grouping !== "undefined"){
+                baseContext.contextActivities['grouping'] = customContext;                
+            } else {
+                baseContext.contextActivities.grouping.push(customContext);
+            }
+            
         }
     }
     return baseContext;
