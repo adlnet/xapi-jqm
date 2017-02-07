@@ -299,6 +299,7 @@ function courseRegistered() {
     var stmt = {
         "actor": actor,
         "verb": ADL.verbs.registered,
+        "context": createContext(),
         "object": baseActivity
     };
 
@@ -313,6 +314,7 @@ function courseLaunched() {
     var stmt = {
         "actor": actor,
         "verb": ADL.verbs.launched,
+        "context": createContext(),
         "object": baseActivity
     };
 
@@ -349,6 +351,7 @@ function courseMastered() {
     var stmt = {
         "actor": actor,
         "verb": ADL.verbs.mastered,
+        "context": createContext(),
         "object": baseActivity
     };
 
@@ -363,6 +366,7 @@ function courseExited() {
     var stmt = {
         "actor": actor,
         "verb": ADL.verbs.exited,
+        "context": createContext(),
         "object": baseActivity
     };
 
@@ -432,22 +436,23 @@ function createContext( parentChapter, parentPage, subParentActivity, both ) {
             };
             baseContext.contextActivities.parent.push(subActivity);
         }
-
-        // if there is a custom context ID, add it
-        if ( typeof customContextID !== "undefined" ) {
-            
-            var customContext = {
-                "id": customContextID,
-            };
-            
-            if(baseContext.contextActivities.grouping !== "undefined"){
-                baseContext.contextActivities['grouping'] = customContext;                
-            } else {
-                baseContext.contextActivities.grouping.push(customContext);
-            }
-            
-        }
     }
+
+    // if there is a custom context ID, add it
+    if ( typeof customContextID !== "undefined" ) {
+        
+        var customContext = {
+            "id": customContextID,
+        };
+        
+        if(baseContext.contextActivities.grouping !== "undefined"){
+            baseContext.contextActivities['grouping'] = customContext;                
+        } else {
+            baseContext.contextActivities.grouping.push(customContext);
+        }
+        
+    }
+
     return baseContext;
 }
 
