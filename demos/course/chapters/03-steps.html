@@ -6,8 +6,29 @@
     <meta name="viewport" content="width=device-width, initial-scale=1"> 
     <title>Introduction - How to Make French Toast - xapi-jqm</title> 
     <link rel="stylesheet" href="http://code.jquery.com/mobile/1.4.2/jquery.mobile-1.4.2.min.css" />
+    
+    <!-- Load CDN; if it fails, load the local instance. -->
     <script src="http://code.jquery.com/jquery-1.10.2.min.js"></script>
+    <script>
+        if (typeof jQuery == 'undefined')
+        {
+            document.write(unescape("%3Cscript src='/js/jquery-1.10.2.min.js' type='text/javascript'%3E%3C/script%3E"));
+        }
+    </script>
+    
+    <!-- Load CDN; if it fails, load the local instance. -->
     <script src="http://code.jquery.com/mobile/1.4.2/jquery.mobile-1.4.2.min.js"></script>
+    <script>
+        if(typeof $.mobile == 'undefined')
+        {
+            document.write(unescape("%3Cscript src='/js/jquery.mobile-1.4.2.min.js' type='text/javascript'%3E%3C/script%3E"));
+        }
+        $(function() {
+            if($('.ui-helper-hidden:first').is(':visible') === true){
+                $('<link rel="stylesheet" type="text/css" href="/css/jquery.mobile-1.4.2.min.css" />').appendTo('head');
+            }
+        });
+    </script>
     <script src="../js/xapiwrapper.min.js"></script>
     <script src="../js/config.js"></script>
     <script src="../js/verbs.js"></script>
@@ -22,6 +43,7 @@
 </head> 
 
 <body data-chapter="03-steps"> 
+<div class='ui-helper-hidden'></div> <!-- Used to load local jqm css. -->
 
 <div data-role="page" id="p1">
 
