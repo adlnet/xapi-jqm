@@ -4,11 +4,30 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1"> 
-    <title>Introduction - How to Make French Toast - xapi-jqm</title> 
-    <link rel="stylesheet" href="http://code.jquery.com/mobile/1.4.2/jquery.mobile-1.4.2.min.css" />
-    <link rel="stylesheet" href="../css/custom-styles.css" />
-    <script src="http://code.jquery.com/jquery-1.10.2.min.js"></script>
+    <title>How to Make French Toast - xapi-jqm</title> 
+    
+    <link rel="stylesheet" href="../css/custom-styles.css" />        
+    
+    <!-- Load CDN; if it fails, load the local instance. -->
+    <script src="http://code.j/query.com/jquery-1.10.2.min.js"></script>
+    <script>
+        if (typeof jQuery == 'undefined')
+        {
+            document.write(unescape("%3Cscript src='../js/jquery-1.10.2.min.js' type='text/javascript'%3E%3C/script%3E"));
+        }
+    </script>
+    
+    <!-- Load CDN; if it fails, load the local instance. -->
     <script src="http://code.jquery.com/mobile/1.4.2/jquery.mobile-1.4.2.min.js"></script>
+    <script>
+        if(typeof $.mobile == 'undefined')
+        {
+            document.write(unescape("%3Cscript src='../js/jquery.mobile-1.4.2.min.js' type='text/javascript'%3E%3C/script%3E"));
+        }
+
+        function addLocalCSS(){$('<link rel="stylesheet" type="text/css" href="../css/jquery.mobile-1.4.2.min.css" />').appendTo('head')};
+    </script>
+    <link onerror="addLocalCSS()" rel="stylesheet" href="http://code.jquery.com/mobile/1.4.2/jquery.mobile-1.4.2.min.css" />
 
     <script src="../js/xapiwrapper.min.js"></script>
     <script src="../js/config.js"></script>
