@@ -23,7 +23,7 @@
 			}
 
 			.container {
-				width: 500px;
+				width: 5000px;
 				height: 300px;
 				overflow: hidden;
 			}
@@ -38,10 +38,18 @@
 			<div id='verbs' class='container'>
 				<svg></svg>
 			</div>
+			<div id='subChart1' class='container'>
+				<h3 style="text-align:center;"></h3>
+				<svg></svg>
+			</div>
 			<div id='lrsActivity' class='container'>
 				<svg></svg>
 			</div>
 			<div id='actorActivity' class='container'>
+				<svg></svg>
+			</div>
+			<div id='subChart2' class='container'>
+				<h3 style="text-align:center;"></h3>
 				<svg></svg>
 			</div>
 		</div>
@@ -61,9 +69,12 @@
 			cutoff = new Date(cutoff.getFullYear(),cutoff.getMonth(),cutoff.getDate()-30);
 			cutoff = cutoff.toISOString();
 
+			var globalVerb;
+
 			//dash.fetchAllStatements({since: cutoff, "agent": JSON.stringify({"objectType":"Agent","mbox":"mailto:tyler.mulligan.ctr@adlnet.gov"}), related_agents: true }, wrapper, function()
 			dash.fetchAllStatements({since: cutoff, activity: "http://adlnet.gov/xapi/samples/xapi-jqm/ps/", related_activities: true }, wrapper, function()
 			{
+				var globalMbox;
 				clearInterval(handle);
 
 				// label for first graph
@@ -71,12 +82,13 @@
 				var header = document.createElement('h2');
 				header.innerHTML = 'Verb Popularity Over Last 30 Days';
 				container.insertBefore(header, container.firstChild);
-	
+
 				// create first graph
 				var verbsChart = dash.createBarChart({
 					container: '#verbs svg',
 					groupBy: 'verb.id',
 					aggregate: ADL.count(),
+					child: objChart,
 					post: function(data){
 						data = new ADL.CollectionSync(data);
 						return data.orderBy('out','descending').slice(0,10).contents;
@@ -92,7 +104,26 @@
 					}
 				});
 
+				var objChart = dash.createBarChart({
+			        container: "#subChart1 svg",
+			        groupBy: 'object.id',
+			        aggregate: ADL.count(),
+			        pre: function(data, event){
+			        	globalVerb = event.in;
+						data.where('verb.id =  /'+event.in+'$/'); 
+					},
+			        customize: function (chart) {
+			        	var verb = /[^\/]+$/.exec(globalVerb)[0];
+			        	ADL.$('#subChart1 h3').textContent = verb.charAt(0).toUpperCase() + verb.slice(1) + " Objects";
+			            chart.xAxis.rotateLabels(45);
+			            chart.xAxis.tickFormat(function(label){
+			                return /[^\/]+$/.exec(label)});			            
+			        }
+			    });
+
+				
 				// draw first graph once it's configured
+				verbsChart.addChild(objChart);
 				verbsChart.draw();
 
 
@@ -138,6 +169,7 @@
 					container: '#actorActivity svg',
 					groupBy: 'actor.mbox',
 					aggregate: ADL.count(),
+					child: objChart,
 					post: function(data){
 						data = new ADL.CollectionSync(data);
 						return data.orderBy('out', 'descending').slice(0,10).contents;
@@ -150,6 +182,38 @@
 						nvd3chart.margin({right: 80, bottom: 150});
 					}
 				});
+
+				var objChart = dash.createBarChart({
+			        container: "#subChart2 svg",
+			        groupBy: 'stored',
+					range: {
+						start: cutoff,
+						end: (new Date(Date.now())).toISOString(),
+						increment: 1000*3600*24
+					},
+					rangeLabel: 'start',
+			        aggregate: ADL.count(),
+			        pre: function(data, event){
+			        	globalMbox = event.in;
+						data.where('actor.mbox =  /'+event.in+'$/'); 
+						for(var i=0; i<data.length; i++){
+							data[i].in = Date.parse(data[i].in);
+						}
+						return data;
+					},
+			        customize: function (chart) {
+			        	var mbox = /[^\/]+$/.exec(globalMbox)[0];
+			        	ADL.$('#subChart2 h3').textContent = mbox + " Activities";
+			            chart.xAxis.rotateLabels(45);
+			            chart.xAxis.tickFormat(function(label){
+			                return d3.time.format('%b %d')(new Date(label));
+						});	            
+			        }
+			    });
+
+				
+				// draw first graph once it's configured
+				actorChart.addChild(objChart);
 				actorChart.draw();
 			});
 
