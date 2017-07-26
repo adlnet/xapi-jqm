@@ -37,6 +37,7 @@ ADL.launch(function(err,launchData,xAPIWrapper){
             Config.actor = actor;
             wrapper.changeConfig(Config);
         }
+        customContextID = "http://adlnet.gov/event/xapiworkshop/iFest/2017";
 
     } else {            
 
